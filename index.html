@@ -29,9 +29,15 @@
       <label class="label" for="email">Twój e-mail</label>
       <input type="email" id="email" required autocomplete="email" placeholder="np. anna@gmail.com">
       <button class="btn" type="submit" id="loginBtn">Wyślij link do logowania</button>
-      <p class="small muted">Bez hasła. Dostaniesz e-mail z linkiem, który Cię zaloguje.</p>
+      <p class="small muted">Bez hasła. Dostaniesz e-mail z kodem i linkiem do logowania.</p>
     </form>
-    <div class="note" id="sent" hidden>Sprawdź skrzynkę (także folder Oferty i Spam) i kliknij link w e-mailu. Otwórz go na tym samym telefonie.</div>
+    <form class="card" id="codeForm" hidden>
+      <div class="note">Sprawdź skrzynkę (także foldery Oferty i Spam). Wpisz tutaj kod z e-maila albo kliknij link na tym telefonie.</div>
+      <label class="label" for="code">Kod z e-maila</label>
+      <input type="text" id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="12" required placeholder="np. 123456">
+      <button class="btn" type="submit" id="codeBtn">Zaloguj</button>
+      <button class="btn ghost" type="button" id="codeBack">Wpisz inny e-mail</button>
+    </form>
     <footer>Program stworzony przez <span class="trainer"></span></footer>
   </section>
 

@@ -60,9 +60,17 @@ $("loginForm").onsubmit = async e => {
   e.preventDefault(); $("loginBtn").disabled = true;
   const { error } = await sb.auth.signInWithOtp({ email: $("email").value.trim(), options: { emailRedirectTo: location.origin + location.pathname } });
   $("loginBtn").disabled = false;
-  if (error) return toast("Nie udało się wysłać linku: " + error.message);
-  $("sent").hidden = false;
+  if (error) return toast("Nie udało się wysłać e-maila: " + error.message);
+  $("loginForm").hidden = true; $("codeForm").hidden = false; $("code").focus();
 };
+// Kod z e-maila: potrzebny na iPhonie, gdzie aplikacja z ekranu głównego nie widzi logowania z przeglądarki
+$("codeForm").onsubmit = async e => {
+  e.preventDefault(); $("codeBtn").disabled = true;
+  const { error } = await sb.auth.verifyOtp({ email: $("email").value.trim(), token: $("code").value.replace(/\D/g, ""), type: "email" });
+  $("codeBtn").disabled = false;
+  if (error) return toast("Kod jest błędny albo wygasł. Sprawdź najnowszy e-mail lub wyślij nowy.");
+};
+$("codeBack").onclick = () => { $("codeForm").hidden = true; $("loginForm").hidden = false; $("code").value = ""; };
 
 async function boot() {
   const { data: { session } } = await sb.auth.getSession();
