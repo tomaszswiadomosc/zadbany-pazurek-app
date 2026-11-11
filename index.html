@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Zadbany Pazurek</title>
+<meta name="description" content="Program 90 dni wychodzenia z obgryzania paznokci. Tomasz Świadomość.">
+<meta name="theme-color" content="#0E0E0E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Zadbany Pazurek">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <!-- Ładowanie -->
+  <section id="s-loading" class="stack"><p class="muted">Ładowanie…</p></section>
+
+  <!-- Logowanie -->
+  <section id="s-login" class="stack" hidden>
+    <div class="brand"><span class="logo-mark" role="img" aria-label="Zadbany Pazurek"><img class="tx" src="logo/napis-zadbany.png" alt=""><img class="ic" src="logo/pazurek-ikona.png" alt=""><img class="tx" src="logo/napis-pazurek.png" alt=""></span><span class="label">Program 90 dni · <span class="trainer"></span></span></div>
+    <h1>Przejmij kontrolę nad dłońmi w 90 dni</h1>
+    <p class="muted">Program wychodzenia z obgryzania paznokci oparty na badaniach. Codziennie kilka minut: zadanie, krótkie ćwiczenie, szybki zapis i SOS na trudne chwile.</p>
+    <form class="card" id="loginForm">
+      <label class="label" for="email">Twój e-mail</label>
+      <input type="email" id="email" required autocomplete="email" placeholder="np. anna@gmail.com">
+      <button class="btn" type="submit" id="loginBtn">Wyślij link do logowania</button>
+      <p class="small muted">Bez hasła. Dostaniesz e-mail z linkiem, który Cię zaloguje.</p>
+    </form>
+    <div class="note" id="sent" hidden>Sprawdź skrzynkę (także folder Oferty i Spam) i kliknij link w e-mailu. Otwórz go na tym samym telefonie.</div>
+    <footer>Program stworzony przez <span class="trainer"></span></footer>
+  </section>
+
+  <!-- Krok 1: dane i zgody -->
+  <section id="s-onboard" class="stack" hidden>
+    <div class="label">Krok 1 z 5</div>
+    <h1>Witaj w programie</h1>
+    <form class="card" id="onbForm">
+      <label class="label" for="fn">Imię</label><input type="text" id="fn" required autocomplete="given-name">
+      <label class="label" for="ln">Nazwisko</label><input type="text" id="ln" required autocomplete="family-name">
+      <label class="label" for="by">Rok urodzenia</label><input type="number" id="by" required min="1920" max="2030" inputmode="numeric" placeholder="np. 1995">
+      <p class="small muted" id="ageMsg">Program jest dla osób od 16 lat.</p>
+      <label class="check"><input type="checkbox" id="cCut"><span>Obgryzam też skórki wokół paznokci.</span></label>
+      <label class="check"><input type="checkbox" id="cTerms" required><span>Akceptuję <a id="termsLink" target="_blank" rel="noopener">regulamin</a> i <a id="privLink" target="_blank" rel="noopener">politykę prywatności</a>.</span></label>
+      <label class="check"><input type="checkbox" id="cHealth" required><span>Zgadzam się na przetwarzanie moich danych o nawyku (zapisy, emocje, ankiety postępu, plany, zdjęcia dłoni) w celu prowadzenia programu. Trener <span class="trainer"></span> widzi moje zapisy i odpowiedzi w ankietach, żeby omawiać postępy grupy na spotkaniach. Zgodę mogę wycofać w każdej chwili.</span></label>
+      <label class="check"><input type="checkbox" id="cCase"><span><b>Opcjonalnie:</b> zgadzam się, by zdjęcia moich dłoni (bez twarzy i danych) były pokazywane jako przykład efektów przed i po.</span></label>
+      <button class="btn" type="submit">Dalej</button>
+    </form>
+  </section>
+
+  <!-- Krok 2: bezpieczeństwo (też jako ekran informacyjny) -->
+  <section id="s-safety" class="stack" hidden>
+    <div class="label" id="safetyStep">Krok 2 z 5</div>
+    <h1>Kiedy iść do lekarza</h1>
+    <p class="muted">Aplikacja pomaga zmienić nawyk, ale nie leczy. Zgłoś się do specjalisty, jeśli zauważysz u siebie:</p>
+    <div class="card">
+      <div class="label">Lekarz rodzinny lub dermatolog</div>
+      <ul class="list">
+        <li>zaczerwienienie, obrzęk, ropę lub silny ból wokół paznokcia</li>
+        <li>gorączkę razem ze zmianami przy paznokciach</li>
+        <li>krwawienie, które nie ustaje</li>
+        <li>paznokieć, który zmienia kształt albo przestaje rosnąć</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="label">Psycholog lub psychiatra</div>
+      <ul class="list">
+        <li>silny lęk albo obniżony nastrój przez większość dni</li>
+        <li>natrętne myśli lub czynności, których nie da się powstrzymać</li>
+        <li>obgryzanie, które mimo programu narasta i przeszkadza w pracy lub relacjach</li>
+      </ul>
+      <p class="small muted">Do psychiatry w Polsce nie potrzebujesz skierowania.</p>
+    </div>
+    <div class="note warn"><b>Myśli o zrobieniu sobie krzywdy?</b> Zadzwoń teraz: <b>112</b> albo Centrum Wsparcia dla Osób w Kryzysie Psychicznym <b>800 70 2222</b> (całodobowo, bezpłatnie).</div>
+    <button class="btn" id="safetyOk">Rozumiem, chcę kontynuować</button>
+  </section>
+
+  <!-- Ankieta postępu (krok 3 oraz dni 14, 30, 60, 90) -->
+  <section id="s-survey" class="stack" hidden>
+    <div class="label" id="surveyStep">Krok 3 z 5</div>
+    <h1 id="surveyH">Gdzie jesteś na starcie</h1>
+    <p class="muted">Trzy pytania, 30 sekund. Powtórzysz je w dniu 14, 30, 60 i 90, żeby zobaczyć realną zmianę.</p>
+    <div class="card"><div class="label">Ile razy dziennie obgryzasz paznokcie (średnio z ostatniego tygodnia)?</div>
+      <div class="chips" id="svFreq"></div></div>
+    <div class="card"><div class="top"><div class="label">Jak silna jest zwykle chęć obgryzania?</div><b id="svUrgeV">5</b></div>
+      <input type="range" id="svUrge" min="0" max="10" value="5" aria-label="Siła chęci od 0 do 10">
+      <div class="top small muted"><span>0 · brak</span><span>10 · nie do wytrzymania</span></div></div>
+    <div class="card"><div class="top"><div class="label">Jak bardzo wstydzisz się swoich dłoni?</div><b id="svShameV">5</b></div>
+      <input type="range" id="svShame" min="0" max="10" value="5" aria-label="Wstyd od 0 do 10">
+      <div class="top small muted"><span>0 · wcale</span><span>10 · ukrywam dłonie</span></div></div>
+    <button class="btn" id="svSave">Zapisz odpowiedzi</button>
+    <button class="btn ghost" id="svLater" hidden>Później</button>
+  </section>
+
+  <!-- Krok 4: dodanie do ekranu -->
+  <section id="s-install" class="stack" hidden>
+    <div class="label">Krok 4 z 5</div>
+    <h1>Dodaj aplikację do ekranu telefonu</h1>
+    <p class="muted">Wtedy otwierasz ją jednym dotknięciem jak zwykłą aplikację. Na iPhonie tylko tak będą działać przypomnienia, które dodamy wkrótce.</p>
+    <div class="card"><ol class="list" id="installSteps"></ol></div>
+    <button class="btn" id="installDone">Gotowe, dalej</button>
+    <button class="btn ghost" id="installLater">Zrobię to później</button>
+  </section>
+
+  <!-- Krok 5: zdjęcie dnia 1 -->
+  <section id="s-photo1" class="stack" hidden>
+    <div class="label">Krok 5 z 5</div>
+    <h1>Zdjęcie na start</h1>
+    <p class="muted">Zrób zdjęcie obu dłoni od góry, palce lekko rozłożone, w dziennym świetle, bez twarzy. Co tydzień powtórzysz je w tym samym miejscu i świetle.</p>
+    <label class="ph" id="ph1big"><input type="file" accept="image/*" capture="environment" hidden id="file1">Dotknij, aby zrobić zdjęcie</label>
+    <button class="btn" id="photo1Next" disabled>Zaczynam program</button>
+    <button class="btn ghost" id="photo1Skip">Zrobię to później</button>
+  </section>
+
+  <!-- APLIKACJA: Dziś -->
+  <section id="v-dzis" class="stack" hidden>
+    <div><div class="label" id="weekLbl"></div><h1 id="dayH"></h1></div>
+    <div class="note" id="weekBanner" hidden></div>
+    <div class="note warn" id="surveyBanner" hidden><b>Czas na ankietę postępu.</b> 3 pytania, 30 sekund. <a href="#" id="surveyGo">Wypełnij teraz</a></div>
+    <div class="note warn" id="photoBanner" hidden>Czas na cotygodniowe zdjęcie dłoni. <a href="#" data-go="postep">Zrób je w zakładce Postęp</a>.</div>
+    <div class="card">
+      <div class="top"><span class="small muted" id="phaseLbl"></span><span class="small muted" id="pct"></span></div>
+      <div class="bar"><span id="progBar"></span></div>
+    </div>
+
+    <div class="card">
+      <div class="label" id="taskLbl">Zadanie tygodnia · odhacz dzisiaj</div>
+      <label class="task"><input type="checkbox" id="taskDone"><span><b id="taskT"></b><br><span class="small muted" id="taskD"></span></span></label>
+    </div>
+
+    <div class="card" id="drillCard">
+      <div class="top"><div class="label">Ćwiczenie dnia · na sucho</div><b id="drillCount"></b></div>
+      <div class="dots" id="drillDots"></div>
+      <div id="drillList" class="stack" style="gap:10px"></div>
+      <p class="small muted">Rób je 3 razy dziennie, najlepiej wtedy, gdy NIE masz ochoty gryźć. Tak nowy ruch staje się automatyczny.</p>
+    </div>
+
+    <div class="card" id="planCard">
+      <div class="top"><div class="label">Mój plan „jeśli… to…”</div><a href="#" id="planAdd" class="small">Dodaj plan</a></div>
+      <div id="planList" class="stack" style="gap:8px"></div>
+    </div>
+
+    <div class="card" id="supportCard" hidden>
+      <div class="label">Osoba wspierająca</div>
+      <p class="small">Wybierz jedną bliską osobę i wyślij jej tę wiadomość. Wsparcie bliskich to jeden z trzech filarów metody HRT.</p>
+      <label class="label" for="supName">Imię tej osoby</label>
+      <input type="text" id="supName" placeholder="np. Kasia">
+      <p class="msg" id="supMsg"></p>
+      <div class="row"><button class="btn ghost" id="supCopy">Kopiuj wiadomość</button><button class="btn" id="supDone">Wysłałem/am</button></div>
+      <a class="small" id="supSkool" target="_blank" rel="noopener">Nie masz kogo poprosić? Znajdź parę w społeczności</a>
+    </div>
+
+    <div class="card" id="eveCard" hidden>
+      <div class="label">Podsumowanie dnia · 1 minuta</div>
+      <p class="small">Jak dziś poszło z dłońmi?</p>
+      <div class="chips" data-group="rating" data-single id="eveRating">
+        <button class="chip" data-v="1">Bardzo źle</button><button class="chip" data-v="2">Słabo</button><button class="chip" data-v="3">Średnio</button><button class="chip" data-v="4">Dobrze</button><button class="chip" data-v="5">Świetnie</button></div>
+      <p class="small">Co dziś pomogło?</p>
+      <div class="chips" data-group="eveHelp" id="eveHelp"></div>
+      <button class="btn" id="eveSave">Zapisz podsumowanie</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b id="sBit">0</b><span class="small muted">obgryzione dziś</span></div>
+      <div class="stat"><b id="sRes">0</b><span class="small muted">powstrzymane dziś</span></div>
+      <div class="stat"><b id="sWeek">0</b><span class="small muted">powstrzymane w 7 dni</span></div>
+    </div>
+    <div class="row"><button class="btn" data-go="zapisz">Zapisz moment</button><button class="btn sos" data-go="sos">SOS</button></div>
+
+    <div class="note" id="tip"></div>
+    <div class="note" id="installHint" hidden><b>Dodaj aplikację do ekranu telefonu.</b><br><span id="installText"></span></div>
+    <a class="btn ghost" id="skoolLink" target="_blank" rel="noopener">Społeczność i cotygodniowe spotkania</a>
+  </section>
+
+  <!-- APLIKACJA: kreator planu „jeśli… to…” -->
+  <section id="v-plan" class="stack" hidden>
+    <h1>Plan „jeśli… to…”</h1>
+    <p class="muted small">Jeden konkretny plan działa lepiej niż trzy ogólne. Opisz sytuację, w której obgryzasz najczęściej, i co zrobisz zamiast tego.</p>
+    <div class="note" id="planHint" hidden></div>
+    <div class="card">
+      <label class="label" for="pSit">Gdy…</label>
+      <input type="text" id="pSit" placeholder="np. siedzę wieczorem na kanapie i czuję nudę">
+      <div class="chips" id="pSitChips"></div>
+    </div>
+    <div class="card">
+      <label class="label" for="pAct">…wtedy…</label>
+      <input type="text" id="pAct" placeholder="np. krążę palcami po wierzchu dłoni">
+      <div class="chips" id="pActChips"></div>
+      <p class="small muted">Zawsze pisz, co ZROBISZ. Plan „nie będę obgryzać” przypomina o nawyku i działa odwrotnie.</p>
+    </div>
+    <div class="card"><div class="label">Twój plan</div><p class="plan" id="pPreview">Gdy …, wtedy …</p></div>
+    <div class="row"><button class="btn ghost" data-go="dzis">Anuluj</button><button class="btn" id="pSave">Zapisz plan</button></div>
+  </section>
+
+  <!-- APLIKACJA: Zapisz -->
+  <section id="v-zapisz" class="stack" hidden>
+    <h1>Zapisz moment</h1>
+    <p class="muted small">Bez oceniania. Każdy zapis pomaga Ci zobaczyć Twój wzorzec.</p>
+    <div class="card"><div class="label">Co się stało?</div>
+      <div class="chips" data-group="kind" data-single><button class="chip" data-v="bit">Obgryzłem/am</button><button class="chip" data-v="res">Powstrzymałem/am się</button></div></div>
+    <div class="card"><div class="label">Kiedy to zauważyłeś/aś?</div>
+      <div class="chips" data-group="aware" data-single><button class="chip" data-v="przed">Zanim zacząłem</button><button class="chip" data-v="w trakcie">W trakcie</button><button class="chip" data-v="po">Dopiero po fakcie</button></div></div>
+    <div class="card"><div class="label">Co poczułeś/aś w palcach?</div><div class="chips" data-group="fingers" id="chipsFingers"></div></div>
+    <div class="card"><div class="label">Co czułeś/aś tuż przed?</div><div class="chips" data-group="emo" id="chipsEmo"></div></div>
+    <div class="card"><div class="label">Gdzie byłeś/aś, co robiłeś/aś?</div><div class="chips" data-group="place" data-single id="chipsPlace"></div></div>
+    <div class="card"><div class="top"><div class="label">Siła impulsu</div><b id="urgeV">5</b></div>
+      <input type="range" id="urge" min="0" max="10" value="5" aria-label="Siła impulsu od 0 do 10">
+      <div class="top small muted"><span>0 · brak</span><span>10 · nie do wytrzymania</span></div></div>
+    <div class="card"><div class="label">Co pomogło lub mogło pomóc?</div><div class="chips" data-group="help" id="chipsHelp"></div></div>
+    <button class="btn" id="save">Zapisz</button>
+  </section>
+
+  <!-- APLIKACJA: po poślizgu -->
+  <section id="v-poslizg" class="stack" hidden>
+    <h1>To dane, nie porażka</h1>
+    <p>Poślizgi zdarzają się prawie każdemu. Twój program toczy się dalej, nic się nie zeruje. Liczy się, jak szybko wrócisz.</p>
+    <div class="note">Teraz: spiłuj nierówne brzegi, żeby nie kusiły, i umyj ręce. Potem wróć do tego, co robiłeś/aś.</div>
+    <div class="card"><div class="label">Co zrobisz inaczej następnym razem w takiej sytuacji?</div>
+      <div class="chips" data-group="next" data-single id="chipsNext"></div>
+      <input type="text" id="nextOwn" placeholder="albo napisz po swojemu"></div>
+    <div class="row"><button class="btn ghost" id="slipSkip">Pomiń</button><button class="btn" id="slipSave">Zapisz i wracam</button></div>
+  </section>
+
+  <!-- APLIKACJA: SOS -->
+  <section id="v-sos" class="stack" hidden>
+    <h1 id="sosH">SOS</h1>
+    <div class="note" id="sosPlan" hidden></div>
+    <div class="seg" role="tablist" id="sosSeg"></div>
+    <p class="muted small" id="sosIntro"></p>
+    <div class="card breath">
+      <div class="box" id="box"><div class="dot" id="dot"></div><div class="count"><b id="cnt">4</b><span id="phase" class="muted">Gotowy/a?</span></div></div>
+      <div class="timer" id="timerBox" hidden><b id="tCnt">30</b><p id="tText"></p><div class="bar"><span id="tBar"></span></div></div>
+      <div class="small muted" id="round"></div>
+      <button class="btn sos" id="sosBtn" style="width:100%">Zacznij</button>
+    </div>
+    <div class="card" id="sosEnd" hidden>
+      <h2 id="sosEndH">Jak teraz impuls?</h2>
+      <div class="row" id="sosEndBtns"><button class="btn" id="sosOk">Minął, zapisz jako powstrzymany</button><button class="btn ghost" id="sosAgain">Jeszcze raz</button></div>
+    </div>
+    <p class="small muted">Na iPhonie wibracja nie działa. Prowadzi Cię licznik.</p>
+  </section>
+
+  <!-- APLIKACJA: Postęp -->
+  <section id="v-postep" class="stack" hidden>
+    <h1>Twój postęp</h1>
+    <div class="card"><div class="label">Zdjęcia dłoni (bez twarzy)</div>
+      <div class="photos">
+        <div class="ph" id="phFirst">Dzień 1<br>brak zdjęcia</div>
+        <label class="ph" id="phLast"><input type="file" accept="image/*" capture="environment" hidden id="fileN">Dodaj dzisiejsze zdjęcie</label>
+      </div>
+      <span class="small muted">Co 7 dni, w tym samym miejscu i świetle, obie dłonie od góry. Paznokieć odrasta ok. 3 mm miesięcznie.</span></div>
+    <div class="card"><div class="label">Ankieta: start i teraz</div><div id="svTable"></div></div>
+    <div class="card"><div class="label">Ostatnie 14 dni</div><div class="bars" id="bars"></div>
+      <div class="legend"><span class="lb">Obgryzione</span><span class="lr">Powstrzymane</span></div></div>
+    <div class="card"><div class="label">Twój wzorzec</div><p id="insight"></p></div>
+    <div class="card"><div class="label">Najczęstsze emocje</div><div class="stack" id="emoBars" style="gap:8px"></div></div>
+    <div class="card"><div class="label">Co czujesz w palcach</div><div class="stack" id="fingerBars" style="gap:8px"></div></div>
+    <div class="card"><div class="label">Pora dnia</div><div class="stack" id="timeBars" style="gap:8px"></div></div>
+    <div class="card"><div class="label">Świadomość i ćwiczenia</div><p id="aware"></p><p id="drillSum" class="small muted"></p></div>
+    <a href="#" class="small" id="safetyInfo">Kiedy iść do lekarza</a>
+    <button class="btn ghost" id="logout">Wyloguj</button>
+    <footer><span class="appname"></span> · program stworzony przez <span class="trainer"></span> · narzędzie wspierające, nie zastępuje terapii</footer>
+  </section>
+</div>
+
+<nav id="nav" hidden><div class="in">
+  <button class="tab" data-go="dzis"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9H5v-9"/></svg>Dziś</button>
+  <button class="tab" data-go="zapisz"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Zapisz</button>
+  <button class="tab s" data-go="sos"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>SOS</button>
+  <button class="tab" data-go="postep"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Postęp</button>
+</div></nav>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="plan.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

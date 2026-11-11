@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Panel trenera · Zadbany Pazurek</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app wide">
+  <section id="a-login" class="stack" hidden style="max-width:440px">
+    <h1>Panel trenera</h1>
+    <form class="card" id="aLogin">
+      <label class="label" for="aEmail">E-mail trenera</label>
+      <input type="email" id="aEmail" required autocomplete="email">
+      <button class="btn" type="submit">Wyślij link do logowania</button>
+    </form>
+    <div class="note" id="aSent" hidden>Sprawdź skrzynkę i kliknij link.</div>
+  </section>
+
+  <section id="a-denied" class="stack" hidden style="max-width:440px">
+    <h1>Brak dostępu</h1>
+    <p class="muted">To konto nie ma uprawnień trenera. Instrukcja nadania uprawnień jest w pliku WDROZENIE.md, krok 7.</p>
+    <button class="btn ghost" id="aOut1">Wyloguj</button>
+  </section>
+
+  <section id="a-main" class="stack" hidden>
+    <div class="top"><div><div class="label">Zadbany Pazurek · Program 90 dni</div><h1>Panel trenera</h1></div>
+      <div class="row" style="flex:none"><select id="range" class="chip" aria-label="Zakres czasu"><option value="7">Ostatnie 7 dni</option><option value="30">Ostatnie 30 dni</option><option value="90">Ostatnie 90 dni</option></select>
+      <button class="btn ghost" id="aOut2" style="flex:none">Wyloguj</button></div></div>
+
+    <div class="stats four">
+      <div class="stat card"><b id="kUsers">0</b><span class="small muted">uczestników</span></div>
+      <div class="stat card"><b id="kActive">0</b><span class="small muted">aktywnych w zakresie</span></div>
+      <div class="stat card"><b id="kBit">0</b><span class="small muted">obgryzień</span></div>
+      <div class="stat card"><b id="kRes">0</b><span class="small muted">powstrzymań</span></div>
+      <div class="stat card"><b id="kAware">0%</b><span class="small muted">zauważonych przed / w trakcie</span></div>
+      <div class="stat card"><b id="kDrill">0</b><span class="small muted">ćwiczeń na sucho na osobę</span></div>
+    </div>
+
+    <div class="card"><div class="label">Wyniki ankiet (start → ostatnia odpowiedź, wszystkie osoby z co najmniej 2 ankietami)</div>
+      <div class="stats four">
+        <div class="stat"><b id="sN">0</b><span class="small muted">osób z wynikiem</span></div>
+        <div class="stat"><b id="sImp">–</b><span class="small muted">z poprawą</span></div>
+        <div class="stat"><b id="sUrge">–</b><span class="small muted">średnia zmiana chęci (0–10)</span></div>
+        <div class="stat"><b id="sShame">–</b><span class="small muted">średnia zmiana wstydu (0–10)</span></div>
+        <div class="stat"><b id="sFreq">–</b><span class="small muted">mniej obgryzania dziennie</span></div>
+      </div>
+      <p class="small muted">„Z poprawą” = mniejsza częstość obgryzania albo chęć niższa o co najmniej 2 punkty. To dane do case study na landing: „X z Y osób…”.</p></div>
+
+    <div class="card"><div class="label">Wnioski na najbliższy call</div><p id="summary"></p></div>
+
+    <div class="grid2">
+      <div class="card"><div class="label">Emocje przed obgryzieniem</div><div class="stack" id="gEmo" style="gap:8px"></div></div>
+      <div class="card"><div class="label">Miejsca</div><div class="stack" id="gPlace" style="gap:8px"></div></div>
+      <div class="card"><div class="label">Pora dnia</div><div class="stack" id="gTime" style="gap:8px"></div></div>
+      <div class="card"><div class="label">Co pomaga przy powstrzymaniu</div><div class="stack" id="gHelp" style="gap:8px"></div></div>
+    </div>
+
+    <div class="card"><div class="label">Uczestnicy</div>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Imię i nazwisko</th><th>Dzień</th><th>Ostatni zapis</th><th>Obgryzienia</th><th>Powstrzymania</th><th>Świadomość</th><th>Ćwiczenia</th><th>Chęć start → teraz</th><th>Plan</th><th>Wsparcie</th><th>Zadania</th><th>Case study</th></tr></thead>
+        <tbody id="tbl"></tbody></table></div>
+      <p class="small muted">Liczby w tabeli dotyczą wybranego zakresu czasu. „Zadania” to odhaczone dni w całym programie.</p></div>
+
+    <div class="card"><div class="label">Case study przed / po (tylko osoby ze zgodą)</div><div class="grid2" id="cases"></div></div>
+  </section>
+</div>
+<div class="toast" id="toast" hidden></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script src="plan.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>
