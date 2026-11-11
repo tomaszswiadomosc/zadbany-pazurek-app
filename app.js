@@ -170,15 +170,27 @@ $("installDone").onclick = async () => {
 $("installLater").onclick = () => { ls.set("install_seen", "1"); nextStep(); };
 
 // ---------- Krok 5: zdjęcie dnia 1 ----------
-let photo1Blob = null;
-$("file1").onchange = async e => {
-  const f = e.target.files[0]; if (!f) return;
-  photo1Blob = await compress(f);
-  $("ph1big").querySelectorAll("img").forEach(i => i.remove());
-  $("ph1big").insertAdjacentHTML("beforeend", `<img alt="Zdjęcie dłoni na start" src="${URL.createObjectURL(photo1Blob)}">`);
-  $("photo1Next").disabled = false;
+const photo1 = { a: null, b: null };
+function pickPhoto1(input, box, key, alt) {
+  $(input).onchange = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    photo1[key] = await compress(f);
+    $(box).querySelectorAll("img").forEach(i => i.remove());
+    $(box).insertAdjacentHTML("beforeend", `<img alt="${alt}" src="${URL.createObjectURL(photo1[key])}">`);
+    $("photo1Next").disabled = false;
+  };
+}
+pickPhoto1("file1", "ph1big", "a", "Zdjęcie dłoni na start");
+pickPhoto1("file1b", "ph1b", "b", "Drugie zdjęcie na start");
+$("photo1Next").onclick = async () => {
+  $("photo1Next").disabled = true;
+  for (const k of ["a", "b"]) {
+    if (!photo1[k]) continue;
+    if (!(await uploadPhoto(photo1[k]))) { $("photo1Next").disabled = false; return; }
+    photo1[k] = null;
+  }
+  go("dzis");
 };
-$("photo1Next").onclick = async () => { $("photo1Next").disabled = true; if (await uploadPhoto(photo1Blob)) go("dzis"); else $("photo1Next").disabled = false; };
 $("photo1Skip").onclick = () => { ls.set("skip_photo1", "1"); go("dzis"); };
 
 // ---------- Dane ----------
@@ -527,7 +539,12 @@ async function renderPostep() {
     $("svTable").innerHTML = `<div class="tablewrap"><table><thead><tr><th>Kiedy</th><th>Dziennie</th><th>Chęć</th><th>Wstyd</th></tr></thead><tbody>${rows}</tbody></table></div>${change}`;
   }
 
-  const first = S.photos[0], last = S.photos.length > 1 ? S.photos.at(-1) : null;
+  const first = S.photos[0], later = S.photos.filter(p => first && p.day > first.day), last = later.length ? later.at(-1) : null;
+  $("phAllWrap").hidden = S.photos.length < 2;
+  if (S.photos.length >= 2) {
+    const { data } = await sb.storage.from("photos").createSignedUrls(S.photos.map(p => p.path), 3600);
+    $("phAll").innerHTML = S.photos.map((p, i) => `<figure><img alt="Dłonie, dzień ${p.day}" src="${(data && data[i] && data[i].signedUrl) || ""}"><figcaption>Dzień ${p.day}</figcaption></figure>`).join("");
+  }
   if (first) { const u = await signed(first.path); if (u) $("phFirst").innerHTML = `<img alt="Dłonie, dzień ${first.day}" src="${u}">`; }
   if (last) { const u = await signed(last.path); if (u) { $("phLast").querySelectorAll("img").forEach(i => i.remove()); $("phLast").insertAdjacentHTML("beforeend", `<img alt="Dłonie, dzień ${last.day}" src="${u}">`); } }
 }

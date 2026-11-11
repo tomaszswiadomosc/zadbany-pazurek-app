@@ -104,7 +104,7 @@ function renderSurveys() {
 
 async function renderCases() {
   const ok = D.profiles.filter(p => p.consent_case_study);
-  const items = ok.map(p => ({ p, ph: D.photos.filter(x => x.user_id === p.id) })).filter(x => x.ph.length >= 2);
+  const items = ok.map(p => ({ p, ph: D.photos.filter(x => x.user_id === p.id) })).filter(x => x.ph.length >= 2 && x.ph.at(-1).day > x.ph[0].day);
   if (!items.length) { $("cases").innerHTML = '<p class="small muted">Pojawią się tu osoby ze zgodą, które mają co najmniej 2 zdjęcia.</p>'; return; }
   const cards = await Promise.all(items.map(async ({ p, ph }) => {
     const [a, b] = [ph[0], ph.at(-1)];

@@ -117,7 +117,10 @@
     <div class="label">Krok 5 z 5</div>
     <h1>Zdjęcie na start</h1>
     <p class="muted">Zrób zdjęcie obu dłoni od góry, palce lekko rozłożone, w dziennym świetle, bez twarzy. Co tydzień powtórzysz je w tym samym miejscu i świetle.</p>
-    <label class="ph" id="ph1big"><input type="file" accept="image/*" capture="environment" hidden id="file1">Dotknij, aby zrobić zdjęcie</label>
+    <div class="photos">
+      <label class="ph" id="ph1big"><input type="file" accept="image/*" capture="environment" hidden id="file1">Zdjęcie 1<br>obie dłonie od góry</label>
+      <label class="ph" id="ph1b"><input type="file" accept="image/*" capture="environment" hidden id="file1b">Zdjęcie 2 (opcjonalnie)<br>np. z bliska</label>
+    </div>
     <button class="btn" id="photo1Next" disabled>Zaczynam program</button>
     <button class="btn ghost" id="photo1Skip">Zrobię to później</button>
   </section>
@@ -258,7 +261,8 @@
         <div class="ph" id="phFirst">Dzień 1<br>brak zdjęcia</div>
         <label class="ph" id="phLast"><input type="file" accept="image/*" capture="environment" hidden id="fileN">Dodaj dzisiejsze zdjęcie</label>
       </div>
-      <span class="small muted">Co 7 dni, w tym samym miejscu i świetle, obie dłonie od góry. Paznokieć odrasta ok. 3 mm miesięcznie.</span></div>
+      <span class="small muted">Co 7 dni, w tym samym miejscu i świetle, obie dłonie od góry. Paznokieć odrasta ok. 3 mm miesięcznie.</span>
+      <div id="phAllWrap" hidden><div class="label" style="margin-top:12px">Wszystkie zdjęcia</div><div class="thumbs" id="phAll"></div></div></div>
     <div class="card"><div class="label">Ankieta: start i teraz</div><div id="svTable"></div></div>
     <div class="card"><div class="label">Ostatnie 14 dni</div><div class="bars" id="bars"></div>
       <div class="legend"><span class="lb">Obgryzione</span><span class="lr">Powstrzymane</span></div></div>
