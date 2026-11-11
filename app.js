@@ -11,7 +11,6 @@ const ls = { get(k) { try { return localStorage.getItem("zp_" + k); } catch (e) 
 document.querySelectorAll(".trainer").forEach(e => e.textContent = C.TRAINER);
 document.querySelectorAll(".appname").forEach(e => e.textContent = C.APP_NAME);
 $("termsLink").href = C.TERMS_URL; $("privLink").href = C.PRIVACY_URL;
-$("skoolLink").href = C.SKOOL_URL; $("supSkool").href = C.SKOOL_URL;
 if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
 let installPrompt = null;
 W.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; });
@@ -203,9 +202,11 @@ async function loadData() {
     sb.from("drills").select("*").eq("user_id", uid).gte("created_at", since).order("created_at"),
     sb.from("surveys").select("*").eq("user_id", uid).order("checkpoint"),
     sb.from("if_then_plans").select("*").eq("user_id", uid).order("created_at"),
-    sb.from("day_notes").select("*").eq("user_id", uid).order("day")
+    sb.from("day_notes").select("*").eq("user_id", uid).order("day"),
+    sb.from("spotkania").select("*").eq("id", 1).maybeSingle()
   ]);
-  const err = r.find(x => x.error); if (err) return fail(err.error);
+  S.meet = r[7].error ? null : r[7].data;
+  const err = r.slice(0, 7).find(x => x.error); if (err) return fail(err.error);
   const withT = a => a.map(e => ({ ...e, t: new Date(e.created_at).getTime() }));
   S.ev = withT(r[0].data); S.tasks = new Set(r[1].data.map(x => x.day)); S.photos = r[2].data;
   S.drills = withT(r[3].data); S.surveys = r[4].data; S.plans = r[5].data; S.notes = r[6].data;
@@ -284,7 +285,7 @@ function renderDzis() {
   const lastPhoto = S.photos.at(-1), every = wi.maint ? 30 : 7;
   $("photoBanner").hidden = !(d >= 7 && (!lastPhoto || d - lastPhoto.day >= every));
 
-  renderDrills(wi); renderPlans(wi); renderSupport(wi); renderEvening(d);
+  renderDrills(wi); renderPlans(wi); renderSupport(wi); renderEvening(d); renderMeet();
 
   const today = S.ev.filter(e => sameDay(e.t, Date.now()));
   $("sBit").textContent = today.filter(e => e.kind === "bit").length;
@@ -296,6 +297,39 @@ function renderDzis() {
   $("installText").textContent = isIOS ? "W Safari dotknij „Udostępnij”, potem „Do ekranu początkowego”." : "W Chrome dotknij menu ⋮, potem „Zainstaluj aplikację” lub „Dodaj do ekranu głównego”.";
 }
 
+// ---------- Spotkanie na żywo (czas polski) ----------
+function warsawNow() {
+  const o = {}; new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Warsaw", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", hourCycle: "h23" })
+    .formatToParts(new Date()).forEach(x => o[x.type] = x.value);
+  return Date.UTC(+o.year, o.month - 1, +o.day, +o.hour, +o.minute); // „zegar ścienny” Warszawy zapisany jako UTC
+}
+function nextMeet(m) {
+  if (!m || !m.dzien || !m.godzina || !m.link) return null;
+  const now = warsawNow(), [h, mi] = m.godzina.split(":").map(Number), dur = (m.czas_min || 60) * 6e4;
+  const today = Math.floor(now / DAY) * DAY;
+  let cancelled = null;
+  for (let k = 0; k < 21; k++) {
+    const day = today + k * DAY, dow = (new Date(day).getUTCDay() + 6) % 7 + 1;
+    if (dow !== m.dzien) continue;
+    const start = day + (h * 60 + mi) * 6e4;
+    if (start + dur < now) continue;
+    if (m.odwolane && new Date(day).toISOString().slice(0, 10) === m.odwolane) { cancelled = day; continue; }
+    return { start, k, live: now >= start - 10 * 6e4 && now <= start + dur, cancelled };
+  }
+  return null;
+}
+function renderMeet() {
+  const n = nextMeet(S.meet); $("meetCard").hidden = !n; if (!n) return;
+  const f = (t, o) => new Date(t).toLocaleDateString("pl-PL", { timeZone: "UTC", ...o });
+  const dayTxt = n.k === 0 ? "Dziś" : n.k === 1 ? "Jutro" : f(n.start, { weekday: "long" }).replace(/^./, c => c.toUpperCase());
+  const hm = new Date(n.start).toISOString().slice(11, 16);
+  $("meetWhen").innerHTML = n.live ? `<b>Trwa teraz</b> · start ${hm}` : `<b>${dayTxt}, ${f(n.start, { day: "numeric", month: "long" })}</b> · godz. ${hm}`;
+  if (n.cancelled) $("meetWhen").insertAdjacentHTML("beforeend", `<br><span class="small muted">Spotkanie ${f(n.cancelled, { day: "numeric", month: "long" })} jest odwołane.</span>`);
+  $("meetTopic").hidden = !S.meet.temat; $("meetTopic").textContent = S.meet.temat ? "Temat: " + S.meet.temat : "";
+  $("meetBtn").href = S.meet.link;
+  $("meetCard").classList.toggle("live", n.live);
+}
+
 function renderDrills(wi) {
   const kinds = W.P90_drillKinds(wi.week), n = drillsToday().filter(x => x.kind === "dotyk" || x.kind === "decoupling").length, max = W.P90_DRILLS_PER_DAY;
   $("drillCount").textContent = `${Math.min(n, max)} z ${max}`;
@@ -303,7 +337,7 @@ function renderDrills(wi) {
   $("drillList").innerHTML = kinds.map(k => {
     const dr = W.P90_DRILLS[k];
     const btns = k === "dotyk"
-      ? `<button class="btn" type="button" data-drill-guide="dotyk">Prowadź mnie (90 s)</button><button class="btn ghost" type="button" data-drill="dotyk">Zrobiłem/am sam(a)</button>`
+      ? `<button class="btn" type="button" data-drill-guide="dotyk">Prowadź mnie<span class="btn-sub">90 s</span></button><button class="btn ghost" type="button" data-drill="dotyk">Zrobiłem/am sam(a)</button>`
       : `<button class="btn" type="button" data-drill="decoupling">Zrobiłem/am serię 15 razy</button>`;
     return `<div class="stack" style="gap:8px"><b>${esc(dr.name)}: ${esc(dr.short)}</b><details><summary class="small">Jak to zrobić</summary><p class="small">${esc(dr.how)}</p></details><div class="row">${btns}</div></div>`;
   }).join("");
@@ -505,7 +539,52 @@ function hbars(el, obj) {
   const ent = Object.entries(obj).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 5), max = Math.max(1, ...ent.map(x => x[1]));
   el.innerHTML = ent.map(([k, v]) => `<div class="hbar"><span>${esc(k)}</span><div class="t"><span style="width:${v / max * 100}%"></span></div><b>${v}</b></div>`).join("") || '<span class="small muted">Brak danych</span>';
 }
+// ---------- Kalendarz 90 dni ----------
+function dayOfTs(t) { const s = new Date(S.profile.start_date + "T00:00:00"), d = new Date(t); d.setHours(0, 0, 0, 0); return Math.round((d - s) / DAY) + 1; }
+function renderCal() {
+  const today = dayRaw(), info = {};
+  const add = (d, k) => { if (d < 1 || d > 90) return; (info[d] = info[d] || { bit: 0, res: 0, drill: 0, task: 0, note: 0, act: 0 }); info[d][k]++; info[d].act++; };
+  S.ev.forEach(e => add(dayOfTs(e.t), e.kind === "bit" ? "bit" : "res"));
+  S.drills.forEach(e => add(dayOfTs(e.t), "drill"));
+  S.tasks.forEach(d => add(d, "task"));
+  S.notes.forEach(n => add(n.day, "note"));
+  const state = d => d > today ? "fut" : !info[d] ? "none" : info[d].bit ? "bad" : "ok";
+  const fmt = d => new Date(new Date(S.profile.start_date + "T00:00:00").getTime() + (d - 1) * DAY + 3e6).toLocaleDateString("pl-PL", { day: "numeric", month: "short" });
+  const phases = [["Faza 1 · Świadomość", 1, 4], ["Faza 2 · Zastępowanie", 5, 8], ["Faza 3 · Utrwalenie", 9, 13]];
+  let html = "";
+  for (const [name, w1, w2] of phases) {
+    html += `<div class="cal-phase">${name}</div>`;
+    for (let w = w1; w <= w2; w++) {
+      html += `<div class="cal-row"><span class="cal-w">T${w}</span>`;
+      for (let i = 1; i <= 7; i++) {
+        const d = (w - 1) * 7 + i;
+        if (d > 90) { html += `<span class="cal-x"></span>`; continue; }
+        const st = state(d);
+        html += `<button type="button" class="cal-d c-${st}${d === today ? " is-today" : ""}" data-d="${d}" aria-label="Dzień ${d}">${d === 90 ? "🏁" : d}</button>`;
+      }
+      html += `</div>`;
+    }
+  }
+  $("cal").innerHTML = html;
+  const wi = weekInfo(), cur = Math.min(today, 90);
+  $("calDay").textContent = today > 90 ? "Program ukończony" : `Dzień ${today} z 90`;
+  $("calStage").textContent = today > 90 ? "Jesteś w trybie utrzymania. Brawo za 90 dni." : `${W.P90_PLAN[wi.week - 1].phase} · tydzień ${wi.week}: ${W.P90_PLAN[wi.week - 1].title}`;
+  const show1 = d => {
+    const x = info[d], st = state(d);
+    $("cal").querySelectorAll(".cal-d").forEach(b => b.classList.toggle("sel", +b.dataset.d === d));
+    $("calInfo").textContent = st === "fut" ? `Dzień ${d} (${fmt(d)}) jeszcze przed Tobą.` :
+      !x ? `Dzień ${d} (${fmt(d)}): brak zapisów.` :
+      `Dzień ${d} (${fmt(d)}): obgryzienia ${x.bit}, powstrzymania ${x.res}, ćwiczenia ${x.drill}${x.task ? ", zadanie odhaczone" : ""}.`;
+  };
+  $("cal").querySelectorAll(".cal-d").forEach(b => b.onclick = () => show1(+b.dataset.d));
+  show1(cur);
+  let ok = 0, best = 0, run = 0;
+  for (let d = 1; d <= cur; d++) { if (state(d) === "ok") { ok++; run++; best = Math.max(best, run); } else run = 0; }
+  $("calSum").textContent = `Dni bez obgryzania: ${ok} · najdłuższa seria: ${best} ${best === 1 ? "dzień" : "dni"} · obecna seria: ${run} ${run === 1 ? "dzień" : "dni"}`;
+}
+
 async function renderPostep() {
+  renderCal();
   const bit = S.ev.filter(e => e.kind === "bit"), now = new Date(); now.setHours(0, 0, 0, 0);
   let mx = 1; const days = [];
   for (let i = 13; i >= 0; i--) { const d = now.getTime() - i * DAY, b = bit.filter(e => sameDay(e.t, d)).length, r = S.ev.filter(e => e.kind === "res" && sameDay(e.t, d)).length; days.push([b, r]); mx = Math.max(mx, b + r); }

@@ -50,7 +50,24 @@
       </div>
       <p class="small muted">„Z poprawą” = mniejsza częstość obgryzania albo chęć niższa o co najmniej 2 punkty. To dane do case study na landing: „X z Y osób…”.</p></div>
 
-    <div class="card"><div class="label">Wnioski na najbliższy call</div><p id="summary"></p></div>
+    <div class="card"><div class="label">Wnioski na najbliższe spotkanie</div><p id="summary"></p></div>
+
+    <form class="card stack" id="meetForm" style="gap:10px">
+      <div class="label">Spotkania na żywo (Google Meet) · widzą je uczestnicy w aplikacji</div>
+      <div class="grid2">
+        <div><label class="label" for="mDay">Dzień tygodnia</label>
+          <select id="mDay"><option value="">— brak spotkań —</option><option value="1">Poniedziałek</option><option value="2">Wtorek</option><option value="3">Środa</option><option value="4">Czwartek</option><option value="5">Piątek</option><option value="6">Sobota</option><option value="7">Niedziela</option></select></div>
+        <div><label class="label" for="mTime">Godzina (czas polski)</label><input type="time" id="mTime"></div>
+        <div><label class="label" for="mDur">Ile trwa (minuty)</label><input type="number" id="mDur" min="15" max="240" step="5" value="60"></div>
+        <div><label class="label" for="mOff">Odwołaj spotkanie w dniu (opcjonalnie)</label><input type="date" id="mOff"></div>
+      </div>
+      <label class="label" for="mLink">Link do Google Meet (stały link spotkania cyklicznego)</label>
+      <input type="url" id="mLink" placeholder="https://meet.google.com/abc-defg-hij">
+      <label class="label" for="mTopic">Temat najbliższego spotkania (opcjonalnie)</label>
+      <input type="text" id="mTopic" maxlength="200" placeholder="np. Wieczorne obgryzanie przy serialu">
+      <button class="btn" type="submit" id="mSave">Zapisz spotkanie</button>
+      <p class="small muted">Aplikacja sama pokazuje najbliższy termin, a w trakcie spotkania napis „Trwa teraz”. Jeśli wybierzesz „brak spotkań”, karta zniknie z aplikacji.</p>
+    </form>
 
     <div class="grid2">
       <div class="card"><div class="label">Emocje przed obgryzieniem</div><div class="stack" id="gEmo" style="gap:8px"></div></div>

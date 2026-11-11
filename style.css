@@ -35,18 +35,18 @@ p{margin:0}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 
 /* Przyciski: główny świeci jak neon */
-.btn{font:700 17px var(--display);letter-spacing:.08em;text-transform:uppercase;border:1px solid #FFB98C;border-radius:4px;padding:14px 16px;cursor:pointer;flex:1;text-align:center;text-decoration:none;color:var(--on-accent);background:linear-gradient(180deg,#FFA165 0%,var(--accent) 55%,#E9763A 100%);box-shadow:var(--glow);animation:neon 2.6s ease-in-out infinite}
-.btn:hover{box-shadow:var(--glow-strong);animation:none}
+.btn{font:700 17px var(--display);letter-spacing:.08em;text-transform:uppercase;border:1px solid #FFB98C;border-radius:4px;padding:14px 16px;cursor:pointer;flex:1;text-align:center;text-decoration:none;color:var(--on-accent);background:linear-gradient(180deg,#FFA165 0%,var(--accent) 55%,#E9763A 100%);box-shadow:0 0 12px rgba(242,138,75,.25)}
+.btn:hover{box-shadow:0 0 16px rgba(242,138,75,.4)}
 .btn:disabled{opacity:.5;cursor:default;animation:none}
 .btn.ghost{background:transparent;color:var(--fg);border:1.5px solid #5A5A5A;box-shadow:none;animation:none}
 .btn.ghost:hover{border-color:var(--fg)}
-.btn.sos{color:var(--on-warn);box-shadow:var(--glow-strong);animation:neonStrong 2s ease-in-out infinite}
+.btn.sos{color:var(--on-warn);box-shadow:0 0 14px rgba(242,138,75,.35)}
 @keyframes neon{0%,100%{box-shadow:var(--glow)}50%{box-shadow:0 0 0 1px rgba(242,138,75,.7),0 0 18px rgba(242,138,75,.85),0 0 46px rgba(242,138,75,.55),0 0 96px rgba(242,138,75,.3),inset 0 0 14px rgba(255,214,186,.6)}}
 @keyframes neonStrong{0%,100%{box-shadow:var(--glow-strong)}50%{box-shadow:0 0 0 1px rgba(255,170,120,.9),0 0 24px rgba(255,150,90,1),0 0 60px rgba(242,138,75,.75),0 0 120px rgba(242,138,75,.45),inset 0 0 16px rgba(255,224,200,.75)}}
 .btn:focus-visible,.chip:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 
 /* Formularze */
-input[type=text],input[type=email],input[type=number],select,textarea{font:16px var(--text);padding:12px;border:1.5px solid var(--line);border-radius:6px;background:#111;color:var(--fg);width:100%;outline:none}
+input[type=text],input[type=email],input[type=number],input[type=time],input[type=date],input[type=url],select,textarea{font:16px var(--text);padding:12px;border:1.5px solid var(--line);border-radius:6px;background:#111;color:var(--fg);width:100%;outline:none}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 input::placeholder,textarea::placeholder{color:#5F5B56}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
@@ -152,3 +152,28 @@ textarea{font:16px var(--text)}
 .dots span.on{background:var(--accent);box-shadow:0 0 8px rgba(242,138,75,.7)}
 
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.meet-when{font-size:18px;margin:4px 0 10px}
+#meetCard.live{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.btn .btn-sub{display:block;font-size:.8em;font-weight:600;letter-spacing:.06em;opacity:.8;margin-top:2px}
+#drillList .btn{font-size:15px;padding:12px 10px}
+
+/* Kalendarz 90 dni */
+:root{--bad:#E0565B}
+.cal-stage{margin:2px 0 10px;font-size:15px}
+.cal-phase{font:700 12px var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:12px 0 6px}
+.cal-phase:first-child{margin-top:0}
+.cal-row{display:grid;grid-template-columns:26px repeat(7,1fr);gap:5px;margin-bottom:5px;align-items:center}
+.cal-w{font-size:11px;color:var(--dim)}
+.cal-d{aspect-ratio:1;max-width:100%;border-radius:6px;border:1px solid var(--line);background:var(--bg2);color:var(--muted);font:600 12px var(--text);padding:0;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.cal-d.c-ok{background:rgba(111,183,161,.85);border-color:transparent;color:#0E0E0E}
+.cal-d.c-bad{background:rgba(224,86,91,.85);border-color:transparent;color:#0E0E0E}
+.cal-d.c-none{background:var(--card2);color:var(--muted)}
+.cal-d.c-fut{background:transparent;color:var(--dim);border-style:dashed}
+.cal-d.is-today{outline:2px solid var(--fg);outline-offset:1px}
+.cal-d.sel{box-shadow:0 0 0 2px var(--accent)}
+.cal-x{aspect-ratio:1}
+.cal-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin:10px 0 6px;font-size:12px;color:var(--muted)}
+.cal-legend span{display:flex;align-items:center;gap:6px}
+.cal-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.cal-legend .c-ok{background:rgba(111,183,161,.85)} .cal-legend .c-bad{background:rgba(224,86,91,.85)} .cal-legend .c-none{background:var(--card2);border:1px solid var(--line)} .cal-legend .c-today{outline:2px solid var(--fg);outline-offset:-2px}

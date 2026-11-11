@@ -41,8 +41,27 @@ async function boot() {
   D.profiles = D.profiles.filter(p => !p.is_admin);
   D.ev.forEach(e => e.t = new Date(e.created_at).getTime());
   D.drills.forEach(e => e.t = new Date(e.created_at).getTime());
-  show("a-main"); render(); renderCases();
+  show("a-main"); render(); renderCases(); loadMeet();
 }
+
+// ---------- Spotkania na żywo ----------
+async function loadMeet() {
+  const { data } = await sb.from("spotkania").select("*").eq("id", 1).maybeSingle();
+  if (!data) return toast("Brak tabeli spotkań. Uruchom w Supabase plik spotkania.sql.");
+  $("mDay").value = data.dzien || ""; $("mTime").value = (data.godzina || "").slice(0, 5); $("mDur").value = data.czas_min || 60;
+  $("mOff").value = data.odwolane || ""; $("mLink").value = data.link || ""; $("mTopic").value = data.temat || "";
+}
+$("meetForm").onsubmit = async e => {
+  e.preventDefault();
+  const dzien = +$("mDay").value || null, link = $("mLink").value.trim() || null;
+  if (dzien && (!$("mTime").value || !link)) return toast("Podaj godzinę i link do Google Meet.");
+  if (link && !/^https:\/\/meet\.google\.com\//.test(link)) return toast("Link musi zaczynać się od https://meet.google.com/");
+  $("mSave").disabled = true;
+  const { error } = await sb.from("spotkania").update({ dzien, godzina: $("mTime").value || null, czas_min: +$("mDur").value || 60,
+    odwolane: $("mOff").value || null, link, temat: $("mTopic").value.trim() || null, updated_at: new Date().toISOString() }).eq("id", 1);
+  $("mSave").disabled = false;
+  toast(error ? "Nie udało się zapisać: " + error.message : "Zapisane. Uczestnicy zobaczą to w aplikacji.");
+};
 sb.auth.onAuthStateChange(ev => { if (ev === "SIGNED_IN") boot(); });
 $("range").onchange = render;
 
@@ -72,7 +91,7 @@ function render() {
   $("summary").textContent = bit.length + res.length
     ? `Grupa najczęściej obgryza ${window.P90_WHEN[top(time)] || ""}, w miejscu „${top(place) || "—"}”, przy emocji: ${(top(emo) || "—").toLowerCase()}. ` +
       `Udział powstrzymań: ${pct(res.length, bit.length + res.length)}. Najczęściej pomaga: ${top(help) || "brak danych"}. ` +
-      `${quiet} ${quiet === 1 ? "osoba nie zapisała" : "osób nie zapisało"} nic od 3 dni — warto ich zaczepić w społeczności.`
+      `${quiet} ${quiet === 1 ? "osoba nie zapisała" : "osób nie zapisało"} nic od 3 dni — warto do nich napisać.`
     : "Brak zapisów w wybranym zakresie.";
 
   $("tbl").innerHTML = D.profiles.map(p => {

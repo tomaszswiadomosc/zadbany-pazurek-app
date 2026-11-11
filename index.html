@@ -160,7 +160,6 @@
       <input type="text" id="supName" placeholder="np. Kasia">
       <p class="msg" id="supMsg"></p>
       <div class="row"><button class="btn ghost" id="supCopy">Kopiuj wiadomość</button><button class="btn" id="supDone">Wysłałem/am</button></div>
-      <a class="small" id="supSkool" target="_blank" rel="noopener">Nie masz kogo poprosić? Znajdź parę w społeczności</a>
     </div>
 
     <div class="card" id="eveCard" hidden>
@@ -182,7 +181,13 @@
 
     <div class="note" id="tip"></div>
     <div class="note" id="installHint" hidden><b>Dodaj aplikację do ekranu telefonu.</b><br><span id="installText"></span></div>
-    <a class="btn ghost" id="skoolLink" target="_blank" rel="noopener">Społeczność i cotygodniowe spotkania</a>
+    <div class="card" id="meetCard" hidden>
+      <div class="label">Spotkanie na żywo · Google Meet</div>
+      <p class="meet-when" id="meetWhen"></p>
+      <p class="small" id="meetTopic" hidden></p>
+      <a class="btn" id="meetBtn" target="_blank" rel="noopener">Dołącz przez Google Meet</a>
+      <p class="small muted">Co tydzień z <span class="trainer"></span>: autohipnoza, omówienie postępów, pytania. Możesz mieć wyłączoną kamerę i wpisać samo imię. Nie podawaj innym uczestnikom swoich danych kontaktowych.</p>
+    </div>
   </section>
 
   <!-- APLIKACJA: kreator planu „jeśli… to…” -->
@@ -250,7 +255,6 @@
       <h2 id="sosEndH">Jak teraz impuls?</h2>
       <div class="row" id="sosEndBtns"><button class="btn" id="sosOk">Minął, zapisz jako powstrzymany</button><button class="btn ghost" id="sosAgain">Jeszcze raz</button></div>
     </div>
-    <p class="small muted">Na iPhonie wibracja nie działa. Prowadzi Cię licznik.</p>
   </section>
 
   <!-- APLIKACJA: Postęp -->
@@ -266,6 +270,12 @@
     <div class="card"><div class="label">Ankieta: start i teraz</div><div id="svTable"></div></div>
     <div class="card"><div class="label">Ostatnie 14 dni</div><div class="bars" id="bars"></div>
       <div class="legend"><span class="lb">Obgryzione</span><span class="lr">Powstrzymane</span></div></div>
+    <div class="card" id="calCard"><div class="top"><div class="label">Kalendarz 90 dni</div><span class="small muted" id="calDay"></span></div>
+      <p class="cal-stage" id="calStage"></p>
+      <div id="cal"></div>
+      <div class="cal-legend"><span><i class="c-ok"></i>Bez obgryzania</span><span><i class="c-bad"></i>Obgryzione</span><span><i class="c-none"></i>Brak zapisów</span><span><i class="c-today"></i>Dziś</span></div>
+      <p class="small" id="calInfo"></p>
+      <p class="small muted" id="calSum"></p></div>
     <div class="card"><div class="label">Twój wzorzec</div><p id="insight"></p></div>
     <div class="card"><div class="label">Najczęstsze emocje</div><div class="stack" id="emoBars" style="gap:8px"></div></div>
     <div class="card"><div class="label">Co czujesz w palcach</div><div class="stack" id="fingerBars" style="gap:8px"></div></div>

@@ -15,7 +15,7 @@ window.P90_PLAN = [
   { phase: "Faza 3 · Utrwalenie", title: "Nuda i frustracja", text: "To dwa najsilniejsze wyzwalacze. Przy nudzie daj rękom zajęcie. Przy frustracji zrób 2 minuty przerwy od zadania i ćwiczenie dotyku." },
   { phase: "Faza 3 · Utrwalenie", title: "Mniej pomocy", text: "Zrezygnuj z plastrów. Gorzki lakier tylko w trudne dni. Ćwiczenia dnia zostają, bo to one utrwalają nowy ruch." },
   { phase: "Faza 3 · Utrwalenie", title: "Plan na trudne dni", text: "Ułóż plan „jeśli… to…” na stres, chorobę albo zmianę rutyny, np. urlop. Nawroty zdarzają się prawie każdemu. Liczy się szybki powrót.", card: "plan" },
-  { phase: "Faza 3 · Utrwalenie", title: "Podsumowanie i co dalej", text: "Porównaj zdjęcie z dnia 1 i dzisiejsze. Wypełnij ankietę. Zapisz, co działało najlepiej, i podziel się tym w społeczności. Od dnia 91 przechodzisz w tryb utrzymania." }
+  { phase: "Faza 3 · Utrwalenie", title: "Podsumowanie i co dalej", text: "Porównaj zdjęcie z dnia 1 i dzisiejsze. Wypełnij ankietę. Zapisz, co działało najlepiej, i opowiedz o tym na spotkaniu na żywo. Od dnia 91 przechodzisz w tryb utrzymania." }
 ];
 
 // Tryb utrzymania od dnia 91: jedno zadanie na tydzień, po kolei w kółko.
@@ -23,7 +23,7 @@ window.P90_MAINT = [
   { title: "Tygodniowy przegląd", text: "Przejrzyj zakładkę Postęp. Jeśli liczba epizodów rośnie, wróć na tydzień do zadań z fazy 2." },
   { title: "Odśwież plan „jeśli… to…”", text: "Czy Twoje plany pasują do obecnego życia? Zmień ten, który przestał działać." },
   { title: "Zdjęcie miesięczne", text: "Raz w miesiącu zrób zdjęcie dłoni w tym samym świetle. To najlepszy dowód, że warto." },
-  { title: "Pomóż komuś", text: "Napisz w społeczności, co pomogło Ci najbardziej. Dzielenie się utrwala Twój nawyk." }
+  { title: "Opowiedz, co działa", text: "Na najbliższym spotkaniu na żywo powiedz, co pomogło Ci najbardziej. Dzielenie się utrwala Twój nawyk i pomaga innym." }
 ];
 
 // Ćwiczenie dnia „na sucho”: 3 razy dziennie, także bez impulsu.
