@@ -354,18 +354,31 @@ async function initPush() {
   } catch (e) { return; }
   card.hidden = false;
 }
-$("pushOn").onclick = async () => {
-  $("pushOn").disabled = true;
+async function enablePush(btn) {
+  btn.disabled = true;
   try {
     const perm = await Notification.requestPermission();
-    if (perm !== "granted") { toast("Bez zgody telefonu przypomnienia nie przyjdą. Możesz to zmienić w ustawieniach."); $("pushCard").hidden = true; return; }
+    if (perm !== "granted") { toast("Bez zgody telefonu przypomnienia nie przyjdą. Możesz to zmienić w ustawieniach telefonu."); $("pushCard").hidden = true; return; }
     const reg = await navigator.serviceWorker.ready;
     const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(C.VAPID_PUBLIC_KEY) });
-    if (await savePushSub(sub)) { toast("Przypomnienia włączone: 8:00, 13:00 i 19:00"); $("pushCard").hidden = true; }
+    if (await savePushSub(sub)) { ls.set("push_later", "0"); toast("Przypomnienia włączone: 8:00, 13:00 i 19:00"); $("pushCard").hidden = true; renderPushState(); }
     else toast("Nie udało się zapisać przypomnień. Spróbuj później.");
   } catch (e) { console.error(e); toast("Ten telefon nie obsługuje przypomnień w tej przeglądarce."); }
-  finally { $("pushOn").disabled = false; }
-};
+  finally { btn.disabled = false; }
+}
+$("pushOn").onclick = () => enablePush($("pushOn"));
+$("pushOn2").onclick = () => enablePush($("pushOn2"));
+async function renderPushState() {
+  const ok = "PushManager" in window && "Notification" in window && "serviceWorker" in navigator;
+  const ios = /iP(hone|ad|od)/.test(navigator.userAgent);
+  let on = false;
+  if (ok && Notification.permission === "granted") { try { on = !!(await (await navigator.serviceWorker.ready).pushManager.getSubscription()); } catch (e) {} }
+  $("pushState").textContent = on ? "Włączone" : "Wyłączone";
+  $("pushOn2").hidden = on || !ok || Notification.permission === "denied";
+  $("pushHint").textContent = on ? "Wyłączysz je w ustawieniach telefonu (Powiadomienia)."
+    : !ok ? (ios ? "Na iPhonie otwórz aplikację z ikony na ekranie początkowym, żeby włączyć przypomnienia." : "Ta przeglądarka nie obsługuje przypomnień.")
+    : Notification.permission === "denied" ? "Powiadomienia są zablokowane. Włącz je w ustawieniach telefonu dla tej aplikacji." : "";
+}
 $("pushLater").onclick = () => { ls.set("push_later", "1"); $("pushCard").hidden = true; };
 
 // ---------- Pory dnia: rano 6–12, południe 12–18, wieczór 18–6 ----------
@@ -642,7 +655,7 @@ function renderCal() {
 }
 
 async function renderPostep() {
-  renderCal();
+  renderCal(); renderPushState();
   const bit = S.ev.filter(e => e.kind === "bit"), now = new Date(); now.setHours(0, 0, 0, 0);
   let mx = 1; const days = [];
   for (let i = 13; i >= 0; i--) { const d = now.getTime() - i * DAY, b = bit.filter(e => sameDay(e.t, d)).length, r = S.ev.filter(e => e.kind === "res" && sameDay(e.t, d)).length; days.push([b, r]); mx = Math.max(mx, b + r); }
