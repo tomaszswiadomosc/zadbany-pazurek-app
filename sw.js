@@ -1,6 +1,6 @@
 // Prosty service worker: pozwala zainstalować aplikację i otwiera ją szybciej.
 // Dane zawsze idą z serwera; pliki aplikacji są w pamięci podręcznej jako zapas na słaby internet.
-const CACHE = "zp-v14";
+const CACHE = "zp-v16";
 const FILES = ["./", "index.html", "style.css", "app.js", "plan.js", "config.js", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png", "logo/napis-zadbany.png", "logo/napis-pazurek.png", "logo/pazurek-ikona.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES))); self.skipWaiting(); });
 self.addEventListener("activate", e => {
@@ -10,6 +10,7 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const u = new URL(e.request.url);
   if (e.request.method !== "GET" || u.origin !== location.origin) return; // Supabase i czcionki: zawsze sieć
+  if (e.request.headers.has("range") || u.pathname.includes("/filmy/")) return; // filmy: prosto z sieci, bez zapisu w pamięci
   e.respondWith(fetch(e.request).then(r => { const c = r.clone(); caches.open(CACHE).then(x => x.put(e.request, c)); return r; })
     .catch(() => caches.match(e.request)));
 });

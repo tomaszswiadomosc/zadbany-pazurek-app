@@ -395,12 +395,17 @@ function openMedia(title, html) {
 }
 function closeMedia() {
   $("mediaBody").querySelectorAll("video").forEach(v => v.pause());
-  $("media").hidden = true; $("mediaBody").innerHTML = ""; document.body.classList.remove("noscroll");
+  $("media").hidden = true; $("media").classList.remove("film"); $("mediaBody").innerHTML = ""; document.body.classList.remove("noscroll");
   if (mediaBack) try { mediaBack.focus(); } catch (e) {}
 }
 function openFilm(k) {
   const f = FILMS[k]; if (!f) return;
-  openMedia(f.t, `<video src="filmy/${k}.mp4" poster="filmy/${k}.jpg" controls playsinline autoplay preload="metadata"></video><p class="small muted">Włącz dźwięk, żeby słyszeć instrukcję.</p>`);
+  openMedia(f.t, `<video src="filmy/${k}.mp4" poster="filmy/${k}.jpg" controls playsinline preload="auto"></video>`);
+  $("media").classList.add("film");
+  const v = $("mediaBody").querySelector("video");
+  v.addEventListener("ended", closeMedia);
+  // start od razu, w tym samym kliknięciu (iPhone pozwala wtedy grać z dźwiękiem)
+  const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
 }
 function openPhotoHowto() {
   openMedia("Zdjęcie dłoni", `<img src="grafiki/jak-zrobic-zdjecie.jpg" alt="Jak zrobić zdjęcie dłoni: 1. telefon poziomo nad dłońmi, ok. 30 cm wyżej; 2. obie dłonie wierzchem do góry, palce lekko rozłożone, 10 paznokci widać; 3. dzienne światło z boku, bez lampy błyskowej; 4. to samo miejsce lub podobny kąt co tydzień."><img src="grafiki/jak-ustawic-telefon.jpg" alt="Jak ustawić telefon: A. poproś bliską osobę; B. sam: telefon na stosie książek ok. 30 cm, aparat wystaje poza krawędź, samowyzwalacz 10 s; C. sam, po jednej dłoni, 2 zdjęcia.">`);

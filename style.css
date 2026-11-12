@@ -195,3 +195,22 @@ textarea{font:16px var(--text)}
 .slot-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 #slots .btn.slim{flex:none;padding:8px 14px;font-size:14px}
 .slot p{margin:0}
+
+/* Okno z filmem / instrukcją */
+.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px))}
+.modal-in{width:100%;max-width:480px;max-height:100%;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.modal-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.modal-top b{font:700 20px var(--display);letter-spacing:.04em;text-transform:uppercase}
+.modal-top .btn{flex:none;padding:8px 14px;font-size:14px}
+.modal video{width:100%;max-height:70vh;border-radius:12px;background:#000;display:block}
+.modal img{width:100%;border-radius:12px;display:block}
+#mediaBody{display:flex;flex-direction:column;gap:10px}
+body.noscroll{overflow:hidden}
+.film-btn{width:100%;font-size:15px!important;padding:10px 12px!important}
+
+/* Film: pełny ekran */
+.modal.film{padding:0;background:#000}
+.modal.film .modal-in{max-width:none;height:100%;border:0;border-radius:0;background:#000;padding:calc(10px + env(safe-area-inset-top,0px)) 12px calc(10px + env(safe-area-inset-bottom,0px));gap:8px}
+.modal.film #mediaBody{flex:1;min-height:0}
+.modal.film video{flex:1;width:100%;height:100%;max-height:none;object-fit:contain;border-radius:0}
+.modal.film .modal-top b{color:#fff}
