@@ -12,13 +12,18 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Zadbany Pazurek">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=17">
+<link rel="stylesheet" href="style.css?v=18">
 </head>
 <body>
 <div class="app">
 
   <!-- Ładowanie -->
   <section id="s-loading" class="stack"><p class="muted">Ładowanie…</p></section>
+  <section id="s-deleted" class="stack" hidden>
+    <h1>Konto usunięte</h1>
+    <p class="muted">Twoje konto i wszystkie dane zostały usunięte. Dziękujemy, że byłeś/aś z nami. Jeśli kiedyś zechcesz wrócić, możesz założyć konto od nowa.</p>
+    <a class="btn ghost" href="./">Wróć na start</a>
+  </section>
 
   <!-- Logowanie -->
   <section id="s-login" class="stack" hidden>
@@ -296,6 +301,13 @@
       <p class="small muted" id="pushHint"></p></div>
     <a href="#" class="small" id="safetyInfo">Kiedy iść do lekarza</a>
     <button class="btn ghost" id="logout">Wyloguj</button>
+    <details class="card danger" id="delBox">
+      <summary class="small">Usuń konto i wszystkie dane</summary>
+      <p class="small">Usuniemy Twoje konto, wszystkie zapisy, ćwiczenia, ankiety, plany i zdjęcia dłoni. Tego nie da się cofnąć. Jeśli zgodziłeś/aś się na publikację zdjęć jako case study, ta zgoda też wygasa.</p>
+      <label class="label" for="delConfirm">Wpisz USUŃ, żeby potwierdzić</label>
+      <input type="text" id="delConfirm" autocomplete="off" autocapitalize="characters" placeholder="USUŃ">
+      <button class="btn warn" type="button" id="delBtn" disabled>Usuń konto na zawsze</button>
+    </details>
     <footer><span class="appname"></span> · program stworzony przez <span class="trainer"></span> · narzędzie wspierające, nie zastępuje terapii</footer>
   </section>
 </div>
@@ -315,8 +327,8 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=17"></script>
-<script src="plan.js?v=17"></script>
-<script src="app.js?v=17"></script>
+<script src="config.js?v=18"></script>
+<script src="plan.js?v=18"></script>
+<script src="app.js?v=18"></script>
 </body>
 </html>

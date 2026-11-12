@@ -16,7 +16,7 @@ let installPrompt = null;
 W.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; });
 
 function toast(m) { const t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(t._t); t._t = setTimeout(() => t.hidden = true, 2800); }
-const SCREENS = ["s-loading", "s-login", "s-onboard", "s-safety", "s-survey", "s-install", "s-photo1", "v-dzis", "v-plan", "v-zapisz", "v-poslizg", "v-sos", "v-postep"];
+const SCREENS = ["s-loading", "s-deleted", "s-login", "s-onboard", "s-safety", "s-survey", "s-install", "s-photo1", "v-dzis", "v-plan", "v-zapisz", "v-poslizg", "v-sos", "v-postep"];
 function show(id) { SCREENS.forEach(s => $(s).hidden = s !== id); $("nav").hidden = !id.startsWith("v-"); scrollTo(0, 0); }
 function fail(e) { console.error(e); toast("Coś poszło nie tak. Sprawdź internet i spróbuj ponownie."); }
 const sameDay = (a, b) => new Date(a).toDateString() === new Date(b).toDateString();
@@ -83,7 +83,7 @@ async function boot() {
   nextStep();
 }
 sb.auth.onAuthStateChange((ev, session) => {
-  if (ev === "SIGNED_OUT") { S.user = null; S.profile = null; show("s-login"); }
+  if (ev === "SIGNED_OUT") { S.user = null; S.profile = null; if (!S.deleted) show("s-login"); }
   if (ev === "SIGNED_IN" && (!S.user || S.user.id !== session.user.id)) boot().catch(fail);
 });
 
@@ -738,6 +738,37 @@ async function renderPostep() {
 }
 $("fileN").onchange = async e => { const f = e.target.files[0]; if (!f) return; if (await uploadPhoto(await compress(f))) renderPostep(); e.target.value = ""; };
 $("logout").onclick = () => sb.auth.signOut();
+
+// ---------- Usuń konto (RODO) ----------
+const delWord = () => $("delConfirm").value.trim().toUpperCase();
+$("delConfirm").oninput = () => { $("delBtn").disabled = !["USUŃ", "USUN"].includes(delWord()); };
+$("delBtn").onclick = async () => {
+  if (!["USUŃ", "USUN"].includes(delWord())) return;
+  const b = $("delBtn"); b.disabled = true; b.textContent = "Usuwam…";
+  try {
+    const uid = S.user.id;
+    // 1. Pliki zdjęć (baza nie skasuje ich sama)
+    for (let i = 0; i < 20; i++) {
+      const { data, error } = await sb.storage.from("photos").list(uid, { limit: 100 });
+      if (error) throw error;
+      if (!data || !data.length) break;
+      const { error: e2 } = await sb.storage.from("photos").remove(data.map(f => `${uid}/${f.name}`));
+      if (e2) throw e2;
+    }
+    // 2. Konto i wszystkie dane w bazie
+    const { error } = await sb.rpc("delete_my_account");
+    if (error) throw error;
+    // 3. Telefon: wyłącz przypomnienia i wyczyść pamięć
+    try { const sub = await (await navigator.serviceWorker.ready).pushManager.getSubscription(); if (sub) await sub.unsubscribe(); } catch (e) {}
+    try { Object.keys(localStorage).filter(k => k.startsWith("zp_") || k.startsWith("sb-")).forEach(k => localStorage.removeItem(k)); } catch (e) {}
+    S.deleted = true;
+    await sb.auth.signOut({ scope: "local" }).catch(() => {});
+    S.user = null; S.profile = null; show("s-deleted");
+  } catch (e) {
+    console.error(e); b.disabled = false; b.textContent = "Usuń konto na zawsze";
+    toast("Nie udało się usunąć konta. Spróbuj ponownie albo napisz do trenera.");
+  }
+};
 
 boot().catch(fail);
 })();
