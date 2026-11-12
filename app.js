@@ -385,6 +385,34 @@ async function renderPushState() {
 }
 $("pushLater").onclick = () => { ls.set("push_later", "1"); $("pushCard").hidden = true; };
 
+// ---------- Filmy i instrukcje ----------
+const FILMS = { dotyk: { t: "Dotyk zamiast zębów", d: "1:19" }, decoupling: { t: "Trik z uchem", d: "0:25" }, piesc: { t: "Pięść 60 sekund", d: "0:38" } };
+let mediaBack = null;
+function openMedia(title, html) {
+  mediaBack = document.activeElement;
+  $("mediaH").textContent = title; $("mediaBody").innerHTML = html; $("media").hidden = false;
+  document.body.classList.add("noscroll"); $("mediaClose").focus();
+}
+function closeMedia() {
+  $("mediaBody").querySelectorAll("video").forEach(v => v.pause());
+  $("media").hidden = true; $("mediaBody").innerHTML = ""; document.body.classList.remove("noscroll");
+  if (mediaBack) try { mediaBack.focus(); } catch (e) {}
+}
+function openFilm(k) {
+  const f = FILMS[k]; if (!f) return;
+  openMedia(f.t, `<video src="filmy/${k}.mp4" poster="filmy/${k}.jpg" controls playsinline autoplay preload="metadata"></video><p class="small muted">Włącz dźwięk, żeby słyszeć instrukcję.</p>`);
+}
+function openPhotoHowto() {
+  openMedia("Zdjęcie dłoni", `<img src="grafiki/jak-zrobic-zdjecie.jpg" alt="Jak zrobić zdjęcie dłoni: 1. telefon poziomo nad dłońmi, ok. 30 cm wyżej; 2. obie dłonie wierzchem do góry, palce lekko rozłożone, 10 paznokci widać; 3. dzienne światło z boku, bez lampy błyskowej; 4. to samo miejsce lub podobny kąt co tydzień."><img src="grafiki/jak-ustawic-telefon.jpg" alt="Jak ustawić telefon: A. poproś bliską osobę; B. sam: telefon na stosie książek ok. 30 cm, aparat wystaje poza krawędź, samowyzwalacz 10 s; C. sam, po jednej dłoni, 2 zdjęcia.">`);
+}
+$("mediaClose").onclick = closeMedia;
+$("media").addEventListener("click", e => { if (e.target === $("media")) closeMedia(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("media").hidden) closeMedia(); });
+document.addEventListener("click", e => {
+  const f = e.target.closest("[data-film]"); if (f) { e.preventDefault(); openFilm(f.dataset.film); return; }
+  const h = e.target.closest("[data-howto-photo]"); if (h) { e.preventDefault(); openPhotoHowto(); }
+});
+
 // ---------- Pory dnia: rano 6–12, południe 12–18, wieczór 18–6 ----------
 const SLOTS = [{ name: "Rano", hours: "6:00–12:00" }, { name: "Południe", hours: "12:00–18:00" }, { name: "Wieczór", hours: "18:00–24:00" }];
 const SHIFT = 6 * 3600e3; // dzień „pór” zaczyna się o 6:00; noc do 6:00 należy do wieczoru
@@ -401,7 +429,7 @@ function renderDrills(wi) {
     const btns = k === "dotyk"
       ? `<button class="btn" type="button" data-drill-guide="dotyk">Prowadź mnie<span class="btn-sub">90 s</span></button><button class="btn ghost" type="button" data-drill="dotyk">Zrobiłem/am sam(a)</button>`
       : `<button class="btn" type="button" data-drill="decoupling">Zrobiłem/am serię 15 razy</button>`;
-    return `<div class="stack" style="gap:8px"><b>${esc(d.name)}: ${esc(d.short)}</b><details><summary class="small">Jak to zrobić</summary><p class="small">${esc(d.how)}</p></details><div class="row">${btns}</div></div>`;
+    return `<div class="stack" style="gap:8px"><b>${esc(d.name)}: ${esc(d.short)}</b><button class="btn ghost slim film-btn" type="button" data-film="${k}">▶ Zobacz film (${FILMS[k].d})</button><details><summary class="small">Jak to zrobić (tekst)</summary><p class="small">${esc(d.how)}</p></details><div class="row">${btns}</div></div>`;
   }).join("");
   const drillName = kinds.map(k => W.P90_DRILLS[k].name).join(" lub ");
   $("slots").innerHTML = SLOTS.map((sl, i) => {
@@ -545,6 +573,7 @@ function openSos(method, practice) {
   $("sosSeg").innerHTML = Object.entries(W.P90_SOS).map(([k, m]) => `<button type="button" role="tab" aria-selected="${k === method}" data-m="${k}">${esc(m.name)}</button>`).join("");
   $("sosSeg").querySelectorAll("button").forEach(b => b.onclick = () => { ls.set("sos_method", b.dataset.m); openSos(b.dataset.m, false); });
   $("sosIntro").textContent = M.intro;
+  $("sosFilm").hidden = !FILMS[method]; $("sosFilm").dataset.film = method;
   const act = activePlans();
   $("sosPlan").hidden = practice || !act.length;
   $("sosPlan").innerHTML = act.map(p => `<b>Twój plan:</b> gdy ${esc(p.situation)}, wtedy ${esc(p.action)}.`).join("<br>");

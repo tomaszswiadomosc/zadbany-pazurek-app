@@ -121,6 +121,7 @@
       <label class="ph" id="ph1big"><input type="file" accept="image/*" capture="environment" hidden id="file1">Zdjęcie 1<br>obie dłonie od góry</label>
       <label class="ph" id="ph1b"><input type="file" accept="image/*" capture="environment" hidden id="file1b">Zdjęcie 2 (opcjonalnie)<br>np. z bliska</label>
     </div>
+    <button class="btn ghost" type="button" data-howto-photo>Jak zrobić zdjęcie? Zobacz instrukcję</button>
     <button class="btn" id="photo1Next" disabled>Zaczynam program</button>
     <button class="btn ghost" id="photo1Skip">Zrobię to później</button>
   </section>
@@ -252,6 +253,7 @@
     <div class="note" id="sosPlan" hidden></div>
     <div class="seg" role="tablist" id="sosSeg"></div>
     <p class="muted small" id="sosIntro"></p>
+    <button class="btn ghost slim film-btn" type="button" id="sosFilm" hidden>▶ Zobacz film: jak to zrobić</button>
     <div class="card breath">
       <div class="box" id="box"><div class="dot" id="dot"></div><div class="count"><b id="cnt">4</b><span id="phase" class="muted">Gotowy/a?</span></div></div>
       <div class="timer" id="timerBox" hidden><b id="tCnt">30</b><p id="tText"></p><div class="bar"><span id="tBar"></span></div></div>
@@ -272,6 +274,7 @@
         <div class="ph" id="phFirst">Dzień 1<br>brak zdjęcia</div>
         <label class="ph" id="phLast"><input type="file" accept="image/*" capture="environment" hidden id="fileN">Dodaj dzisiejsze zdjęcie</label>
       </div>
+      <a href="#" class="small" data-howto-photo>Jak zrobić zdjęcie i ustawić telefon?</a>
       <span class="small muted">Co 7 dni, w tym samym miejscu i świetle, obie dłonie od góry. Paznokieć odrasta ok. 3 mm miesięcznie.</span>
       <div id="phAllWrap" hidden><div class="label" style="margin-top:12px">Wszystkie zdjęcia</div><div class="thumbs" id="phAll"></div></div></div>
     <div class="card"><div class="label">Ankieta: start i teraz</div><div id="svTable"></div></div>
@@ -303,6 +306,12 @@
   <button class="tab s" data-go="sos"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>SOS</button>
   <button class="tab" data-go="postep"><svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg>Postęp</button>
 </div></nav>
+<div class="modal" id="media" hidden role="dialog" aria-modal="true" aria-labelledby="mediaH">
+  <div class="modal-in">
+    <div class="modal-top"><b id="mediaH"></b><button class="btn ghost slim" type="button" id="mediaClose">Zamknij</button></div>
+    <div id="mediaBody"></div>
+  </div>
+</div>
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
