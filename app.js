@@ -285,7 +285,7 @@ function renderDzis() {
   const lastPhoto = S.photos.at(-1), every = wi.maint ? 30 : 7;
   $("photoBanner").hidden = !(d >= 7 && (!lastPhoto || d - lastPhoto.day >= every));
 
-  renderDrills(wi); renderPlans(wi); renderSupport(wi); renderEvening(d); renderMeet();
+  renderDrills(wi); renderPlans(wi); renderSupport(wi); renderEvening(d); renderMeet(); initPush();
 
   const today = S.ev.filter(e => sameDay(e.t, Date.now()));
   $("sBit").textContent = today.filter(e => e.kind === "bit").length;
@@ -330,23 +330,81 @@ function renderMeet() {
   $("meetCard").classList.toggle("live", n.live);
 }
 
+// ---------- Przypomnienia push (8:00, 13:00, 19:00) ----------
+let pushChecked = false;
+function b64u(s) { const p = "=".repeat((4 - s.length % 4) % 4), b = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from(b, c => c.charCodeAt(0)); }
+async function savePushSub(sub) {
+  const j = sub.toJSON();
+  const { error } = await sb.from("push_subs").upsert({ user_id: S.user.id, endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth }, { onConflict: "endpoint" });
+  return !error;
+}
+async function initPush() {
+  if (pushChecked) return; pushChecked = true;
+  const card = $("pushCard"), key = C.VAPID_PUBLIC_KEY;
+  const ios = /iP(hone|ad|od)/.test(navigator.userAgent), standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
+  if (!key || ls.get("push_later") === "1") return;
+  if (!("PushManager" in window) || !("Notification" in window) || !("serviceWorker" in navigator)) {
+    if (ios && !standalone) { card.hidden = false; $("pushOn").hidden = true; $("pushIos").hidden = false; }
+    return;
+  }
+  if (Notification.permission === "denied") return;
+  try {
+    const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription();
+    if (sub && Notification.permission === "granted") { savePushSub(sub); return; }
+  } catch (e) { return; }
+  card.hidden = false;
+}
+$("pushOn").onclick = async () => {
+  $("pushOn").disabled = true;
+  try {
+    const perm = await Notification.requestPermission();
+    if (perm !== "granted") { toast("Bez zgody telefonu przypomnienia nie przyjdą. Możesz to zmienić w ustawieniach."); $("pushCard").hidden = true; return; }
+    const reg = await navigator.serviceWorker.ready;
+    const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(C.VAPID_PUBLIC_KEY) });
+    if (await savePushSub(sub)) { toast("Przypomnienia włączone: 8:00, 13:00 i 19:00"); $("pushCard").hidden = true; }
+    else toast("Nie udało się zapisać przypomnień. Spróbuj później.");
+  } catch (e) { console.error(e); toast("Ten telefon nie obsługuje przypomnień w tej przeglądarce."); }
+  finally { $("pushOn").disabled = false; }
+};
+$("pushLater").onclick = () => { ls.set("push_later", "1"); $("pushCard").hidden = true; };
+
+// ---------- Pory dnia: rano 6–12, południe 12–18, wieczór 18–6 ----------
+const SLOTS = [{ name: "Rano", hours: "6:00–12:00" }, { name: "Południe", hours: "12:00–18:00" }, { name: "Wieczór", hours: "18:00–24:00" }];
+const SHIFT = 6 * 3600e3; // dzień „pór” zaczyna się o 6:00; noc do 6:00 należy do wieczoru
+const slotDay = t => new Date(t - SHIFT).toDateString();
+const slotOf = t => { const h = new Date(t - SHIFT).getHours(); return h < 6 ? 0 : h < 12 ? 1 : 2; };
 function renderDrills(wi) {
-  const kinds = W.P90_drillKinds(wi.week), n = drillsToday().filter(x => x.kind === "dotyk" || x.kind === "decoupling").length, max = W.P90_DRILLS_PER_DAY;
-  $("drillCount").textContent = `${Math.min(n, max)} z ${max}`;
-  $("drillDots").innerHTML = Array.from({ length: max }, (_, i) => `<span class="${i < n ? "on" : ""}"></span>`).join("");
-  $("drillList").innerHTML = kinds.map(k => {
-    const dr = W.P90_DRILLS[k];
+  const now = Date.now(), cur = slotOf(now), today = slotDay(now), max = W.P90_DRILLS_PER_DAY;
+  const mine = arr => arr.filter(x => slotDay(x.t) === today);
+  const dr = mine(S.drills).filter(x => x.kind === "dotyk" || x.kind === "decoupling"), ev = mine(S.ev);
+  const kinds = W.P90_drillKinds(wi.week);
+  $("drillCount").textContent = `${Math.min(dr.length, max)} z ${max}`;
+  const drillBtns = () => kinds.map(k => {
+    const d = W.P90_DRILLS[k];
     const btns = k === "dotyk"
       ? `<button class="btn" type="button" data-drill-guide="dotyk">Prowadź mnie<span class="btn-sub">90 s</span></button><button class="btn ghost" type="button" data-drill="dotyk">Zrobiłem/am sam(a)</button>`
       : `<button class="btn" type="button" data-drill="decoupling">Zrobiłem/am serię 15 razy</button>`;
-    return `<div class="stack" style="gap:8px"><b>${esc(dr.name)}: ${esc(dr.short)}</b><details><summary class="small">Jak to zrobić</summary><p class="small">${esc(dr.how)}</p></details><div class="row">${btns}</div></div>`;
+    return `<div class="stack" style="gap:8px"><b>${esc(d.name)}: ${esc(d.short)}</b><details><summary class="small">Jak to zrobić</summary><p class="small">${esc(d.how)}</p></details><div class="row">${btns}</div></div>`;
   }).join("");
-  $("drillList").querySelectorAll("[data-drill]").forEach(b => b.onclick = async () => {
+  const drillName = kinds.map(k => W.P90_DRILLS[k].name).join(" lub ");
+  $("slots").innerHTML = SLOTS.map((sl, i) => {
+    const st = i < cur ? "past" : i === cur ? "now" : "future";
+    const nEv = ev.filter(x => slotOf(x.t) === i).length, done = dr.some(x => slotOf(x.t) === i);
+    const badge = done ? `<span class="slot-badge ok">✓ Zrobione</span>` : st === "now" ? `<span class="slot-badge now">Teraz</span>` : st === "past" ? `<span class="slot-badge">Za Tobą</span>` : `<span class="slot-badge">Przed Tobą</span>`;
+    const obs = st === "future" ? `<p class="small muted">Obserwuj i zapisuj każdy moment.</p>`
+      : `<div class="slot-row"><span class="small">Obserwacja: <b>${nEv}</b> ${nEv === 1 ? "zapis" : nEv > 1 && nEv < 5 ? "zapisy" : "zapisów"}</span>${st === "now" ? `<button class="btn ghost slim" type="button" data-go="zapisz">+ Zapisz</button>` : ""}</div>`;
+    const ex = done ? `<p class="small">Ćwiczenie zrobione. Dobra robota.</p>`
+      : st === "now" ? drillBtns()
+      : st === "past" ? `<p class="small muted">Ćwiczenie pominięte. Nic się nie stało, zrób je w tej porze.</p>`
+      : `<p class="small muted">Ćwiczenie: ${esc(drillName)}.</p>`;
+    return `<div class="slot ${st}${done ? " done" : ""}"><div class="slot-h"><b>${sl.name}</b><span class="small muted">${sl.hours}</span>${badge}</div>${obs}${ex}</div>`;
+  }).join("");
+  $("slots").querySelectorAll("[data-drill]").forEach(b => b.onclick = async () => {
     b.disabled = true;
-    if (await logDrill(b.dataset.drill)) { const c = drillsToday().length; toast(c >= max ? "Komplet na dziś. Świetna robota" : `Zaliczone: ${c} z ${max}`); renderDzis(); }
+    if (await logDrill(b.dataset.drill)) { toast(`Ćwiczenie zaliczone: ${SLOTS[slotOf(Date.now())].name.toLowerCase()}`); renderDzis(); }
     b.disabled = false;
   });
-  $("drillList").querySelectorAll("[data-drill-guide]").forEach(b => b.onclick = () => { sosPractice = true; show("v-sos"); openSos(b.dataset.drillGuide, true); });
+  $("slots").querySelectorAll("[data-drill-guide]").forEach(b => b.onclick = () => { sosPractice = true; show("v-sos"); openSos(b.dataset.drillGuide, true); });
 }
 
 function canAddPlan() {

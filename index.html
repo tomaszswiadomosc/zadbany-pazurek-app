@@ -139,13 +139,20 @@
     <div class="card">
       <div class="label" id="taskLbl">Zadanie tygodnia · odhacz dzisiaj</div>
       <label class="task"><input type="checkbox" id="taskDone"><span><b id="taskT"></b><br><span class="small muted" id="taskD"></span></span></label>
+      <button class="btn add-moment" type="button" data-go="zapisz"><span class="plus">+</span> Zapisz moment</button>
     </div>
 
     <div class="card" id="drillCard">
-      <div class="top"><div class="label">Ćwiczenie dnia · na sucho</div><b id="drillCount"></b></div>
-      <div class="dots" id="drillDots"></div>
-      <div id="drillList" class="stack" style="gap:10px"></div>
-      <p class="small muted">Rób je 3 razy dziennie, najlepiej wtedy, gdy NIE masz ochoty gryźć. Tak nowy ruch staje się automatyczny.</p>
+      <div class="top"><div class="label">Twój dzień · obserwacja i ćwiczenie</div><b id="drillCount"></b></div>
+      <div id="slots" class="slots"></div>
+      <p class="small muted">W każdej porze: obserwuj i zapisuj każdy moment, a potem zrób ćwiczenie na sucho, najlepiej wtedy, gdy NIE masz ochoty gryźć.</p>
+    </div>
+
+    <div class="card" id="pushCard" hidden>
+      <div class="label">Przypomnienia</div>
+      <p class="small">3 krótkie przypomnienia dziennie: rano o 8:00, w południe o 13:00 i wieczorem o 19:00.</p>
+      <div class="row"><button class="btn" type="button" id="pushOn">Włącz przypomnienia</button><button class="btn ghost" type="button" id="pushLater">Nie teraz</button></div>
+      <p class="small muted" id="pushIos" hidden>Na iPhonie przypomnienia działają, gdy otwierasz aplikację z ikony na ekranie początkowym.</p>
     </div>
 
     <div class="card" id="planCard">

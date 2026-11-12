@@ -156,7 +156,8 @@ textarea{font:16px var(--text)}
 .meet-when{font-size:18px;margin:4px 0 10px}
 #meetCard.live{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
 .btn .btn-sub{display:block;font-size:.8em;font-weight:600;letter-spacing:.06em;opacity:.8;margin-top:2px}
-#drillList .btn{font-size:15px;padding:12px 10px}
+#slots .btn{font-size:14px;padding:12px 8px;letter-spacing:.05em}
+#drillCount{white-space:nowrap}
 
 /* Kalendarz 90 dni */
 :root{--bad:#E0565B}
@@ -177,3 +178,20 @@ textarea{font:16px var(--text)}
 .cal-legend span{display:flex;align-items:center;gap:6px}
 .cal-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
 .cal-legend .c-ok{background:rgba(111,183,161,.85)} .cal-legend .c-bad{background:rgba(224,86,91,.85)} .cal-legend .c-none{background:var(--card2);border:1px solid var(--line)} .cal-legend .c-today{outline:2px solid var(--fg);outline-offset:-2px}
+/* Zadanie tygodnia: szybki zapis */
+.add-moment{width:100%;margin-top:12px}
+.add-moment .plus{font-size:24px;line-height:0;margin-right:2px}
+/* Pory dnia */
+.slots{display:flex;flex-direction:column;gap:10px;margin-top:6px}
+.slot{border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.slot.now{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.slot.future{opacity:.6}
+.slot.done:not(.now){border-color:rgba(111,183,161,.5)}
+.slot-h{display:flex;align-items:baseline;gap:8px}
+.slot-h b{font:700 18px var(--display);letter-spacing:.06em;text-transform:uppercase}
+.slot-badge{margin-left:auto;font-size:12px;font-weight:600;color:var(--muted);white-space:nowrap}
+.slot-badge.now{color:var(--accent)}
+.slot-badge.ok{color:var(--good)}
+.slot-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+#slots .btn.slim{flex:none;padding:8px 14px;font-size:14px}
+.slot p{margin:0}
