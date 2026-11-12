@@ -336,22 +336,26 @@ function b64u(s) { const p = "=".repeat((4 - s.length % 4) % 4), b = atob((s + p
 async function savePushSub(sub) {
   const j = sub.toJSON();
   const { error } = await sb.from("push_subs").upsert({ user_id: S.user.id, endpoint: j.endpoint, p256dh: j.keys.p256dh, auth: j.keys.auth }, { onConflict: "endpoint" });
+  if (error) { console.error(error); pushErr = error.message || String(error); }
   return !error;
 }
+let pushErr = "";
 async function initPush() {
   if (pushChecked) return; pushChecked = true;
   const card = $("pushCard"), key = C.VAPID_PUBLIC_KEY;
   const ios = /iP(hone|ad|od)/.test(navigator.userAgent), standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone;
-  if (!key || ls.get("push_later") === "1") return;
-  if (!("PushManager" in window) || !("Notification" in window) || !("serviceWorker" in navigator)) {
+  if (!key) return;
+  const supported = "PushManager" in window && "Notification" in window && "serviceWorker" in navigator;
+  // Przypomnienia już włączone na tym telefonie: przy każdym otwarciu dopisz telefon do bazy (gdyby wcześniej się nie zapisał)
+  if (supported && Notification.permission === "granted") {
+    try { const sub = await (await navigator.serviceWorker.ready).pushManager.getSubscription(); if (sub) { savePushSub(sub); return; } } catch (e) {}
+  }
+  if (ls.get("push_later") === "1") return;
+  if (!supported) {
     if (ios && !standalone) { card.hidden = false; $("pushOn").hidden = true; $("pushIos").hidden = false; }
     return;
   }
   if (Notification.permission === "denied") return;
-  try {
-    const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription();
-    if (sub && Notification.permission === "granted") { savePushSub(sub); return; }
-  } catch (e) { return; }
   card.hidden = false;
 }
 async function enablePush(btn) {
@@ -362,7 +366,7 @@ async function enablePush(btn) {
     const reg = await navigator.serviceWorker.ready;
     const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(C.VAPID_PUBLIC_KEY) });
     if (await savePushSub(sub)) { ls.set("push_later", "0"); toast("Przypomnienia włączone: 8:00, 13:00 i 19:00"); $("pushCard").hidden = true; renderPushState(); }
-    else toast("Nie udało się zapisać przypomnień. Spróbuj później.");
+    else toast("Nie udało się zapisać przypomnień: " + pushErr);
   } catch (e) { console.error(e); toast("Ten telefon nie obsługuje przypomnień w tej przeglądarce."); }
   finally { btn.disabled = false; }
 }
