@@ -1,0 +1,39 @@
+// Zadbany Pazurek: przypomnienia push o 8:00, 13:00 i 19:00 (czas polski).
+// Uruchamiane co godzinę przez pg_cron (plik push.sql). Wysyła tylko o pełnych godzinach z listy.
+import webpush from "npm:web-push@3.6.7";
+import { createClient } from "npm:@supabase/supabase-js@2.45.4";
+
+const MSG: Record<number, { title: string; body: string }> = {
+  8: { title: "Dzień dobry. Poranna obserwacja", body: "Obserwuj dłonie i zapisuj każdy moment, także ten zauważony w trakcie. Potem ćwiczenie poranne." },
+  13: { title: "Dzięki za poranną obserwację", body: "Teraz południe. Obserwuj, zapisuj i zrób ćwiczenie dnia." },
+  19: { title: "Wieczór, czas największej czujności", body: "Serial, kanapa, telefon? Obserwuj dłonie, zapisuj każdy moment i zrób ostatnie ćwiczenie." },
+};
+
+Deno.serve(async (req) => {
+  if (req.headers.get("x-cron-secret") !== Deno.env.get("CRON_SECRET")) return new Response("forbidden", { status: 403 });
+  const body = await req.json().catch(() => ({}));
+  const hour = typeof body.test_hour === "number" ? body.test_hour
+    : +new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Warsaw", hour: "2-digit", hourCycle: "h23" }).format(new Date());
+  const msg = MSG[hour];
+  if (!msg) return Response.json({ skipped: hour });
+
+  webpush.setVapidDetails("mailto:" + (Deno.env.get("VAPID_EMAIL") ?? "kontakt@example.com"), Deno.env.get("VAPID_PUBLIC")!, Deno.env.get("VAPID_PRIVATE")!);
+  const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+  let q = sb.from("push_subs").select("id, endpoint, p256dh, auth");
+  if (body.only_user) q = q.eq("user_id", body.only_user);
+  const { data: subs, error } = await q;
+  if (error) return Response.json({ error: error.message }, { status: 500 });
+
+  let sent = 0, removed = 0;
+  const payload = JSON.stringify({ ...msg, url: "./" });
+  for (const s of subs ?? []) {
+    try {
+      await webpush.sendNotification({ endpoint: s.endpoint, keys: { p256dh: s.p256dh, auth: s.auth } }, payload, { TTL: 3600 });
+      sent++;
+    } catch (e) {
+      const code = (e as { statusCode?: number }).statusCode;
+      if (code === 404 || code === 410) { await sb.from("push_subs").delete().eq("id", s.id); removed++; }
+    }
+  }
+  return Response.json({ hour, sent, removed });
+});

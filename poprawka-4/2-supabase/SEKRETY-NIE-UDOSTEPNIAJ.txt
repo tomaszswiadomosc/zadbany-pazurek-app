@@ -1,0 +1,8 @@
+Wklej w Supabase -> Edge Functions -> Secrets (Name = Value):
+
+VAPID_PUBLIC = BOPmYAzC1cRtulHTAOlsPRu8p6cJBJl7_IV4uvvMqtX9zeL233gdfBjtJTyrWdQIF9W-C5kXWlnpbeJwpkXUH_Q
+VAPID_PRIVATE = ZZXQlHQK1FydijBBV3jqdw3k3be-kMdoCMTlLz0e3pg
+CRON_SECRET = 82ea7f140310ab6c4cb4bec1356c21dfd0ba462da336bfd8
+VAPID_EMAIL = tomaszswiadomosc@gmail.com
+
+VAPID_PRIVATE i CRON_SECRET to hasla. Nie wysylaj ich nikomu i nie wrzucaj na GitHub.
