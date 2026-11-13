@@ -156,7 +156,7 @@ function dueCheckpoint() {
 // ---------- Krok 4: dodanie do ekranu ----------
 function openInstall() {
   const steps = isIOS
-    ? ["Otwórz tę stronę w przeglądarce Safari.", "Dotknij „Udostępnij” (kwadrat ze strzałką w górę).", "Przewiń i wybierz „Do ekranu początkowego”, potem „Dodaj”.", "Od teraz otwieraj aplikację z ikony na ekranie."]
+    ? ["Otwórz tę stronę w przeglądarce Safari.", "Dotknij ··· obok paska adresu, potem „Udostępnij”. W starszym iPhonie „Udostępnij” (kwadrat ze strzałką) jest od razu na dolnym pasku.", "Wybierz „Do ekranu głównego” (jeśli nie widzisz, dotknij „Pokaż więcej”), potem „Dodaj”.", "Od teraz otwieraj aplikację z ikony na ekranie."]
     : ["Otwórz tę stronę w przeglądarce Chrome.", "Dotknij menu ⋮ w prawym górnym rogu.", "Wybierz „Zainstaluj aplikację” albo „Dodaj do ekranu głównego”.", "Od teraz otwieraj aplikację z ikony na ekranie."];
   $("installSteps").innerHTML = steps.map(s => `<li>${s}</li>`).join("");
   $("installDone").textContent = installPrompt ? "Zainstaluj teraz" : "Gotowe, dalej";
@@ -294,7 +294,7 @@ function renderDzis() {
   const tips = W.P90_TIPS.slice(); if (S.profile.cuticles) tips.push("Skórki: wieczorem wmasuj krem lub olejek. Gładka skórka mniej kusi do skubania.");
   $("tip").textContent = tips[d % tips.length];
   $("installHint").hidden = isStandalone();
-  $("installText").textContent = isIOS ? "W Safari dotknij „Udostępnij”, potem „Do ekranu początkowego”." : "W Chrome dotknij menu ⋮, potem „Zainstaluj aplikację” lub „Dodaj do ekranu głównego”.";
+  $("installText").textContent = isIOS ? "W Safari dotknij ··· obok paska adresu, potem „Udostępnij”, „Do ekranu głównego” i „Dodaj”." : "W Chrome dotknij menu ⋮, potem „Zainstaluj aplikację” lub „Dodaj do ekranu głównego”.";
 }
 
 // ---------- Spotkanie na żywo (czas polski) ----------
