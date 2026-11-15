@@ -11,5 +11,5 @@ window.P90_CONFIG = {
   TERMS_URL: "regulamin.html",
   PRIVACY_URL: "prywatnosc.html",
   // Strona sprzedażowa (link dla osób bez dostępu). Po ustawieniu domeny wpisz https://pazurek.tomaszswiadomosc.pl
-  LANDING_URL: "https://claude.ai/artifact/HWYx3qMhxPBzwhyvDcLmdb",
+ LANDING_URL: "https://pazurek.tomaszswiadomosc.pl",
 };
