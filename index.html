@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Zadbany Pazurek">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=21">
+<link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
 <div class="app">
@@ -241,7 +241,7 @@
     </div>
     <div class="card"><div class="label">Suplementacja i odżywianie</div>
       <p class="small">Paznokcie zbudowane są z białka, a do wzrostu potrzebują składników z jedzenia. Co jeść, jakie badania warto zrobić i kiedy suplementy mają sens, masz w krótkim przewodniku na jedną stronę.</p>
-      <a class="btn" href="pdf/suplementacja-i-odzywianie.pdf" target="_blank" rel="noopener">Pobierz przewodnik PDF</a>
+      <button class="btn" type="button" data-guide>Otwórz przewodnik</button>
     </div>
     <p class="small muted">To wskazówki pielęgnacyjne, nie porada lekarska. Przy zmianach na paznokciach, które Cię niepokoją, skonsultuj się z lekarzem.</p>
   </section>
@@ -363,15 +363,15 @@
 </div></nav>
 <div class="modal" id="media" hidden role="dialog" aria-modal="true" aria-labelledby="mediaH">
   <div class="modal-in">
-    <div class="modal-top"><b id="mediaH"></b><button class="btn ghost slim" type="button" id="mediaClose">Zamknij</button></div>
+    <div class="modal-top"><b id="mediaH"></b><button class="btn ghost slim" type="button" id="mediaClose">✕ Zamknij</button></div>
     <div id="mediaBody"></div>
   </div>
 </div>
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=21"></script>
-<script src="plan.js?v=21"></script>
-<script src="app.js?v=21"></script>
+<script src="config.js?v=22"></script>
+<script src="plan.js?v=22"></script>
+<script src="app.js?v=22"></script>
 </body>
 </html>

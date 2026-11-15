@@ -238,3 +238,6 @@ details.danger[open]{display:flex;flex-direction:column;gap:10px}
 .hyg-step p{margin:4px 0 0}
 @media(min-width:620px){.hyg-step{flex-direction:row;align-items:flex-start}.hyg-step img{width:240px;flex:none}}
 .nowrap{white-space:nowrap}
+.guide-wrap{overflow:auto;-webkit-overflow-scrolling:touch;max-height:62vh;border:1px solid var(--line);border-radius:10px;background:#fff}
+.guide-img{display:block;width:100%;cursor:zoom-in}
+.guide-img.zoom{width:240%;max-width:none;cursor:zoom-out}

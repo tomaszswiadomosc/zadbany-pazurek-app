@@ -436,12 +436,26 @@ function openFilm(k) {
 function openPhotoHowto() {
   openMedia("Zdjęcie dłoni", `<img src="grafiki/jak-zrobic-zdjecie.jpg" alt="Jak zrobić zdjęcie dłoni: 1. telefon poziomo nad dłońmi, ok. 30 cm wyżej; 2. obie dłonie wierzchem do góry, palce lekko rozłożone, 10 paznokci widać; 3. dzienne światło z boku, bez lampy błyskowej; 4. to samo miejsce lub podobny kąt co tydzień."><img src="grafiki/jak-ustawic-telefon.jpg" alt="Jak ustawić telefon: A. poproś bliską osobę; B. sam: telefon na stosie książek ok. 30 cm, aparat wystaje poza krawędź, samowyzwalacz 10 s; C. sam, po jednej dłoni, 2 zdjęcia.">`);
 }
+const GUIDE_PDF = "pdf/suplementacja-i-odzywianie.pdf";
+function openGuide() {
+  openMedia("Suplementacja i odżywianie", `<div class="guide-wrap"><img class="guide-img" src="pdf/suplementacja-i-odzywianie.jpg" alt="Przewodnik: suplementacja i odżywianie, jedna strona"></div><p class="small muted">Dotknij strony, żeby ją powiększyć, i przesuwaj palcem. Zamykasz przyciskiem „✕ Zamknij” u góry.</p><button class="btn ghost" type="button" id="guideSave">Zapisz albo wydrukuj PDF</button>`);
+  const gi = $("mediaBody").querySelector(".guide-img"); gi.onclick = () => gi.classList.toggle("zoom");
+  $("guideSave").onclick = async () => {
+    try {
+      const blob = await (await fetch(GUIDE_PDF)).blob();
+      const file = new File([blob], "Suplementacja-i-odzywianie.pdf", { type: "application/pdf" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "Suplementacja i odżywianie" }); return; }
+      const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) { if (e && e.name !== "AbortError") toast("Nie udało się zapisać pliku. Spróbuj jeszcze raz."); }
+  };
+}
 $("mediaClose").onclick = closeMedia;
 $("media").addEventListener("click", e => { if (e.target === $("media")) closeMedia(); });
 document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("media").hidden) closeMedia(); });
 document.addEventListener("click", e => {
   const f = e.target.closest("[data-film]"); if (f) { e.preventDefault(); openFilm(f.dataset.film); return; }
   const h = e.target.closest("[data-howto-photo]"); if (h) { e.preventDefault(); openPhotoHowto(); }
+  const g = e.target.closest("[data-guide]"); if (g) { e.preventDefault(); openGuide(); }
 });
 
 // ---------- Pory dnia: rano 6–12, południe 12–18, wieczór 18–6 ----------
