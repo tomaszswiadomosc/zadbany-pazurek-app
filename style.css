@@ -46,7 +46,7 @@ p{margin:0}
 .btn:focus-visible,.chip:focus-visible,.tab:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 
 /* Formularze */
-input[type=text],input[type=email],input[type=number],input[type=time],input[type=date],input[type=url],select,textarea{font:16px var(--text);padding:12px;border:1.5px solid var(--line);border-radius:6px;background:#EAF5FC;color:var(--fg);width:100%;outline:none}
+input[type=text],input[type=email],input[type=number],input[type=time],input[type=date],input[type=url],input[type=search],select,textarea{font:16px var(--text);padding:12px;border:1.5px solid var(--line);border-radius:6px;background:#EAF5FC;color:var(--fg);width:100%;outline:none}
 input:focus,select:focus,textarea:focus{border-color:var(--accent)}
 input::placeholder,textarea::placeholder{color:#9AAABB}
 .check{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
@@ -241,3 +241,4 @@ details.danger[open]{display:flex;flex-direction:column;gap:10px}
 .guide-wrap{overflow:auto;-webkit-overflow-scrolling:touch;max-height:62vh;border:1px solid var(--line);border-radius:10px;background:#fff}
 .guide-img{display:block;width:100%;cursor:zoom-in}
 .guide-img.zoom{width:240%;max-width:none;cursor:zoom-out}
+.btn.slim{width:auto;flex:none;padding:7px 12px;font-size:13px}

@@ -45,7 +45,7 @@ async function boot() {
   D.profiles = D.profiles.filter(p => !p.is_admin);
   D.ev.forEach(e => e.t = new Date(e.created_at).getTime());
   D.drills.forEach(e => e.t = new Date(e.created_at).getTime());
-  show("a-main"); render(); renderCases(); loadMeet();
+  show("a-main"); render(); renderCases(); loadMeet(); loadAccess();
 }
 
 // ---------- Spotkania na żywo ----------
@@ -66,6 +66,43 @@ $("meetForm").onsubmit = async e => {
   $("mSave").disabled = false;
   toast(error ? "Nie udało się zapisać: " + error.message : "Zapisane. Uczestnicy zobaczą to w aplikacji.");
 };
+// ---------- Lista dostępu ----------
+let ACC = [], ORD = [];
+async function loadAccess() {
+  const a = await sb.from("access_list").select("*").order("created_at", { ascending: false });
+  if (a.error) { $("accInfo").textContent = "Brak listy dostępu. Uruchom w Supabase plik dostep.sql."; $("accForm").hidden = true; return; }
+  ACC = a.data || [];
+  const o = await sb.from("orders").select("email,status,amount,paid_at").eq("status", "oplacone");
+  ORD = o.error ? [] : o.data || [];
+  renderAccess();
+}
+function renderAccess() {
+  const q = $("accFind").value.trim().toLowerCase();
+  const rows = ACC.filter(r => !q || r.email.includes(q) || (r.imie || "").toLowerCase().includes(q));
+  const paid = ORD.length, active = ACC.filter(r => !r.revoked_at).length;
+  $("accInfo").textContent = `Aktywnych dostępów: ${active} · opłaconych zamówień: ${paid}. Osoby po płatności trafiają tu same; ręcznie dodasz testera albo prezent, a po zwrocie pieniędzy odbierasz dostęp.`;
+  $("accTbl").innerHTML = rows.map(r => `<tr><td>${esc(r.email)}</td><td>${esc(r.imie || "")}</td><td>${r.zrodlo === "p24" ? "płatność" : "ręcznie"}</td><td>${new Date(r.created_at).toLocaleDateString("pl-PL")}</td>
+    <td>${r.revoked_at ? '<span class="muted">odebrany</span>' : "aktywny"}</td>
+    <td><button class="btn ghost slim" data-acc="${esc(r.email)}" data-on="${r.revoked_at ? 1 : 0}">${r.revoked_at ? "Przywróć" : "Odbierz dostęp"}</button></td></tr>`).join("") || '<tr><td colspan="6" class="muted">Brak osób</td></tr>';
+}
+$("accFind").oninput = renderAccess;
+$("accForm").onsubmit = async e => {
+  e.preventDefault();
+  const email = $("accEmail").value.trim().toLowerCase(), imie = $("accName").value.trim() || null;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return toast("Sprawdź adres e-mail.");
+  const { error } = await sb.from("access_list").upsert({ email, imie, zrodlo: "reczny", revoked_at: null }, { onConflict: "email" });
+  if (error) return toast("Nie udało się dodać: " + error.message);
+  $("accEmail").value = ""; $("accName").value = ""; toast("Dodane. Ta osoba może się już zalogować."); loadAccess();
+};
+$("accTbl").addEventListener("click", async e => {
+  const b = e.target.closest("[data-acc]"); if (!b) return;
+  const email = b.dataset.acc, restore = b.dataset.on === "1";
+  if (!restore && b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno? Kliknij jeszcze raz"; return; }
+  const { error } = await sb.from("access_list").update({ revoked_at: restore ? null : new Date().toISOString() }).eq("email", email);
+  if (error) return toast("Nie udało się: " + error.message);
+  toast(restore ? "Dostęp przywrócony." : "Dostęp odebrany. Ta osoba nie zaloguje się do aplikacji."); loadAccess();
+});
+
 sb.auth.onAuthStateChange(ev => { if (ev === "SIGNED_IN") boot(); });
 $("range").onchange = render;
 

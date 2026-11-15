@@ -16,7 +16,7 @@ let installPrompt = null;
 W.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; });
 
 function toast(m) { const t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(t._t); t._t = setTimeout(() => t.hidden = true, 2800); }
-const SCREENS = ["s-loading", "s-deleted", "s-login", "s-onboard", "s-safety", "s-survey", "s-install", "s-photo1", "v-dzis", "v-higiena", "v-plan", "v-zapisz", "v-poslizg", "v-sos", "v-postep"];
+const SCREENS = ["s-loading", "s-deleted", "s-noaccess", "s-login", "s-onboard", "s-safety", "s-survey", "s-install", "s-photo1", "v-dzis", "v-higiena", "v-plan", "v-zapisz", "v-poslizg", "v-sos", "v-postep"];
 function show(id) { SCREENS.forEach(s => $(s).hidden = s !== id); $("nav").hidden = !id.startsWith("v-"); scrollTo(0, 0); }
 function fail(e) { console.error(e); toast("Coś poszło nie tak. Sprawdź internet i spróbuj ponownie."); }
 const sameDay = (a, b) => new Date(a).toDateString() === new Date(b).toDateString();
@@ -55,8 +55,21 @@ fillChips("svFreq", W.P90_FREQ, W.P90_FREQ.map((_, i) => i)); $("svFreq").datase
 bindChips(document);
 
 // ---------- Logowanie ----------
+// Lista dostępu: do aplikacji logują się tylko osoby z listy (opłacone albo dodane przez trenera).
+// Gdy w bazie nie ma jeszcze funkcji (przed uruchomieniem dostep.sql), aplikacja działa jak dotąd.
+async function accessCheck(rpc, args) {
+  const { data, error } = await sb.rpc(rpc, args);
+  return error ? true : data === true;
+}
+function showNoAccess() {
+  const u = C.LANDING_URL; const j = $("noaccessJoin");
+  if (u) j.href = u; else j.hidden = true;
+  show("s-noaccess");
+}
+$("noaccessBack").onclick = () => { S.blocked = false; $("loginForm").hidden = false; $("codeForm").hidden = true; show("s-login"); $("email").focus(); };
 $("loginForm").onsubmit = async e => {
   e.preventDefault(); $("loginBtn").disabled = true;
+  if (!(await accessCheck("can_login", { p_email: $("email").value.trim() }))) { $("loginBtn").disabled = false; return showNoAccess(); }
   const { error } = await sb.auth.signInWithOtp({ email: $("email").value.trim(), options: { emailRedirectTo: location.origin + location.pathname } });
   $("loginBtn").disabled = false;
   if (error) return toast("Nie udało się wysłać e-maila: " + error.message);
@@ -74,6 +87,7 @@ $("codeBack").onclick = () => { $("codeForm").hidden = true; $("loginForm").hidd
 async function boot() {
   const { data: { session } } = await sb.auth.getSession();
   if (!session) return show("s-login");
+  if (!(await accessCheck("my_access"))) { S.blocked = true; await sb.auth.signOut(); return showNoAccess(); }
   S.user = session.user;
   const { data: prof, error } = await sb.from("profiles").select("*").eq("id", S.user.id).maybeSingle();
   if (error) return fail(error);
@@ -83,7 +97,7 @@ async function boot() {
   nextStep();
 }
 sb.auth.onAuthStateChange((ev, session) => {
-  if (ev === "SIGNED_OUT") { S.user = null; S.profile = null; if (!S.deleted) show("s-login"); }
+  if (ev === "SIGNED_OUT") { S.user = null; S.profile = null; if (!S.deleted && !S.blocked) show("s-login"); }
   if (ev === "SIGNED_IN" && (!S.user || S.user.id !== session.user.id)) boot().catch(fail);
 });
 

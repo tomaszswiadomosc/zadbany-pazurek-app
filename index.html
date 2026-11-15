@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Zadbany Pazurek">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=22">
+<link rel="stylesheet" href="style.css?v=23">
 </head>
 <body>
 <div class="app">
@@ -25,6 +25,14 @@
     <a class="btn ghost" href="./">Wróć na start</a>
   </section>
 
+  <section id="s-noaccess" class="stack" hidden>
+    <h1>Ten adres nie ma jeszcze dostępu</h1>
+    <p class="muted">Do aplikacji logują się osoby, które dołączyły do programu. Jeśli już zapłaciłeś/aś, użyj tego samego adresu e-mail co przy płatności. Mail z dostępem przychodzi zwykle w ciągu kilku minut.</p>
+    <a class="btn" id="noaccessJoin" href="#" target="_blank" rel="noopener">Dołączam za 42 zł</a>
+    <button class="btn ghost" type="button" id="noaccessBack">Wpisz inny e-mail</button>
+    <p class="small muted">Coś się nie zgadza? Odpisz na maila z dostępem albo napisz do mnie na Instagramie.</p>
+  </section>
+
   <!-- Logowanie -->
   <section id="s-login" class="stack" hidden>
     <div class="brand"><span class="logo-mark" role="img" aria-label="Zadbany Pazurek"><img class="tx" src="logo/napis-zadbany.png" alt=""><img class="ic" src="logo/pazurek-ikona.png" alt=""><img class="tx" src="logo/napis-pazurek.png" alt=""></span><span class="label">Program 90 dni · <span class="trainer"></span></span></div>
@@ -33,8 +41,8 @@
     <form class="card" id="loginForm">
       <label class="label" for="email">Twój e-mail</label>
       <input type="email" id="email" required autocomplete="email" placeholder="np. anna@gmail.com">
-      <button class="btn" type="submit" id="loginBtn">Wyślij link do logowania</button>
-      <p class="small muted">Bez hasła. Dostaniesz e-mail z kodem i linkiem do logowania.</p>
+      <button class="btn" type="submit" id="loginBtn">Wyślij kod do logowania</button>
+      <p class="small muted">Bez hasła. Dostaniesz e-mail z kodem do wpisania.</p>
     </form>
     <form class="card" id="codeForm" hidden>
       <div class="note">Sprawdź skrzynkę (także foldery Oferty i Spam). Wpisz tutaj kod z e-maila albo kliknij link na tym telefonie.</div>
@@ -370,8 +378,8 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=22"></script>
-<script src="plan.js?v=22"></script>
-<script src="app.js?v=22"></script>
+<script src="config.js?v=23"></script>
+<script src="plan.js?v=23"></script>
+<script src="app.js?v=23"></script>
 </body>
 </html>
