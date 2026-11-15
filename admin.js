@@ -39,6 +39,8 @@ async function boot() {
     ]);
   } catch (e) { console.error(e); return toast("Nie udało się pobrać danych."); }
   try { D.hyg = await all(() => sb.from("hygiene_done").select("user_id,day,item,done_at")); } catch (e) { console.warn("higiena", e); D.hyg = []; }
+  try { D.land = await all(() => sb.from("landing_events").select("event,zrodlo,urzadzenie,at")); } catch (e) { console.warn("statystyki", e); D.land = []; }
+  D.land.forEach(x => x.t = new Date(x.at).getTime());
   D.hyg.forEach(h => h.t = new Date(h.done_at).getTime());
   D.profiles = D.profiles.filter(p => !p.is_admin);
   D.ev.forEach(e => e.t = new Date(e.created_at).getTime());
@@ -85,6 +87,14 @@ function render() {
   $("kDrill").textContent = D.profiles.length ? (drills.length / D.profiles.length).toFixed(1) : "0";
   const hyg = D.hyg.filter(h => h.t >= from), hygDays = new Set(hyg.map(h => h.user_id + ":" + h.day)).size;
   $("kHyg").textContent = D.profiles.length ? (hygDays / D.profiles.length).toFixed(1) : "0";
+  const land = D.land.filter(x => x.t >= from), lc = k => land.filter(x => x.event === k).length;
+  const lv = lc("wejscie"), ls = lc("zapis");
+  $("lVisit").textContent = lv; $("lJoin").textContent = lc("dolaczam"); $("lSign").textContent = ls;
+  $("lConv").textContent = lv ? Math.round(ls / lv * 100) + "%" : "–";
+  const src = {}; land.filter(x => x.event === "wejscie").forEach(x => { const k = x.zrodlo || "bezpośrednio"; src[k] = (src[k] || 0) + 1; });
+  const topSrc = Object.entries(src).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const tel = land.filter(x => x.event === "wejscie" && x.urzadzenie === "telefon").length;
+  $("lSrc").textContent = topSrc.length ? "Skąd przychodzą: " + topSrc.map(([k, n]) => `${k} (${n})`).join(", ") + ` · na telefonie: ${pct(tel, lv)}` : "Brak wejść w tym zakresie.";
   renderSurveys();
 
   const emo = count(bit, e => e.emotions), place = count(bit, e => e.place), time = count(bit, e => window.P90_partOfDay(e.t)), help = count(res, e => e.helps);
