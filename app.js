@@ -16,7 +16,7 @@ let installPrompt = null;
 W.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installPrompt = e; });
 
 function toast(m) { const t = $("toast"); t.textContent = m; t.hidden = false; clearTimeout(t._t); t._t = setTimeout(() => t.hidden = true, 2800); }
-const SCREENS = ["s-loading", "s-deleted", "s-login", "s-onboard", "s-safety", "s-survey", "s-install", "s-photo1", "v-dzis", "v-plan", "v-zapisz", "v-poslizg", "v-sos", "v-postep"];
+const SCREENS = ["s-loading", "s-deleted", "s-login", "s-onboard", "s-safety", "s-survey", "s-install", "s-photo1", "v-dzis", "v-higiena", "v-plan", "v-zapisz", "v-poslizg", "v-sos", "v-postep"];
 function show(id) { SCREENS.forEach(s => $(s).hidden = s !== id); $("nav").hidden = !id.startsWith("v-"); scrollTo(0, 0); }
 function fail(e) { console.error(e); toast("Coś poszło nie tak. Sprawdź internet i spróbuj ponownie."); }
 const sameDay = (a, b) => new Date(a).toDateString() === new Date(b).toDateString();
@@ -203,8 +203,10 @@ async function loadData() {
     sb.from("surveys").select("*").eq("user_id", uid).order("checkpoint"),
     sb.from("if_then_plans").select("*").eq("user_id", uid).order("created_at"),
     sb.from("day_notes").select("*").eq("user_id", uid).order("day"),
-    sb.from("spotkania").select("*").eq("id", 1).maybeSingle()
+    sb.from("spotkania").select("*").eq("id", 1).maybeSingle(),
+    sb.from("hygiene_done").select("day,item").eq("user_id", uid)
   ]);
+  S.hyg = new Set(r[8].error ? [] : r[8].data.map(x => x.day + ":" + x.item));
   S.meet = r[7].error ? null : r[7].data;
   const err = r.slice(0, 7).find(x => x.error); if (err) return fail(err.error);
   const withT = a => a.map(e => ({ ...e, t: new Date(e.created_at).getTime() }));
@@ -243,6 +245,28 @@ async function addEpisode(row) {
   const e = { ...data, t: new Date(data.created_at).getTime() }; S.ev.push(e); return e;
 }
 
+// ---------- Higiena paznokci ----------
+const HYG = [
+  { id: "olejek", t: "Olejek na skórki", d: "Kropla na każdą skórkę, wmasuj. Rano i wieczorem." },
+  { id: "krem", t: "Krem do rąk", d: "Po myciu rąk. Wmasuj też w paznokcie i skórki." },
+  { id: "pilnik", t: "Pilnik zamiast zębów", d: "Sprawdź palcem brzegi. Co odstaje, wygładź pilnikiem." }
+];
+function renderHyg(d) {
+  const n = HYG.filter(h => S.hyg.has(d + ":" + h.id)).length;
+  $("hygCount").textContent = `${n} z 3`;
+  $("hygList").innerHTML = HYG.map(h => `<label class="task hyg"><input type="checkbox" data-hyg="${h.id}"${S.hyg.has(d + ":" + h.id) ? " checked" : ""}><img src="grafiki/higiena/${h.id}.svg" alt=""><span><b>${h.t}</b><br><span class="small muted">${h.d}</span></span></label>`).join("");
+  $("hygList").querySelectorAll("[data-hyg]").forEach(cb => cb.onchange = async () => {
+    const on = cb.checked, item = cb.dataset.hyg, k = d + ":" + item;
+    const r = on ? await sb.from("hygiene_done").upsert({ user_id: S.user.id, day: d, item })
+                 : await sb.from("hygiene_done").delete().eq("user_id", S.user.id).eq("day", d).eq("item", item);
+    if (r.error) { cb.checked = !on; return fail(r.error); }
+    on ? S.hyg.add(k) : S.hyg.delete(k);
+    const m = HYG.filter(h => S.hyg.has(d + ":" + h.id)).length;
+    $("hygCount").textContent = `${m} z 3`;
+    if (on && m === 3) toast("Higiena na dziś zrobiona");
+  });
+}
+
 // ---------- Nawigacja ----------
 function go(v) {
   if (v !== "sos") stopSos();
@@ -274,6 +298,8 @@ function renderDzis() {
     if (r.error) { e.target.checked = !on; return fail(r.error); }
     on ? S.tasks.add(d) : S.tasks.delete(d); if (on) toast("Zadanie zaliczone");
   };
+
+  renderHyg(d);
 
   // Komunikaty
   const wb = $("weekBanner");

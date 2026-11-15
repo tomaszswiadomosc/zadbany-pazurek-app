@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Zadbany Pazurek">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=20">
+<link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 <div class="app">
@@ -154,6 +154,12 @@
       <p class="small muted">W każdej porze: obserwuj i zapisuj każdy moment, a potem zrób ćwiczenie na sucho, najlepiej wtedy, gdy NIE masz ochoty gryźć.</p>
     </div>
 
+    <div class="card" id="hygCard">
+      <div class="top"><div class="label">Higiena paznokci · odhacz dziś</div><b id="hygCount" class="nowrap"></b></div>
+      <div class="hyg-list" id="hygList"></div>
+      <button class="btn ghost" type="button" data-go="higiena">Jak to robić · grafiki</button>
+    </div>
+
     <div class="card" id="pushCard" hidden>
       <div class="label">Przypomnienia</div>
       <p class="small">3 krótkie przypomnienia dziennie: rano o 8:00, w południe o 13:00 i wieczorem o 19:00.</p>
@@ -201,6 +207,43 @@
       <a class="btn" id="meetBtn" target="_blank" rel="noopener">Dołącz przez Google Meet</a>
       <p class="small muted">Grupa wsparcia co tydzień z <span class="trainer"></span>: rozmowa, omówienie postępów, pytania, a jeśli chcecie, wspólna medytacja. Możesz mieć wyłączoną kamerę i wpisać samo imię. Nie podawaj innym uczestnikom swoich danych kontaktowych.</p>
     </div>
+  </section>
+
+  <!-- APLIKACJA: higiena paznokci -->
+  <section id="v-higiena" class="stack" hidden>
+    <div><a href="#" data-go="dzis" class="small">‹ Wróć do Dziś</a><h1>Higiena paznokci</h1></div>
+    <p class="muted">Trzy proste rzeczy dziennie, razem około 3 minut. Zadbane dłonie mniej kuszą, żeby je gryźć, a paznokcie spokojnie się odbudowują.</p>
+    <div class="card"><div class="label">Codziennie · odhaczasz na ekranie Dziś</div>
+      <div class="hyg-step"><img src="grafiki/higiena/olejek.svg" alt="" loading="lazy"><div><b>1. Olejek na skórki</b><p class="small">Rano i wieczorem kropla olejku na każdą skórkę. Wmasuj okrężnymi ruchami przez około 30 sekund. Nawilżona skórka mniej pęka i rzadziej robią się zadziory, które kuszą do gryzienia. Nie masz olejku? Wystarczy oliwa albo wazelina.</p></div></div>
+      <div class="hyg-step"><img src="grafiki/higiena/krem.svg" alt="" loading="lazy"><div><b>2. Krem do rąk</b><p class="small">Po każdym myciu rąk. Wybierz gęsty krem, na przykład z mocznikiem. Wmasuj go też w paznokcie i skórki, nie tylko w dłonie.</p></div></div>
+      <div class="hyg-step"><img src="grafiki/higiena/pilnik.svg" alt="" loading="lazy"><div><b>3. Pilnik zamiast zębów</b><p class="small">Przejedź opuszką po brzegach paznokci. Gdy coś odstaje albo się zahacza, wygładź to pilnikiem, nie zębami. Pilnikuj w jedną stronę, bez piłowania tam i z powrotem. Noś pilnik przy sobie: w kieszeni, w aucie, przy komputerze.</p></div></div>
+    </div>
+    <div class="card"><div class="label">Raz w tygodniu</div>
+      <div class="hyg-step"><img src="grafiki/higiena/obcinanie.svg" alt="" loading="lazy"><div><b>Skracanie</b><p class="small">Trzymaj paznokcie krótko, bo mniej paznokcia to mniej do gryzienia. Obcinaj prosto i lekko zaokrąglij rogi, potem wygładź pilnikiem. Najłatwiej po kąpieli, gdy płytka jest miękka.</p></div></div>
+    </div>
+    <div class="card"><div class="label">Gdy coś się dzieje</div>
+      <div class="hyg-step"><img src="grafiki/higiena/zadzior.svg" alt="" loading="lazy"><div><b>Zadzior</b><p class="small">Odstający kawałek skórki przytnij czystymi cążkami przy samej nasadzie. Nie odrywaj go i nie odgryzaj, bo skóra rozedrze się dalej. Potem posmaruj olejkiem albo kremem.</p></div></div>
+      <div class="hyg-step"><img src="grafiki/higiena/skorki.svg" alt="" loading="lazy"><div><b>Skórki zostaw w spokoju</b><p class="small">Nie wycinaj skórek. Chronią miejsce, z którego rośnie paznokieć, a wycinane odrastają grubsze i twardsze. Wystarczy je nawilżać.</p></div></div>
+      <div class="hyg-step"><img src="grafiki/higiena/rekawiczki.svg" alt="" loading="lazy"><div><b>Woda i chemia</b><p class="small">Do zmywania i sprzątania zakładaj rękawiczki. Częsty kontakt z wodą i detergentami osłabia paznokcie. Po myciu dokładnie osusz dłonie.</p></div></div>
+      <div class="hyg-step"><img src="grafiki/higiena/lekarz.svg" alt="" loading="lazy"><div><b>Kiedy do lekarza</b><p class="small">Skóra przy paznokciu jest czerwona, opuchnięta, ciepła i pulsująco boli? Pojawia się ropa, objawy nie mijają po 2 do 3 dniach albo masz gorączkę? Idź do lekarza i nie wyciskaj ropy sam. Przy cukrzycy lub obniżonej odporności reaguj od razu.</p></div></div>
+    </div>
+    <div class="card"><div class="label">Co mieć pod ręką</div>
+      <ul class="list small">
+        <li>olejek do skórek (albo oliwa, wazelina)</li>
+        <li>gęsty krem do rąk</li>
+        <li>pilnik szklany albo drobnoziarnisty</li>
+        <li>małe cążki do skórek</li>
+        <li>rękawiczki do zmywania</li>
+      </ul>
+    </div>
+    <div class="card"><div class="label">Czego się spodziewać</div>
+      <p class="small">Paznokcie u rąk rosną średnio 3 do 4 mm na miesiąc. W 90 dni to około 1 cm, czyli zwykle tyle, ile trzeba, żeby obgryziony brzeg odrósł. Cierpliwość i codzienna pielęgnacja robią tu całą robotę.</p>
+    </div>
+    <div class="card"><div class="label">Suplementacja i odżywianie</div>
+      <p class="small">Paznokcie zbudowane są z białka, a do wzrostu potrzebują składników z jedzenia. Co jeść, jakie badania warto zrobić i kiedy suplementy mają sens, masz w krótkim przewodniku na jedną stronę.</p>
+      <a class="btn" href="pdf/suplementacja-i-odzywianie.pdf" target="_blank" rel="noopener">Pobierz przewodnik PDF</a>
+    </div>
+    <p class="small muted">To wskazówki pielęgnacyjne, nie porada lekarska. Przy zmianach na paznokciach, które Cię niepokoją, skonsultuj się z lekarzem.</p>
   </section>
 
   <!-- APLIKACJA: kreator planu „jeśli… to…” -->
@@ -327,8 +370,8 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=20"></script>
-<script src="plan.js?v=20"></script>
-<script src="app.js?v=20"></script>
+<script src="config.js?v=21"></script>
+<script src="plan.js?v=21"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>

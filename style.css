@@ -225,3 +225,16 @@ details.danger[open]{display:flex;flex-direction:column;gap:10px}
 /* Jasny motyw: logo przyciemnione, cienie kart */
 .logo-mark img{filter:brightness(0) opacity(.85)}
 .card{box-shadow:0 10px 30px -22px rgba(14,42,68,.35)}
+
+/* Higiena paznokci */
+.hyg-list{display:flex;flex-direction:column;gap:12px;margin:6px 0 12px}
+.task.hyg{align-items:center}
+.task.hyg img{width:56px;height:42px;object-fit:cover;border-radius:8px;flex:none}
+.task.hyg b{font-size:17px}
+.hyg-step{display:flex;flex-direction:column;gap:10px;padding:14px 0;border-top:1px solid var(--line)}
+.hyg-step:first-of-type{border-top:0;padding-top:4px}
+.hyg-step img{width:100%;max-width:320px;height:auto;border-radius:14px;display:block}
+.hyg-step b{font-family:var(--display);font-size:19px;text-transform:uppercase;letter-spacing:.02em}
+.hyg-step p{margin:4px 0 0}
+@media(min-width:620px){.hyg-step{flex-direction:row;align-items:flex-start}.hyg-step img{width:240px;flex:none}}
+.nowrap{white-space:nowrap}

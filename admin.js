@@ -38,6 +38,8 @@ async function boot() {
       all(() => sb.from("if_then_plans").select("user_id,situation,action,active"))
     ]);
   } catch (e) { console.error(e); return toast("Nie udało się pobrać danych."); }
+  try { D.hyg = await all(() => sb.from("hygiene_done").select("user_id,day,item,done_at")); } catch (e) { console.warn("higiena", e); D.hyg = []; }
+  D.hyg.forEach(h => h.t = new Date(h.done_at).getTime());
   D.profiles = D.profiles.filter(p => !p.is_admin);
   D.ev.forEach(e => e.t = new Date(e.created_at).getTime());
   D.drills.forEach(e => e.t = new Date(e.created_at).getTime());
@@ -81,6 +83,8 @@ function render() {
   $("kBit").textContent = bit.length; $("kRes").textContent = res.length; $("kAware").textContent = pct(awPre, aw.length);
   const drills = D.drills.filter(d => d.t >= from);
   $("kDrill").textContent = D.profiles.length ? (drills.length / D.profiles.length).toFixed(1) : "0";
+  const hyg = D.hyg.filter(h => h.t >= from), hygDays = new Set(hyg.map(h => h.user_id + ":" + h.day)).size;
+  $("kHyg").textContent = D.profiles.length ? (hygDays / D.profiles.length).toFixed(1) : "0";
   renderSurveys();
 
   const emo = count(bit, e => e.emotions), place = count(bit, e => e.place), time = count(bit, e => window.P90_partOfDay(e.t)), help = count(res, e => e.helps);
@@ -101,12 +105,14 @@ function render() {
     const sv = D.surveys.filter(s => s.user_id === p.id), dr = drills.filter(d => d.user_id === p.id).length;
     const urge = sv.length ? (sv.length > 1 ? `${sv[0].urge} → ${sv.at(-1).urge}` : `${sv[0].urge}`) : "–";
     const plan = D.plans.some(x => x.user_id === p.id && x.active) ? "tak" : "nie";
+    const hy = hyg.filter(h => h.user_id === p.id), hyD = new Set(hy.map(h => h.day)).size;
+    const hyTxt = hyD ? `${hyD} ${hyD === 1 ? "dzień" : "dni"} · ${(hy.length / hyD).toFixed(1)}/3` : "–";
     return `<tr><td>${esc(p.first_name)} ${esc(p.last_name)}<br><span class="small muted">${esc(p.email)}</span></td>
       <td>${window.P90_dayNo(p.start_date)}</td>
       <td>${last ? new Date(last.t).toLocaleString("pl-PL", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "brak"}</td>
       <td>${mine.filter(e => e.kind === "bit").length}</td><td>${mine.filter(e => e.kind === "res").length}</td>
-      <td>${pct(ap, a.length)}</td><td>${dr}</td><td>${urge}</td><td>${plan}</td><td>${p.support_sent_at ? "tak" : "nie"}</td><td>${tasks}</td><td>${p.consent_case_study ? "tak" : "nie"}</td></tr>`;
-  }).join("") || '<tr><td colspan="12" class="muted">Jeszcze nikt nie dołączył.</td></tr>';
+      <td>${pct(ap, a.length)}</td><td>${dr}</td><td>${hyTxt}</td><td>${urge}</td><td>${plan}</td><td>${p.support_sent_at ? "tak" : "nie"}</td><td>${tasks}</td><td>${p.consent_case_study ? "tak" : "nie"}</td></tr>`;
+  }).join("") || '<tr><td colspan="13" class="muted">Jeszcze nikt nie dołączył.</td></tr>';
 }
 
 function renderSurveys() {

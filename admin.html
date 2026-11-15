@@ -6,7 +6,7 @@
 <title>Panel trenera · Zadbany Pazurek</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=20">
+<link rel="stylesheet" href="style.css?v=21">
 </head>
 <body>
 <div class="app wide">
@@ -38,6 +38,7 @@
       <div class="stat card"><b id="kRes">0</b><span class="small muted">powstrzymań</span></div>
       <div class="stat card"><b id="kAware">0%</b><span class="small muted">zauważonych przed / w trakcie</span></div>
       <div class="stat card"><b id="kDrill">0</b><span class="small muted">ćwiczeń na sucho na osobę</span></div>
+      <div class="stat card"><b id="kHyg">0</b><span class="small muted">dni z higieną paznokci na osobę</span></div>
     </div>
 
     <div class="card"><div class="label">Wyniki ankiet (start → ostatnia odpowiedź, wszystkie osoby z co najmniej 2 ankietami)</div>
@@ -78,17 +79,17 @@
 
     <div class="card"><div class="label">Uczestnicy</div>
       <div class="tablewrap"><table>
-        <thead><tr><th>Imię i nazwisko</th><th>Dzień</th><th>Ostatni zapis</th><th>Obgryzienia</th><th>Powstrzymania</th><th>Świadomość</th><th>Ćwiczenia</th><th>Chęć start → teraz</th><th>Plan</th><th>Wsparcie</th><th>Zadania</th><th>Case study</th></tr></thead>
+        <thead><tr><th>Imię i nazwisko</th><th>Dzień</th><th>Ostatni zapis</th><th>Obgryzienia</th><th>Powstrzymania</th><th>Świadomość</th><th>Ćwiczenia</th><th>Higiena</th><th>Chęć start → teraz</th><th>Plan</th><th>Wsparcie</th><th>Zadania</th><th>Case study</th></tr></thead>
         <tbody id="tbl"></tbody></table></div>
-      <p class="small muted">Liczby w tabeli dotyczą wybranego zakresu czasu. „Zadania” to odhaczone dni w całym programie.</p></div>
+      <p class="small muted">Liczby w tabeli dotyczą wybranego zakresu czasu. „Zadania” to odhaczone dni w całym programie. „Higiena” to dni, w których ktoś odhaczył pielęgnację, i średnio ile z 3 rzeczy zrobił.</p></div>
 
     <div class="card"><div class="label">Case study przed / po (tylko osoby ze zgodą)</div><div class="grid2" id="cases"></div></div>
   </section>
 </div>
 <div class="toast" id="toast" hidden></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=20"></script>
-<script src="plan.js?v=20"></script>
-<script src="admin.js?v=20"></script>
+<script src="config.js?v=21"></script>
+<script src="plan.js?v=21"></script>
+<script src="admin.js?v=21"></script>
 </body>
 </html>
