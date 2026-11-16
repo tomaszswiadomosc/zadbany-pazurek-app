@@ -380,6 +380,22 @@ async function savePushSub(sub) {
   return !error;
 }
 let pushErr = "";
+// Subskrypcja z aktualnym kluczem VAPID. Gdy telefon ma starą (inny klucz), przepisuje ją na nowy.
+function sameKey(sub) {
+  try { const a = new Uint8Array(sub.options.applicationServerKey), b = b64u(C.VAPID_PUBLIC_KEY); return a.length === b.length && a.every((x, i) => x === b[i]); }
+  catch (e) { return true; }
+}
+async function freshSub(reg, create) {
+  let sub = await reg.pushManager.getSubscription();
+  if (sub && !sameKey(sub)) {
+    const old = sub.endpoint;
+    try { await sub.unsubscribe(); } catch (e) {}
+    try { await sb.from("push_subs").delete().eq("endpoint", old); } catch (e) {}
+    sub = null; create = true;
+  }
+  if (!sub && create) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(C.VAPID_PUBLIC_KEY) });
+  return sub;
+}
 async function initPush() {
   if (pushChecked) return; pushChecked = true;
   const card = $("pushCard"), key = C.VAPID_PUBLIC_KEY;
@@ -388,7 +404,7 @@ async function initPush() {
   const supported = "PushManager" in window && "Notification" in window && "serviceWorker" in navigator;
   // Przypomnienia już włączone na tym telefonie: przy każdym otwarciu dopisz telefon do bazy (gdyby wcześniej się nie zapisał)
   if (supported && Notification.permission === "granted") {
-    try { const sub = await (await navigator.serviceWorker.ready).pushManager.getSubscription(); if (sub) { savePushSub(sub); return; } } catch (e) {}
+    try { const sub = await freshSub(await navigator.serviceWorker.ready, false); if (sub) { savePushSub(sub); return; } } catch (e) {}
   }
   if (ls.get("push_later") === "1") return;
   if (!supported) {
@@ -404,7 +420,7 @@ async function enablePush(btn) {
     const perm = await Notification.requestPermission();
     if (perm !== "granted") { toast("Bez zgody telefonu przypomnienia nie przyjdą. Możesz to zmienić w ustawieniach telefonu."); $("pushCard").hidden = true; return; }
     const reg = await navigator.serviceWorker.ready;
-    const sub = (await reg.pushManager.getSubscription()) || await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64u(C.VAPID_PUBLIC_KEY) });
+    const sub = await freshSub(reg, true);
     if (await savePushSub(sub)) { ls.set("push_later", "0"); toast("Przypomnienia włączone: 8:00, 13:00 i 19:00"); $("pushCard").hidden = true; renderPushState(); }
     else toast("Nie udało się zapisać przypomnień: " + pushErr);
   } catch (e) { console.error(e); toast("Ten telefon nie obsługuje przypomnień w tej przeglądarce."); }
