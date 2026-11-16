@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zadbany Pazurek | Przestań obgryzać paznokcie</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Przestań obgryzać paznokcie w 90 dni. Bez silnej woli, z planem w telefonie: aplikacja, codzienne ćwiczenia i spotkania na żywo. 42 zł, 14 dni gwarancji zwrotu.">
+<meta property="og:title" content="Zadbany Pazurek | Przestań obgryzać paznokcie">
+<meta property="og:description" content="Przestań obgryzać paznokcie w 90 dni. Bez silnej woli, z planem w telefonie. Program Tomasza Świadomość.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#F7FBFE">
+<link rel="icon" type="image/png" sizes="32x32" href="ikony/icon-32.png">
+<link rel="apple-touch-icon" href="ikony/icon-180.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
+<style>
+  /* Jeden, świadomie ciemny wygląd: biel + błękitne akcenty, wąska wersalikowa typografia nagłówków. */
+  :root{
+    --bg:#F7FBFE; --bg2:#EAF5FC; --card:#FFFFFF; --card2:#F1F8FD; --line:#CFE4F2;
+    --ink:#0E2A44; --muted:#4B6178; --dim:#7F91A3;
+    --orange:#0E92D6; --orange-dark:#0A74AE; --orange-soft:rgba(14,146,214,.12);
+    --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+    --text:"Barlow",-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    --r:14px; --max:1180px;
+    color-scheme:light;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--text);-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  a{color:var(--orange)}
+  .wrap{max-width:var(--max);margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+  section{padding-block:72px}
+  h1,h2,h3{font-family:var(--display);text-transform:uppercase;line-height:1.02;margin:0 0 16px;letter-spacing:.005em;text-wrap:balance}
+  h1{font-size:clamp(44px,8.4vw,92px);font-weight:800}
+  h2{font-size:clamp(34px,5.6vw,58px);font-weight:800}
+  h3{font-size:24px;font-weight:700;letter-spacing:.01em}
+  h1 em,h2 em{font-style:normal;color:var(--orange)}
+  p{margin:0 0 14px}
+  .lead{font-size:clamp(18px,2.4vw,21px);color:var(--muted);max-width:640px}
+  .eyebrow{display:block;font-size:13px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .eyebrow.o{color:var(--orange)}
+  .center{text-align:center}
+  .center .lead{margin-left:auto;margin-right:auto}
+  .muted{color:var(--muted)}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--orange);color:#FFFFFF;font:700 20px var(--display);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:0;border-radius:4px;padding:18px 30px;cursor:pointer;transition:background .15s,transform .15s}
+  .btn:hover{background:var(--orange-dark)}
+  .btn:active{transform:scale(.98)}
+  .btn[disabled]{opacity:.6;cursor:wait}
+  .btn.line{background:transparent;color:var(--ink);border:1.5px solid #CFE4F2}
+  .btn.line:hover{border-color:var(--ink);background:transparent}
+  .btn svg{width:20px;height:20px;flex:none}
+  /* Neon: błękitne przyciski świecą jak neon i delikatnie pulsują */
+  .btn:not(.line){position:relative;background:linear-gradient(180deg,#7CCBF2 0%,var(--orange) 55%,#0A74AE 100%);border:1px solid #7CCBF2;box-shadow:0 0 0 1px rgba(14,146,214,.55),0 0 12px rgba(14,146,214,.75),0 0 32px rgba(14,146,214,.5),0 0 70px rgba(14,146,214,.28),inset 0 0 12px rgba(14,146,214,.55);text-shadow:0 1px 0 rgba(14,146,214,.45);animation:none;--x: 2.6s ease-in-out infinite}
+  .btn:not(.line):hover{background:linear-gradient(180deg,#7CCBF2 0%,#0E92D6 55%,#0A74AE 100%);box-shadow:0 0 0 1px rgba(14,146,214,.8),0 0 16px rgba(14,146,214,.95),0 0 44px rgba(14,146,214,.7),0 0 100px rgba(14,146,214,.4),inset 0 0 14px rgba(14,146,214,.7);animation:none}
+  @keyframes neon{0%,100%{box-shadow:0 0 0 1px rgba(14,146,214,.55),0 0 12px rgba(14,146,214,.75),0 0 32px rgba(14,146,214,.5),0 0 70px rgba(14,146,214,.28),inset 0 0 12px rgba(14,146,214,.55)}50%{box-shadow:0 0 0 1px rgba(14,146,214,.7),0 0 18px rgba(14,146,214,.9),0 0 46px rgba(14,146,214,.62),0 0 96px rgba(14,146,214,.36),inset 0 0 14px rgba(14,146,214,.65)}}
+  @media(prefers-reduced-motion:reduce){.btn:not(.line){animation:none}}
+  :focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+
+  /* NAGŁÓWEK */
+  .hero{position:relative;padding-block:20px 72px;background:radial-gradient(1200px 600px at 15% 0%,#DFF1FC 0%,transparent 60%),var(--bg);border-bottom:1px solid #CFE4F2}
+  .top{display:flex;align-items:center;justify-content:space-between;padding-block:6px 48px}
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink);font:800 22px var(--display);letter-spacing:.06em;text-transform:uppercase}
+  .logo{gap:10px;align-items:flex-end}
+  .logo-txt{margin-bottom:6px}
+  .logo-ic{height:46px;width:auto}
+  .logo-txt{height:26px;width:auto}
+  .top{gap:12px}
+  .top a.small{white-space:nowrap}
+  @media(max-width:480px){.logo{gap:6px}.logo-ic{height:34px}.logo-txt{height:16px;margin-bottom:4px}.top a.small{font-size:13px;letter-spacing:.1em}}
+  .top a.small{font:700 15px var(--display);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;color:var(--ink);border-bottom:2px solid var(--orange);padding-bottom:2px}
+  .hero-grid{display:grid;gap:44px;align-items:center}
+  .hero-grid{max-width:860px}
+  .badge{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;font-size:15px;color:var(--muted);margin-bottom:22px}
+  .badge .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 0 4px var(--orange-soft)}
+  .badge b{color:var(--ink);font-weight:600}
+  .price-line{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 16px;margin:6px 0 4px}
+  .price-line .big{font:800 clamp(60px,10vw,104px)/1 var(--display);color:var(--orange)}
+  .price-line .lbl{font:800 clamp(24px,3.6vw,36px)/1.05 var(--display);text-transform:uppercase;color:var(--orange)}
+  .slogan{font:700 clamp(24px,3.4vw,34px)/1.15 var(--display);text-transform:uppercase;letter-spacing:.02em;margin:18px 0 0;padding-left:16px;border-left:4px solid var(--orange)}
+  .slogan em{font-style:normal;color:var(--orange)}
+  .hero .sub{font-size:19px;color:var(--muted);max-width:560px;margin:18px 0 26px}
+  .hero .sub b{color:var(--ink)}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px}
+  .cta-row .btn{flex:1 1 auto}
+  .hero .fine{font-size:14px;color:var(--dim);margin-top:14px}
+
+  .gal-h{font:700 18px var(--display);letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .tile{aspect-ratio:1;max-width:100%;border-radius:10px;overflow:hidden;background:var(--card);border:1px solid var(--line);display:grid;place-items:center;text-align:center;color:var(--dim);font-size:13px;padding:10px;position:relative}
+  .tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .tile svg{width:34px;height:34px;stroke:#7F91A3;fill:none;stroke-width:1.5;margin:0 auto 6px}
+  .gal-note{font-size:13px;color:var(--dim);margin-top:10px}
+
+  /* FILM */
+  .video{position:relative;aspect-ratio:9/16;max-width:380px;margin:30px auto 0;border-radius:var(--r);overflow:hidden;background:var(--card);border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;text-align:center}
+  .video button{all:unset;cursor:pointer;position:absolute;inset:0;display:grid;place-items:center;background-size:cover;background-position:center}
+  .video .play{width:80px;height:80px;border-radius:50%;background:var(--orange);display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+  .video .play:after{content:"";border-left:24px solid #FFFFFF;border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:6px}
+  .video iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .video .soon{padding:24px;font:700 22px var(--display);letter-spacing:.1em;text-transform:uppercase}
+
+  /* KARTY */
+  .grid{display:grid;gap:14px;margin-top:34px}
+  @media(min-width:760px){.grid.two{grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:repeat(3,1fr)}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px}
+  .card p{color:var(--muted)}
+  .card p:last-child{margin:0}
+  .num{display:block;font:800 44px/1 var(--display);color:var(--orange);margin-bottom:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .chip{border:1px solid var(--line);border-radius:4px;padding:8px 14px;font:600 16px var(--display);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .chip.hot{background:var(--orange);border-color:var(--orange);color:#FFFFFF}
+  /* Wyzwalacze: kolory od granatu do bieli */
+  .chips .chip:nth-child(1){background:#0E2A44;border-color:#0E2A44;color:#FFFFFF}
+  .chips .chip:nth-child(2){background:#0D456B;border-color:#0D456B;color:#FFFFFF}
+  .chips .chip:nth-child(3){background:#0B6193;border-color:#0B6193;color:#FFFFFF}
+  .chips .chip:nth-child(4){background:#0B79B5;border-color:#0B79B5;color:#FFFFFF}
+  .chips .chip:nth-child(5){background:#0D8ACB;border-color:#0D8ACB;color:#FFFFFF}
+  .chips .chip:nth-child(6){background:#269FDC;border-color:#269FDC;color:#FFFFFF}
+  .chips .chip:nth-child(7){background:#57B8E9;border-color:#57B8E9;color:#0E2A44}
+  .chips .chip:nth-child(8){background:#8BD1F3;border-color:#8BD1F3;color:#0E2A44}
+  .chips .chip:nth-child(9){background:#C5E8F9;border-color:#C5E8F9;color:#0E2A44}
+  .chips .chip:nth-child(10){background:#FFFFFF;border-color:#CFE4F2;color:#0E2A44}
+  .habit-pics > :only-child{max-width:640px}
+  .alt{background:var(--bg2);border-block:1px solid #CFE4F2}
+  .phase small{display:block;font:700 15px var(--display);color:var(--orange);letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px}
+
+  /* PRZED I PO */
+  .ba-grid{display:grid;gap:18px;margin-top:34px}
+  @media(min-width:760px){.ba-grid{grid-template-columns:repeat(3,1fr)}}
+  .ba{display:flex;flex-direction:column;gap:10px}
+  .cmp{position:relative;aspect-ratio:4/3;max-width:100%;border-radius:var(--r);overflow:hidden;background:var(--card);border:1px solid var(--line);--pos:50%;user-select:none}
+  .cmp .layer{position:absolute;inset:0;display:grid;place-items:center}
+  .cmp .layer img{width:100%;height:100%;object-fit:cover}
+  .cmp .after{clip-path:inset(0 0 0 var(--pos))}
+  .cmp .ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--dim);font:700 18px var(--display);letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:16px}
+  .cmp .before .ph{background:repeating-linear-gradient(135deg,#EAF5FC 0 14px,#F1F8FD 14px 28px);position:absolute;inset:0;justify-content:center}
+  .cmp .after .ph{background:#EAF5FC;position:absolute;inset:0;justify-content:center;color:var(--orange)}
+  .cmp .tag{position:absolute;top:12px;font:700 14px var(--display);letter-spacing:.14em;text-transform:uppercase;background:rgba(255,255,255,.88);color:var(--ink);padding:5px 10px;border-radius:3px;z-index:2;pointer-events:none}
+  .cmp .tag.l{left:12px}.cmp .tag.r{right:12px;color:var(--orange)}
+  /* Etykiety przed/po: biel i błękit */
+  .cmp .tag{display:flex;flex-direction:column;align-items:flex-start;gap:6px;background:none;padding:0;border-radius:0;letter-spacing:0;text-transform:none}
+  .cmp .tag.r{align-items:flex-end}
+  .cmp .tag b{font:800 15px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;padding:7px 14px;border-radius:999px;box-shadow:0 6px 16px -6px rgba(0,0,0,.35)}
+  .cmp .tag.l b{background:#FFFFFF;color:#0E2A44}
+  .cmp .tag.r b{background:#0E92D6;color:#FFFFFF}
+  .cmp .tag small{font:500 12px/1.25 var(--text);color:#16233A;background:rgba(255,255,255,.82);padding:4px 8px 4px 9px;border-left:2px solid #FFFFFF;border-radius:0 4px 4px 0;max-width:130px}
+  .cmp .tag.r small{border-left:0;border-right:2px solid #0E92D6;border-radius:4px 0 0 4px;padding:4px 9px 4px 8px;text-align:right}
+  @media(max-width:420px){.cmp .tag small{font-size:11px;max-width:110px}}
+  .cmp .bar{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:var(--orange);z-index:2;pointer-events:none}
+  .cmp .bar:after{content:"";position:absolute;top:50%;left:50%;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0E0E' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 6l-6 6 6 6M15 6l6 6-6 6'/%3E%3C/svg%3E") center/22px no-repeat}
+  .cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;z-index:3;margin:0}
+  .ba .cap{font-size:15px;color:var(--muted)}
+  .ba .cap b{color:var(--ink);font-weight:600}
+  .honest{margin-top:22px;font-size:14px;color:var(--dim);max-width:760px}
+  .habit-pics{display:grid;gap:12px;margin-top:30px}
+  @media(min-width:700px){.habit-pics{grid-template-columns:1fr 1fr}}
+  .habit-pics img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:var(--r);border:1px solid var(--line);filter:grayscale(.35) contrast(1.05)}
+
+  /* APLIKACJA */
+  .app-grid{display:grid;gap:40px;align-items:center;margin-top:34px}
+  @media(min-width:900px){.app-grid{grid-template-columns:300px 1fr}}
+  .phone{width:270px;margin:0 auto;background:#000;border:1px solid #333;border-radius:42px;padding:12px;box-shadow:0 30px 70px -30px rgba(14,146,214,.35)}
+  .screen{background:#F7FBFE;color:#0E2A44;border-radius:32px;padding:24px 16px 18px;min-height:500px;display:flex;flex-direction:column;gap:10px;overflow:hidden;font-family:system-ui,sans-serif}
+  .s-day{font-size:12px;color:#4B6178;font-weight:600}
+  .s-big{font:800 30px/1 var(--display);text-transform:uppercase}
+  .s-bar{height:7px;border-radius:9px;background:#D6E7F3;overflow:hidden}
+  .s-bar i{display:block;height:100%;width:22%;background:#0E92D6;border-radius:9px}
+  .s-card{background:#FFFFFF;border:1px solid #D6E7F3;box-shadow:0 8px 20px -16px rgba(14,42,68,.35);border-radius:14px;padding:10px 12px;font-size:13px;line-height:1.4}
+  .s-card small{display:block;color:#4B6178;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+  .s-dots{display:flex;gap:5px;margin-top:6px}.s-dots i{width:24px;height:6px;border-radius:9px;background:#D6E7F3}.s-dots i.on{background:#0E92D6}
+  .s-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .s-btn{border-radius:12px;padding:11px;text-align:center;font-weight:700;font-size:14px}
+  .s-btn.g{background:linear-gradient(180deg,#5CC0F0,#0E92D6 55%,#0A7FC0);color:#fff}.s-btn.o{background:#fff;color:#0E2A44;border:1.5px solid #B9D3E6}
+  .phone-wrap{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .s-btn{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:15px}.s-nav{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:11px}.s-card small,.s-day{letter-spacing:.1em}
+  .phone{overflow:hidden;touch-action:pan-y}
+  .slides{display:flex;transition:transform .6s cubic-bezier(.65,0,.35,1)}
+  .slides .screen{flex:0 0 100%;position:relative;padding-bottom:58px}
+  .s-title{font:800 24px/1.05 var(--display);text-transform:uppercase;margin-bottom:2px}
+  .s-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+  .s-chips b{font-weight:600;font-size:11px;border:1px solid #D6E7F3;border-radius:99px;padding:4px 8px;background:#fff}
+  .s-chips b.on{background:#EAF5FC;border-color:#0E92D6;color:#0E92D6}
+  .s-range{height:6px;border-radius:9px;background:#D6E7F3;margin-top:8px}.s-range i{display:block;height:100%;background:#0E92D6;border-radius:9px}
+  .s-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;background:#D6E7F3;padding:3px;border-radius:10px}
+  .s-seg b{font-size:11px;text-align:center;padding:6px 0;border-radius:8px;font-weight:600}.s-seg b.on{background:#0E92D6;color:#fff}
+  .s-box{position:relative;width:150px;height:150px;margin:6px auto;border:3px solid #D6E7F3;border-radius:16px;display:grid;place-items:center;text-align:center}
+  .s-box b{display:block;font:800 44px/1 system-ui,sans-serif}.s-box span{font-size:12px;color:#4B6178}
+  .s-dot{position:absolute;width:16px;height:16px;border-radius:50%;background:#0E92D6;top:-9px;left:-9px;animation:sdot 8s linear infinite}
+  @keyframes sdot{0%{top:-9px;left:-9px}25%{top:-9px;left:calc(100% - 7px)}50%{top:calc(100% - 7px);left:calc(100% - 7px)}75%{top:calc(100% - 7px);left:-9px}100%{top:-9px;left:-9px}}
+  .s-chart{display:grid;grid-template-columns:repeat(14,1fr);gap:3px;height:70px;align-items:end;margin-top:6px}
+  .s-chart i{display:flex;flex-direction:column-reverse;height:100%;background:linear-gradient(to top,#E0565B 0 var(--b),#6FB7A1 var(--b) calc(var(--b) + var(--r)),transparent calc(var(--b) + var(--r)));border-radius:3px 3px 0 0}
+  .s-leg{display:flex;gap:10px;font-size:10px;color:#4B6178;margin-top:6px}.s-leg span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px}.s-leg .b:before{background:#E0565B}.s-leg .r:before{background:#6FB7A1}
+  .s-svy{display:flex;justify-content:space-between;font-size:13px;margin-top:4px}.s-svy b{color:#0E92D6}
+  .s-nav{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(4,1fr);background:#FFFFFF;border-top:1px solid #D6E7F3;padding:10px 4px 12px;font-size:10px;font-weight:700;color:#7F91A3;text-align:center}
+  .s-nav .on{color:#0E92D6}
+  .phone-dots{display:flex;gap:8px}
+  .phone-dots button{width:28px;height:6px;border-radius:99px;border:0;background:#CFE4F2;cursor:pointer;padding:0;transition:background .3s,width .3s}
+  .phone-dots button[aria-selected="true"]{background:var(--orange);width:44px;box-shadow:0 0 10px rgba(14,146,214,.7)}
+  .phone-cap{font:700 18px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--orange);margin:0}
+  .feat[data-slide]{cursor:pointer;border-radius:10px;padding:8px;margin:-8px;transition:background .2s}
+  .feat[data-slide]:hover,.feat.active{background:rgba(14,146,214,.07)}
+  @media(prefers-reduced-motion:reduce){.slides{transition:none}.s-dot{animation:none}}
+  .feats{display:grid;gap:14px}
+  @media(min-width:640px){.feats{grid-template-columns:1fr 1fr}}
+  .feat{display:flex;gap:16px;align-items:flex-start}
+  .feat .ic{flex:0 0 46px;height:46px;border-radius:6px;background:var(--orange-soft);display:grid;place-items:center}
+  .feat .ic svg{width:24px;height:24px;stroke:var(--orange);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .feat h3{font-size:22px;margin-bottom:6px}
+
+  /* OFERTA */
+  .offer{display:grid;gap:26px;align-items:center}
+  @media(min-width:860px){.offer{grid-template-columns:1.2fr .8fr}}
+  .check{list-style:none;padding:0;margin:22px 0 0}
+  .check li{position:relative;padding:0 0 14px 36px;color:var(--muted)}
+  .check li b{color:var(--ink);font-weight:600}
+  .check li:before{content:"";position:absolute;left:0;top:3px;width:22px;height:22px;border-radius:3px;background:var(--orange) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230E0E0E' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/14px no-repeat}
+  .price{background:var(--card);border:1.5px solid var(--orange);border-radius:var(--r);padding:30px;text-align:center}
+  .price .kicker{font:700 16px var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--orange)}
+  .price .tag{font:800 96px/1 var(--display);margin:8px 0 12px;color:var(--ink)}
+  .price p{color:var(--muted);font-size:15px}
+  .price .btn{width:100%}
+
+  /* DOWÓD: suwak 0–100% */
+  .proof{max-width:640px;margin:28px auto 0;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px 22px 18px;display:flex;flex-direction:column;gap:16px}
+  .proof-h{font:700 18px var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+  .proof-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px;font-size:15px;color:var(--muted)}
+  .proof-top b{color:var(--ink);font-weight:600}
+  .proof .pct{font:800 30px/1 var(--display);color:var(--muted)}
+  .proof .pct.o{color:var(--orange)}
+  .track{height:14px;border-radius:99px;background:#CFE4F2;overflow:hidden}
+  .fill{display:block;height:100%;width:var(--w);border-radius:99px;background:#7F91A3;transition:width 1.6s cubic-bezier(.2,.8,.2,1)}
+  .fill.o{background:linear-gradient(90deg,#0A74AE,#7CCBF2);box-shadow:0 0 14px rgba(14,146,214,.7)}
+  .proof.pre .fill{width:0}
+  .scale{display:flex;justify-content:space-between;font-size:12px;color:var(--dim);margin-top:-6px;font-variant-numeric:tabular-nums}
+  .proof-total{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;border-top:1px solid var(--line);padding-top:14px}
+  .proof-total b{font:800 34px/1 var(--display);color:var(--orange)}
+  .proof-total span{font:700 16px var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin-right:14px}
+  .proof-note{font-size:13px;color:var(--dim);margin:0}
+  @media(prefers-reduced-motion:reduce){.fill{transition:none}}
+
+  /* HIPNOZA */
+  .hyp{display:grid;gap:30px;align-items:start}
+  @media(min-width:900px){.hyp{grid-template-columns:.9fr 1.1fr}}
+  .facts{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+  .fact{border:1px solid var(--line);border-radius:6px;padding:10px 14px;background:var(--card)}
+  .fact b{display:block;font:800 30px/1 var(--display);color:var(--orange)}
+  .fact span{font-size:13px;color:var(--muted)}
+  .steps{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+  .steps li{display:grid;grid-template-columns:48px 1fr;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px 18px 16px}
+  .steps .n{font:800 34px/1 var(--display);color:var(--orange)}
+  .steps h3{font-size:21px;margin:2px 0 6px}
+  .steps p{color:var(--muted);margin:0;font-size:16px}
+  .plus{margin-top:14px;border-left:3px solid var(--orange);padding:4px 0 4px 16px;color:var(--ink);font-size:17px}
+  .plus b{color:var(--orange)}
+
+  /* OPINIE */
+  .quotes{display:grid;gap:14px;margin-top:34px;align-items:start}
+  @media(min-width:760px){.quotes{grid-template-columns:repeat(2,1fr)}}
+  @media(min-width:1080px){.quotes{grid-template-columns:repeat(3,1fr)}}
+  .quote{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px 22px 20px;margin:0;display:flex;flex-direction:column;gap:12px;min-width:0;height:100%}
+  .quote blockquote{flex:1}
+  .quote .mark{display:block;width:30px;height:24px;flex:none}
+  .quote .mark path{fill:var(--orange)}
+  .quote blockquote{margin:0;color:var(--ink);font-size:17px;line-height:1.6}
+  .quote figcaption{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:14px}
+  .quote .av{width:40px;height:40px;border-radius:4px;background:var(--orange);color:#FFFFFF;display:grid;place-items:center;font:800 20px var(--display);flex:none}
+  .quote figcaption b{display:block;font:700 20px/1.1 var(--display);letter-spacing:.06em;text-transform:uppercase}
+  .quote figcaption span{font-size:13px;color:var(--dim)}
+  .quote.big blockquote{font-size:19px}
+
+  /* KIM JESTEM */
+  .about{display:grid;gap:32px;align-items:center}
+  @media(min-width:800px){.about{grid-template-columns:280px 1fr}}
+  .avatar{width:260px;height:325px;max-width:100%;border-radius:6px;margin:0 auto;background:var(--card);border:1px solid var(--line);color:var(--orange);display:grid;place-items:center;font:800 76px var(--display);overflow:hidden}
+  .avatar img{width:100%;height:100%;object-fit:cover}
+  .about p{color:var(--muted)}
+
+  /* FAQ */
+  details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:0 20px;margin-bottom:10px}
+  summary{cursor:pointer;list-style:none;font:700 21px var(--display);letter-spacing:.04em;text-transform:uppercase;padding:18px 32px 18px 0;position:relative}
+  summary::-webkit-details-marker{display:none}
+  summary:after{content:"+";position:absolute;right:0;top:12px;font-size:30px;color:var(--orange);font-weight:400}
+  details[open] summary:after{content:"−"}
+  details p{color:var(--muted);padding-bottom:6px}
+
+  /* FORMULARZ */
+  .form-box{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:30px 22px;max-width:640px;margin:32px auto 0}
+  label{display:block;font-weight:600;font-size:15px;margin:0 0 6px}
+  .opt{font-weight:400;color:var(--dim)}
+  input[type=text],input[type=email],select,textarea{width:100%;font:inherit;font-size:16px;color:var(--ink);background:#FFFFFF;border:1.5px solid var(--line);border-radius:6px;padding:13px 14px;margin-bottom:16px;outline:none;transition:border .15s}
+  input::placeholder,textarea::placeholder{color:#7F91A3}
+  input:focus,select:focus,textarea:focus{border-color:var(--orange)}
+  textarea{min-height:90px;resize:vertical}
+  .tick{display:flex;gap:12px;align-items:flex-start;font-weight:400;font-size:14px;color:var(--muted);margin-bottom:14px;cursor:pointer}
+  .tick input{flex:0 0 22px;width:22px;height:22px;margin:1px 0 0;accent-color:var(--orange)}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+  .msg{display:none;border-radius:6px;padding:16px 18px;margin-top:16px;font-weight:600}
+  .msg.err{display:block;background:rgba(14,146,214,.14);color:var(--orange)}
+  .done{text-align:center;padding:10px 0}
+  .done .big{font:800 64px/1 var(--display);color:var(--orange);margin-bottom:10px}
+  .done p{color:var(--muted)}
+
+  footer{padding-block:40px 120px;font-size:14px;color:var(--dim);text-align:center;border-top:1px solid #CFE4F2}
+  footer p{margin:0 0 6px}
+  footer b{color:var(--ink)}
+
+  .sticky{position:fixed;left:calc(12px + env(safe-area-inset-left,0px));right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:20;transform:translateY(160%);transition:transform .3s}
+  .sticky.show{transform:none}
+  .sticky .btn{width:100%;box-shadow:0 10px 30px rgba(0,0,0,.6)}
+  @media(min-width:940px){.sticky{display:none}}
+  @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+  .hidden{display:none!important}
+</style>
+<link rel="stylesheet" href="animacje.css">
+<style>
+  /* Animacje na ciemnym tle: delikatniejszy odblask i cień */
+  .an-card:before{background:linear-gradient(118deg,transparent 30%,rgba(255,255,255,.6) 46%,transparent 60%)}
+  .an-card:hover,.an-js .an-card.an-in:hover{box-shadow:0 30px 60px -30px rgba(14,146,214,.28)}
+  .center .an-line:after,h2.center.an-line:after{margin-left:auto;margin-right:auto}
+</style>
+<style>.logo-txt,.logo-ic{filter:brightness(0) opacity(.85)}</style>
+<style>
+  /* Zdjęcia podkładowe (Unsplash) */
+  .hero-pics{display:grid;grid-template-columns:1.2fr 1fr;grid-template-rows:1fr 1fr;gap:12px;height:clamp(300px,44vw,540px);min-width:0}
+  .hero-pics img{width:100%;height:100%;min-height:0;object-fit:cover;border-radius:18px;box-shadow:0 26px 54px -30px rgba(14,42,68,.4)}
+  .hero-pics .big{grid-row:span 2;border-radius:999px 999px 18px 18px}
+  @media(min-width:900px){.hero-grid{max-width:none;grid-template-columns:1.1fr .9fr}}
+  .pic{margin:26px 0 0;border-radius:var(--r);overflow:hidden;box-shadow:0 26px 54px -32px rgba(14,42,68,.35)}
+  .pic img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+  .an-band{padding-inline:max(20px,env(safe-area-inset-left,0px))}
+  .an-band:before{background:linear-gradient(180deg,rgba(10,60,100,.55),rgba(10,60,100,.34) 45%,rgba(10,60,100,.6))}
+  .an-band h2{max-width:900px;margin:0 auto;color:#fff}
+  .an-band h2 em{color:#BFE6FB}
+  .an-band p{color:#E6F3FB;font-size:clamp(17px,2.2vw,20px);max-width:560px;margin:18px auto 0}
+  .bonus-band{background:linear-gradient(135deg,#0A74AE 0%,#0E92D6 55%,#5CC0F0 100%);color:#fff;position:relative;overflow:hidden}
+  .bonus-band:before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:rgba(255,255,255,.08);right:-160px;top:-220px}
+  .bonus-band .wrap{position:relative}
+  .bonus-head{text-align:center;max-width:760px;margin:0 auto}
+  .bonus-badge{display:inline-block;background:#fff;color:#0A74AE;font:800 clamp(22px,3vw,30px)/1 var(--display);letter-spacing:.16em;text-transform:uppercase;padding:12px 26px;border-radius:999px;box-shadow:0 14px 34px -14px rgba(0,0,0,.35);transform:rotate(-3deg)}
+  .bonus-band h2{color:#fff;font-size:clamp(38px,6.4vw,68px);margin:22px 0 10px}
+  .bonus-band h2 em{color:#BFE6FB}
+  .bonus-band .lead{color:#E6F3FB;margin:0 auto}
+  .bonus-band .an-line:after{background:#fff}
+  .bonus-grid{display:grid;gap:18px;margin-top:38px}
+  @media(min-width:760px){.bonus-grid{grid-template-columns:1fr 1fr}}
+  .bonus-tile{background:#fff;color:var(--ink);border-radius:22px;padding:30px 28px;box-shadow:0 30px 60px -30px rgba(0,0,0,.45)}
+  .bonus-tile svg{width:78px;height:78px;display:block;margin-bottom:14px}
+  .bonus-no{display:inline-block;font:800 15px var(--display);letter-spacing:.14em;text-transform:uppercase;color:#fff;background:#0E92D6;border-radius:6px;padding:5px 10px}
+  .bonus-tile h3{font-size:clamp(28px,3.6vw,38px);margin:12px 0 10px}
+  .bonus-tile p{color:var(--muted);font-size:18px;margin:0}
+  .guarantee{display:flex;gap:10px;align-items:flex-start;text-align:left;margin-top:16px;padding:12px 14px;border-radius:10px;background:#EAF5FC;color:var(--ink);font-size:14px;line-height:1.45}
+  .guarantee svg{width:26px;height:26px;flex:none;color:var(--orange)}
+  .join-cta{margin:26px auto 0;display:flex;flex-direction:column;align-items:center;gap:10px}
+  .join-cta .btn{min-width:min(100%,320px)}
+  .about-stat{display:flex;gap:14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin:4px 0 16px}
+  .about-stat b{font:800 46px/1 var(--display);color:var(--orange);flex:none}
+  .about-stat span{font-size:15px;color:var(--muted);line-height:1.45}
+  .honest.pogl{font-size:15px;color:var(--ink);background:#EAF5FC;border:1px solid var(--line);border-radius:10px;padding:10px 14px;display:inline-block}
+  details.src{margin:2px 0 0;font-size:13px;color:var(--dim);background:none;border:0;padding:0;border-radius:0}
+  details.src summary{cursor:pointer;color:var(--muted);font:600 13px/1.4 var(--text);text-transform:none;letter-spacing:0;padding:0;text-decoration:underline}
+  details.src summary:after{content:none}
+  details.src ul{margin:8px 0 0;padding-left:18px}
+  details.src li{margin:3px 0}
+</style>
+</head>
+<body>
+
+<!-- 1. NAGŁÓWEK -->
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <a class="logo" href="#" aria-label="Zadbany Pazurek"><img class="logo-txt" src="logo/napis-zadbany.png" alt="Zadbany"><img class="logo-ic" src="logo/pazurek-ikona.png" alt=""><img class="logo-txt" src="logo/napis-pazurek.png" alt="Pazurek"></a>
+      <a class="small" href="#zapis">Dołączam</a>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">Program 90 dni · Tomasz Świadomość</span>
+        <h1>Przestań obgryzać paznokcie <em>w 90 dni</em></h1>
+        <p class="slogan">Bez silnej woli.<br><em>Z planem w telefonie.</em></p>
+        <p class="sub">Obgryzanie to nawyk, który da się przeprogramować.<br>Aplikacja, codzienne ćwiczenia i spotkania na żywo w każdą niedzielę prowadzą Cię krok po kroku.</p>
+        <div class="cta-row">
+          <a class="btn" href="#zapis">Dołączam za 42 zł</a>
+        </div>
+        <p class="fine"><b>14 dni gwarancji zwrotu.</b> Bez App Store, działa na każdym telefonie.</p>
+      </div>
+      <div class="hero-pics" aria-hidden="true">
+        <img class="big" src="zdjecia/hero-glowne.jpg" alt="">
+        <img src="zdjecia/hero-piesc.jpg" alt="">
+        <img src="zdjecia/hero-swiatlo.jpg" alt="">
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- 2. FILM -->
+<section id="czytaj" class="hidden">
+  <div class="wrap center">
+    <span class="eyebrow o">Zacznij tutaj · 2 minuty</span>
+    <h2>Dlaczego to robisz? <em>I jak z tego wyjść</em></h2>
+    <p class="lead">Twój mózg znalazł sposób na nudę, stres i napięcie.<br>W 2 minuty wyjaśniam, jak działa ten mechanizm i dlaczego zakazy nie pomagają.</p>
+    <div class="video" id="video"><div class="soon">Film pojawi się wkrótce</div></div>
+  </div>
+</section>
+
+<!-- 3. EDUKACJA -->
+<section class="alt">
+  <div class="wrap">
+    <span class="eyebrow o">Dlaczego tak się dzieje</span>
+    <h2>Dlaczego nawyk jest <em>silniejszy od Ciebie</em></h2>
+    <p class="lead">Obgryzanie paznokci to nie wada charakteru. Psychologia nazywa to BFRB, czyli powtarzalnym zachowaniem skupionym na ciele. Ma swoje mechanizmy. Kiedy je znasz, przestajesz walczyć na ślepo.</p>
+    <div class="habit-pics" id="habitPics"></div>
+    <h3 style="margin-top:44px">Nawyk czeka na Twoją nudę</h3>
+    <p class="muted">Badania pokazują, że najsilniejsze wyzwalacze to nuda i frustracja. Sprawdź, które znasz:</p>
+    <div class="chips">
+      <span class="chip">Nuda</span><span class="chip">Frustracja</span><span class="chip">Stres i lęk</span><span class="chip">Niecierpliwość</span><span class="chip">Perfekcjonizm</span><span class="chip">Serial na kanapie</span><span class="chip">Telefon</span><span class="chip">Komputer</span><span class="chip">Auto</span><span class="chip">Czekanie</span>
+    </div>
+  </div>
+</section>
+
+<!-- 4. PROGRAM -->
+<section>
+  <div class="wrap">
+    <span class="eyebrow o">Jak to działa</span>
+    <h2>Program <em>90 dni</em></h2>
+    <p class="lead">Paznokieć odrasta 3 do 4 mm miesięcznie, więc 90 dni to czas, żeby zobaczyć realną zmianę. Program opiera się na Habit Reversal Training i ćwiczeniach z badań nad BFRB.</p>
+    <div class="grid three">
+      <div class="card phase"><small>Tydzień 1–4</small><h3>Świadomość</h3><p>Uczysz się łapać moment, zanim ręka dotknie ust. Zapisujesz, kiedy, gdzie i z jaką emocją to się dzieje.</p></div>
+      <div class="card phase"><small>Tydzień 5–8</small><h3>Zastępowanie</h3><p>Dajesz rękom inną odpowiedź. Proste ruchy, które przerywają automat w kilka sekund.</p></div>
+      <div class="card phase"><small>Tydzień 9–12</small><h3>Utrwalenie</h3><p>Nowa reakcja staje się Twoja. Uczysz się, co robić w trudniejsze dni, żeby nie wrócić.</p></div>
+    </div>
+      <div class="proof" id="proof">
+      <div class="proof-h">Na czym opiera się program: wynik badania metody</div>
+      <div class="proof-row"><div class="proof-top"><span>Habit Reversal Training <b>(metoda, na której opiera się program)</b></span><b class="pct o"><span data-count="99">99</span>%</b></div><div class="track"><span class="fill o" style="--w:99%"></span></div></div>
+      <div class="proof-row"><div class="proof-top"><span>Inna metoda dla porównania</span><b class="pct"><span data-count="60">60</span>%</b></div><div class="track"><span class="fill" style="--w:60%"></span></div></div>
+      <div class="scale"><span>0%</span><span>50%</span><span>100%</span></div>
+      <p class="proof-note">O tyle średnio spadła liczba epizodów obgryzania w grupie, z utrzymaniem przez 5 miesięcy. <b>To wynik badania klinicznego metody prowadzonej z terapeutą, nie wynik tego programu.</b> Azrin, Nunn i Frantz, Behaviour Research and Therapy, 1980, 97 osób. Efekty są indywidualne i zależą od regularności ćwiczeń.</p>
+      <div class="proof-total"><b data-count="7">7</b><span>badań naukowych</span><b>888</b><span>osób łącznie</span></div>
+      <details class="src"><summary>Metody z programu sprawdzono w 7 badaniach naukowych. Zobacz, w jakich</summary><ul><li>Azrin, Nunn, Frantz (1980): odwracanie nawyku, 97 osób</li><li>Moritz i in. (2023): delikatny dotyk zamiast obgryzania, 268 osób</li><li>Moritz i in. (2011): decoupling przy obgryzaniu paznokci, 72 osoby</li><li>Moritz i in.: porównanie trzech technik samopomocy, 113 osób</li><li>Moritz i in.: samopomoc z filmami, 217 osób</li><li>Twohig i in. (2003): odwracanie nawyku a placebo, 30 osób</li><li>Ghanizadeh i in.: odwracanie nawyku u dzieci i młodzieży, 91 osób</li></ul></details>
+
+  </div>
+</section>
+
+<!-- 4b. PAS ZE ZDJĘCIEM -->
+<section class="an-band">
+  <img class="an-band-bg" src="zdjecia/pas-dlonie.jpg" alt="" loading="lazy">
+  <div>
+    <h2 class="an-line an-center">Zmiana jest <em>w Twoich rękach</em></h2>
+    <p>Nie potrzebujesz silnej woli. Potrzebujesz planu na te chwile, kiedy ręka sama wędruje do ust.</p>
+  </div>
+</section>
+
+<!-- 5. PRZED I PO -->
+<section class="alt" id="przed-po">
+  <div class="wrap">
+    <span class="eyebrow o">Przed i po</span>
+    <h2>Tak mogą wyglądać <em>Twoje dłonie</em></h2>
+    <p class="lead" id="baLead">Prawdziwe zdjęcia uczestników, zrobione w dniu 1 i po programie. Przesuń suwak, żeby porównać.</p>
+    <div class="ba-grid" id="ba"></div>
+    <p class="honest" id="baNote">Pokazuję tylko zdjęcia uczestników, którzy wyrazili na to zgodę. Efekty są indywidualne i zależą od regularności ćwiczeń.</p>
+  </div>
+</section>
+
+<!-- 6. APLIKACJA -->
+<section class="alt">
+  <div class="wrap">
+    <span class="eyebrow o">Aplikacja</span>
+    <h2>Wszystko masz <em>w telefonie</em></h2>
+    <p class="lead">Bez App Store. Otwierasz link, dodajesz aplikację do ekranu i logujesz się kodem z maila. Kilka minut dziennie.</p>
+    <div class="app-grid">
+      <div class="phone-wrap">
+      <div class="phone" id="phone" role="region" aria-roledescription="karuzela" aria-label="Ekrany aplikacji">
+        <div class="slides" id="slides">
+        <div class="screen" aria-label="Ekran Dziś">
+          <div class="s-day">Tydzień 3 z 12 · Faza 1 · Świadomość</div>
+          <div class="s-big">Dzień 20 <span style="font-size:15px;color:#4B6178;font-weight:600">z 90</span></div>
+          <div class="s-bar"><i></i></div>
+          <div class="s-card"><small>Ćwiczenie dnia · 2 z 3</small>Dotyk: 1 minuta delikatnego dotyku dłoni<div class="s-dots"><i class="on"></i><i class="on"></i><i></i></div></div>
+          <div class="s-card"><small>Mój plan „jeśli… to…”</small>Gdy siedzę wieczorem przy serialu, wtedy krążę palcami po dłoni.</div>
+          <div class="s-row"><div class="s-btn g">Zapisz</div><div class="s-btn o">SOS</div></div>
+          <div class="s-nav"><span class="on">Dziś</span><span>Zapisz</span><span>SOS</span><span>Postęp</span></div>
+        </div>
+        <div class="screen" aria-label="Ekran Zapisz">
+          <div class="s-title">Zapisz moment</div>
+          <div class="s-card"><small>Co się stało?</small><div class="s-chips"><b class="on">Powstrzymałem się</b><b>Obgryzłem</b></div></div>
+          <div class="s-card"><small>Co czułeś tuż przed?</small><div class="s-chips"><b class="on">Nuda</b><b>Stres</b><b>Frustracja</b><b>Zmęczenie</b></div></div>
+          <div class="s-card"><small>Gdzie byłeś?</small><div class="s-chips"><b class="on">Kanapa / serial</b><b>Telefon</b><b>Auto</b></div></div>
+          <div class="s-card"><small>Siła impulsu · 6</small><div class="s-range"><i style="width:60%"></i></div></div>
+          <div class="s-btn g">Zapisz</div>
+          <div class="s-nav"><span>Dziś</span><span class="on">Zapisz</span><span>SOS</span><span>Postęp</span></div>
+        </div>
+        <div class="screen" aria-label="Ekran SOS">
+          <div class="s-title">SOS · Oddech</div>
+          <div class="s-seg"><b class="on">Oddech</b><b>Dotyk</b><b>Pięść</b></div>
+          <div class="s-box"><i class="s-dot"></i><div><b>3</b><span>Wdech</span></div></div>
+          <div class="s-card" style="text-align:center"><small>Runda 2 z 4</small>4 s wdech · 4 s zatrzymanie · 4 s wydech · 4 s zatrzymanie</div>
+          <div class="s-card" style="background:#EAF5FC;border-color:#EAF5FC"><small>Twój plan</small>Gdy siedzę przy serialu, wtedy krążę palcami po dłoni.</div>
+          <div class="s-nav"><span>Dziś</span><span>Zapisz</span><span class="on">SOS</span><span>Postęp</span></div>
+        </div>
+        <div class="screen" aria-label="Ekran Postęp">
+          <div class="s-title">Twój postęp</div>
+          <div class="s-card"><small>Ostatnie 14 dni</small><div class="s-chart"><i style="--b:80%;--r:10%"></i><i style="--b:70%;--r:15%"></i><i style="--b:75%;--r:10%"></i><i style="--b:60%;--r:20%"></i><i style="--b:65%;--r:25%"></i><i style="--b:50%;--r:25%"></i><i style="--b:55%;--r:30%"></i><i style="--b:40%;--r:35%"></i><i style="--b:45%;--r:30%"></i><i style="--b:35%;--r:40%"></i><i style="--b:30%;--r:45%"></i><i style="--b:25%;--r:40%"></i><i style="--b:20%;--r:50%"></i><i style="--b:15%;--r:45%"></i></div><div class="s-leg"><span class="b">obgryzione</span><span class="r">powstrzymane</span></div></div>
+          <div class="s-card"><small>Ankieta: start → dziś</small><div class="s-svy"><span>Siła chęci</span><b>8 → 4</b></div><div class="s-svy"><span>Wstyd</span><b>7 → 3</b></div></div>
+          <div class="s-card"><small>Twój wzorzec</small>Najczęściej obgryzasz wieczorem, na kanapie, gdy czujesz nudę.</div>
+          <div class="s-nav"><span>Dziś</span><span>Zapisz</span><span>SOS</span><span class="on">Postęp</span></div>
+        </div>
+        </div>
+      </div>
+      <div class="phone-dots" id="phoneDots" role="tablist" aria-label="Wybierz ekran">
+        <button type="button" role="tab" aria-selected="true" aria-label="Dziś"></button><button type="button" role="tab" aria-label="Zapisz"></button><button type="button" role="tab" aria-label="SOS"></button><button type="button" role="tab" aria-label="Postęp"></button>
+      </div>
+      <p class="phone-cap" id="phoneCap">Dziś</p>
+      </div>
+      <div class="feats">
+        <div class="feat" data-slide="0"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg></div><div><h3>Dziś</h3><p class="muted">Twój dzień z 90, zadanie tygodnia i ćwiczenie dnia 3 razy po minucie.</p></div></div>
+        <div class="feat" data-slide="1"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/></svg></div><div><h3>Zapisz</h3><p class="muted">Moment, emocja, miejsce, co poczułeś w palcach. 10 sekund, żeby zobaczyć swój wzorzec.</p></div></div>
+        <div class="feat" data-slide="2"><div class="ic"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12h6M12 9v6"/></svg></div><div><h3>SOS</h3><p class="muted">Impuls jest silny? Oddech, dotyk albo pięść na minutę. Aplikacja prowadzi Cię krok po kroku.</p></div></div>
+        <div class="feat" data-slide="3"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 3v18h18M7 15l4-4 3 3 6-6"/></svg></div><div><h3>Postęp</h3><p class="muted">Zdjęcie z dnia 1 obok dzisiejszego, ankieta co kilka tygodni i Twoje godziny ryzyka.</p></div></div>
+        <div class="feat" data-slide="0"><div class="ic"><svg viewBox="0 0 24 24"><path d="M9 18l-4-4 4-4M15 6l4 4-4 4M5 14h9M19 10h-9"/></svg></div><div><h3>Plan „jeśli… to…”</h3><p class="muted">Ustalasz z góry, co zrobisz w sytuacji, w której zwykle obgryzasz.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6b. BONUS: HIGIENA + OD ŚRODKA -->
+<section class="bonus-band">
+  <div class="wrap">
+    <div class="bonus-head center">
+      <span class="bonus-badge">Bonus</span>
+      <h2>W programie dostajesz <em>2 bonusy</em></h2>
+      <p class="lead">Żeby paznokcie nie tylko przestały być obgryzane, ale też zdrowo odrosły.</p>
+    </div>
+    <div class="bonus-grid">
+      <div class="bonus-tile">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#EAF5FC"/><path d="M19 64V32a13 13 0 0 1 26 0v32" fill="#F7DCCB" stroke="#0E2A44" stroke-width="2.6"/><path d="M25 40V28q0-5 5-5h4q5 0 5 5v12q0 5-7 6q-7-1-7-6z" fill="#FBEDE7" stroke="#0E2A44" stroke-width="2.2"/><path d="M52 8c-4 6-4 9 0 10 4-1 4-4 0-10z" fill="#0E92D6"/><path d="M10 14l2 4 4 2-4 2-2 4-2-4-4-2 4-2z" fill="#0E92D6"/></svg>
+        <span class="bonus-no">Bonus 1</span>
+        <h3>Codzienna higiena paznokci</h3>
+        <p>Jak dbać o paznokcie, które odrastają po obgryzaniu: co robić każdego dnia, czego używać i jak pielęgnować skórki. Prosto, krok po kroku, w aplikacji.</p>
+      </div>
+      <div class="bonus-tile">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="12" y="6" width="36" height="50" rx="5" fill="#fff" stroke="#0E2A44" stroke-width="3"/><rect x="18" y="16" width="20" height="4" rx="2" fill="#0E92D6"/><rect x="18" y="26" width="24" height="3" rx="1.5" fill="#CFE4F2"/><rect x="18" y="33" width="21" height="3" rx="1.5" fill="#CFE4F2"/><text x="18" y="50" font-family="Barlow Condensed, Arial Narrow, sans-serif" font-weight="800" font-size="10" fill="#0E2A44">PDF</text><circle cx="48" cy="46" r="12" fill="#0E92D6"/><path d="M43 46l3.5 3.5L53 42" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span class="bonus-no">Bonus 2 · PDF</span>
+        <h3>Suplementacja i odżywianie</h3>
+        <p>Co jeść, co zbadać i kiedy suplementy mają sens, żeby paznokcie odrastały mocne. Jedna strona do zapisania albo wydruku, dostajesz ją razem z dostępem.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. OFERTA -->
+<section id="cena">
+  <div class="wrap">
+    <div class="offer">
+      <div>
+        <span class="eyebrow o">Co dostajesz</span>
+        <h2>Pełny program <em>za 42 zł</em></h2>
+        <ul class="check">
+          <li><b>Aplikacja Zadbany Pazurek:</b> plan na 12 tygodni, ćwiczenia dnia, dziennik, SOS i śledzenie postępu</li>
+          <li><b>Codzienna higiena paznokci:</b> co robić, czego używać i jak pielęgnować odrastające paznokcie. Proste instrukcje z grafikami i odhaczanie w aplikacji</li>
+          <li><b>Bonus PDF „Suplementacja i odżywianie”:</b> co jeść, jakie badania zrobić i kiedy suplementy mają sens. Jedna strona A4</li>
+          <li><b>Spotkania na żywo w każdą niedzielę o 20:00</b> (Google Meet): grupa wsparcia, omówienie postępów i, jeśli chcecie, wspólna medytacja. Link masz w aplikacji</li>
+          <li><b>Ludzi,</b> którzy przechodzą przez to samo co Ty, na spotkaniach na żywo</li>
+        </ul>
+      </div>
+      <div class="price">
+        <div class="kicker">Program 90 dni</div>
+        <div class="tag">42 zł</div>
+        <p>Płacisz raz, bez abonamentu.</p>
+        <a class="btn" href="#zapis">Dołączam za 42 zł</a>
+        <div class="guarantee"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l8 3v6c0 5-3.5 9.3-8 11-4.5-1.7-8-6-8-11V5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span><b>14 dni gwarancji zwrotu.</b> Jeśli w ciągu 14 dni uznasz, że program nie jest dla Ciebie, napisz do mnie, a oddam Ci 42 zł.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10b. PAS ZE ZDJĘCIEM -->
+<section class="an-band">
+  <img class="an-band-bg" src="zdjecia/program-roslina.jpg" alt="" loading="lazy">
+  <div>
+    <h2 class="an-line an-center">Mały krok każdego dnia. <em>Wielka zmiana po 90 dniach.</em></h2>
+  </div>
+</section>
+
+<!-- 11. ZAPIS -->
+<section class="alt" id="zapis">
+  <div class="wrap">
+    <div class="center">
+      <h2>Weź to w <em>swoje ręce</em></h2>
+      <p class="lead">Jeśli zmagasz się z tym nawykiem, dobrze trafiłeś.<br>Ćwiczenia w programie opierają się na badaniach. Działają, kiedy je regularnie robisz.</p>
+      <div class="join-cta" id="joinCta"><a class="btn" href="#zapis">Dołączam za 42 zł</a><p class="fine"><b>14 dni gwarancji zwrotu.</b> Płacisz raz, bez abonamentu.</p></div>
+      </div>
+    </div>
+    <div class="form-box hidden" id="formBox">
+      <form id="form" novalidate>
+        <label for="imie">Imię</label>
+        <input type="text" id="imie" name="imie" autocomplete="given-name" maxlength="80" required>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" autocomplete="email" maxlength="200" required>
+
+        <label for="telefon">Numer telefonu <span class="opt">(opcjonalnie, tak szybciej się skontaktuję)</span></label>
+        <input type="tel" id="telefon" name="telefon" autocomplete="tel" maxlength="30" placeholder="np. 600 100 200">
+
+        <label for="profil">Nazwa profilu na Instagramie lub TikToku <span class="opt">(opcjonalnie)</span></label>
+        <input type="text" id="profil" name="profil" placeholder="@twojprofil" maxlength="200">
+
+        <label for="jak_dlugo">Jak długo obgryzasz paznokcie?</label>
+        <select id="jak_dlugo" name="jak_dlugo" required>
+          <option value="">Wybierz</option>
+          <option>Mniej niż rok</option>
+          <option>1 do 5 lat</option>
+          <option>Ponad 5 lat</option>
+          <option>Od dzieciństwa</option>
+        </select>
+
+        <label for="wiadomosc">Co najbardziej chcesz zmienić? <span class="opt">(opcjonalnie)</span></label>
+        <textarea id="wiadomosc" name="wiadomosc" maxlength="600" placeholder="Np. chcę mieć dłonie, których się nie wstydzę"></textarea>
+
+        <div class="hp" aria-hidden="true"><label>Firma<input type="text" name="firma" tabindex="-1" autocomplete="off"></label></div>
+
+        <label class="tick"><input type="checkbox" id="wiek16" required> <span>Mam ukończone 16 lat.</span></label>
+        <label class="tick hidden" id="regBox"><input type="checkbox" id="regulamin"> <span>Akceptuję <a id="terms2" href="#" target="_blank" rel="noopener">regulamin</a> i chcę dostać dostęp do programu od razu po płatności. Wiem, że mam 14 dni na zwrot pieniędzy, jeśli program nie jest dla mnie.</span></label>
+        <label class="tick"><input type="checkbox" id="zgoda" required> <span>Zgadzam się na przetwarzanie podanych danych, w tym informacji o moim nawyku, w celu zapisu do programu Zadbany Pazurek. Administratorem jest Golden Teacher Tomasz Grzybowski (Tomasz Świadomość). Mogę wycofać zgodę w każdej chwili. Szczegóły w <a id="privacy" href="#" target="_blank" rel="noopener">polityce prywatności</a>.</span></label>
+
+        <p class="fine" id="talkNote" style="margin:4px 0 0">Po wysłaniu zgłoszenia odezwę się do Ciebie osobiście, zwykle w ciągu 24 godzin. Porozmawiamy chwilę, a płatność 42 zł (BLIK lub przelew) ustalimy dopiero wtedy. Dostęp do aplikacji dostaniesz zaraz po płatności.</p>
+        <button class="btn" type="submit" id="send" style="width:100%;margin-top:6px">Dołączam za 42 zł</button>
+        <div class="msg" id="msg" role="alert"></div>
+      </form>
+      <div class="done hidden" id="done">
+        <div class="big">Gotowe</div>
+        <h3 id="doneTitle">Dzięki! Jesteś na liście.</h3>
+        <p>Odezwę się do Ciebie osobiście, zwykle w ciągu 24 godzin: telefonicznie, w DM albo mailem. Jeśli piszę mailem, zajrzyj też do folderu Oferty lub Spam.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. KIM JESTEM -->
+<section class="alt">
+  <div class="wrap">
+    <div class="about">
+      <div class="avatar" id="avatar">TŚ</div>
+      <div>
+        <span class="eyebrow o">Kim jestem</span>
+        <h2>Tomasz <em>Świadomość</em></h2>
+        <p>Jestem trenerem mentalnym, pracuję też hipnozą. Pomagam ludziom wychodzić z destrukcyjnych nawyków.</p>
+        <div class="about-stat"><b>200+</b><span>osobom pomogłem wyjść z destrukcyjnych nawyków: zrozumieć, skąd się wzięły, także w trudnych doświadczeniach z przeszłości, i przeprogramować swoje reakcje.</span></div>
+        <p>Widzę jedno: nawyk nie znika od zakazów. Znika, kiedy rozumiesz, czemu służy, i dajesz mózgowi coś w zamian.</p>
+        <p>Zadbany Pazurek to ta praca zamknięta w aplikacji, którą masz zawsze przy sobie.</p>
+        <p><a id="ig" href="#" target="_blank" rel="noopener">Zobacz mój profil na Instagramie →</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. FAQ -->
+<section>
+  <div class="wrap" style="max-width:820px">
+    <h2 class="center">Najczęstsze <em>pytania</em></h2>
+    <div style="margin-top:30px">
+      <details><summary>Czy to naprawdę działa?</summary><p>Program opiera się na metodach, które mają najlepsze wyniki w badaniach: odwracaniu nawyku, zastępowaniu go innym ruchem i uważności. Nie obiecuję cudu w tydzień. Obiecuję plan, który prowadzi Cię krok po kroku przez 90 dni.</p></details>
+      <details><summary>Ile czasu dziennie mi to zajmie?</summary><p>Około 5 do 10 minut. Zadanie i ćwiczenie dnia, kilka szybkich zapisów i SOS wtedy, gdy go potrzebujesz.</p></details>
+      <details><summary>Dla kogo jest program?</summary><p>Dla osób od 16 lat, które obgryzają paznokcie lub skórki i chcą przestać. Nie ma znaczenia, czy robisz to od roku, czy od dzieciństwa.</p></details>
+      <details><summary>Czy to zastępuje terapię?</summary><p>Nie. To narzędzie wspierające. Jeśli obgryzanie powoduje rany lub infekcje albo idzie w parze z silnym lękiem czy obniżonym nastrojem, skonsultuj się z lekarzem lub psychoterapeutą.</p></details>
+      <details><summary>Czy muszę coś instalować?</summary><p>Nie pobierasz niczego ze sklepu. Aplikacja działa w przeglądarce, a jej ikonę dodajesz do ekranu telefonu. Logujesz się kodem, który przychodzi na Twój e-mail, bez hasła.</p></details>
+      <details><summary>Co z moimi danymi i zdjęciami?</summary><p>Dane są przechowywane na serwerach w Unii Europejskiej (Frankfurt). Zdjęć Twoich dłoni nie publikuję bez Twojej osobnej zgody.</p></details>
+      <details><summary>Kiedy są spotkania na żywo?</summary><p>W każdą niedzielę o 20:00 czasu polskiego, w Google Meet. Link znajdziesz w aplikacji. Udział jest dobrowolny, możesz też tylko słuchać.</p></details>
+      <details><summary>Co, jeśli znowu zacznę obgryzać?</summary><p>To normalna część zmiany nawyku. Zapisujesz taki moment w aplikacji jako informację, nie porażkę. Z czasem widzisz, kiedy i dlaczego to się dzieje, a plan „jeśli… to…” i SOS pomagają w trudnych chwilach.</p></details>
+      <details><summary>Ile to kosztuje?</summary><p>42 zł jednorazowo, bez abonamentu.</p></details>
+      <details><summary>A jeśli program nie jest dla mnie?</summary><p>Masz 14 dni gwarancji zwrotu. Jeśli w tym czasie uznasz, że to nie dla Ciebie, napisz do mnie, a oddam Ci 42 zł.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- 8b. HIPNOZA 1:1 (na dole strony) -->
+<section id="hipnoza">
+  <div class="wrap">
+    <div class="hyp">
+      <div>
+        <span class="eyebrow o">Hipnoza 1:1</span>
+        <h2>Hipnoza, która <em>dociera głębiej</em></h2>
+        <p class="lead">Obgryzanie dzieje się poza Twoją świadomością. Dlatego w hipnozie pracuję z Tobą tam, gdzie ten nawyk powstał. Przez cały czas jesteś świadomy i masz kontrolę.</p>
+        <div class="facts">
+          <div class="fact"><b>ok. 1,5 h</b><span>jedna sesja z rozmową</span></div>
+          <div class="fact"><b>1–4</b><span>sesje u większości osób</span></div>
+          <div class="fact"><b>18+</b><span>tylko dla osób pełnoletnich</span></div>
+        </div>
+        <figure class="pic"><img src="zdjecia/hipnoza.jpg" alt="Kobieta w spokoju patrzy na morze" loading="lazy"></figure>
+      </div>
+      <div>
+        <ol class="steps">
+          <li><span class="n">1</span><div><h3>Rozmawiamy</h3><p>Pytam, kiedy i w jakich sytuacjach obgryzasz i od kiedy to trwa.</p></div></li>
+          <li><span class="n">2</span><div><h3>Wprowadzam Cię w relaks</h3><p>Spokojny oddech i skupienie. Głęboki relaks przy pełnej świadomości.</p></div></li>
+          <li><span class="n">3</span><div><h3>Pracujemy z podświadomością</h3><p>Zaczynasz zauważać odruch, zanim się wydarzy. Palce przy ustach przestają być przyjemne. Widzisz swoje zadbane dłonie i czujesz, co to dla Ciebie znaczy. Uczysz się rozładowywać napięcie oddechem.</p></div></li>
+        </ol>
+        <p class="plus"><b>Hipnoza + Program 90 dni.</b> Hipnoza działa najlepiej razem z codziennym treningiem nawyku. Sesja zmienia nastawienie, a program utrwala nową reakcję każdego dnia. Efekty są indywidualne.</p>
+        <p style="margin-top:18px"><a class="btn line" id="hypDm" href="#" target="_blank" rel="noopener">Zapytaj o sesję w DM</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8c. OPINIE PO SESJACH HIPNOZY -->
+<section id="opinie" class="alt">
+  <div class="wrap">
+    <span class="eyebrow o">Opinie po sesjach hipnozy</span>
+    <h2>Co mówią <em>moi klienci</em></h2>
+    <p class="lead">Fragmenty wiadomości od osób, z którymi pracowałem na sesjach hipnozy 1:1. To opinie o sesjach, nie o programie 90 dni.</p>
+    <div class="quotes">
+      <figure class="quote"><svg class="mark" viewBox="0 0 30 24" aria-hidden="true"><path d="M0 24V14C0 6 4 1 12 0l1 4c-4 1-6 4-6 8h6v12H0zm17 0V14c0-8 4-13 12-14l1 4c-4 1-6 4-6 8h6v12H17z"/></svg><blockquote>Po 30 latach tego nawyku w końcu jestem wolny. Pierwszy raz w moim życiu mam piękne i zadbane paznokcie.</blockquote><figcaption><span class="av" aria-hidden="true">P</span><div><b>Paweł</b><span>30 lat obgryzania · po sesji hipnozy</span></div></figcaption></figure>
+      <figure class="quote"><svg class="mark" viewBox="0 0 30 24" aria-hidden="true"><path d="M0 24V14C0 6 4 1 12 0l1 4c-4 1-6 4-6 8h6v12H0zm17 0V14c0-8 4-13 12-14l1 4c-4 1-6 4-6 8h6v12H17z"/></svg><blockquote>Po tych dwóch sesjach hipnozy zrozumiałam, dlaczego miałam ten nawyk. Teraz reaguję, zanim pojawi się emocja.</blockquote><figcaption><span class="av" aria-hidden="true">O</span><div><b>Oliwia</b><span>po dwóch sesjach hipnozy</span></div></figcaption></figure>
+      <figure class="quote"><svg class="mark" viewBox="0 0 30 24" aria-hidden="true"><path d="M0 24V14C0 6 4 1 12 0l1 4c-4 1-6 4-6 8h6v12H0zm17 0V14c0-8 4-13 12-14l1 4c-4 1-6 4-6 8h6v12H17z"/></svg><blockquote>Minęły 3 tygodnie od naszej hipnozy. Jestem szybszy od tego odruchu i cały czas dbam o paznokcie.</blockquote><figcaption><span class="av" aria-hidden="true">M</span><div><b>Marcin</b><span>3 tygodnie po hipnozie</span></div></figcaption></figure>
+      <figure class="quote"><svg class="mark" viewBox="0 0 30 24" aria-hidden="true"><path d="M0 24V14C0 6 4 1 12 0l1 4c-4 1-6 4-6 8h6v12H0zm17 0V14c0-8 4-13 12-14l1 4c-4 1-6 4-6 8h6v12H17z"/></svg><blockquote>Przez większość życia borykałem się z tym. Teraz wiem, czym było to podyktowane, a ćwiczenia pomagają mi każdego dnia.</blockquote><figcaption><span class="av" aria-hidden="true">M</span><div><b>Michał</b><span>po sesji hipnozy</span></div></figcaption></figure>
+      <figure class="quote"><svg class="mark" viewBox="0 0 30 24" aria-hidden="true"><path d="M0 24V14C0 6 4 1 12 0l1 4c-4 1-6 4-6 8h6v12H0zm17 0V14c0-8 4-13 12-14l1 4c-4 1-6 4-6 8h6v12H17z"/></svg><blockquote>Nie obgryzam już skórek. W końcu o nie zadbałem i jestem o krok przed każdym ruchem.</blockquote><figcaption><span class="av" aria-hidden="true">M</span><div><b>Marek</b><span>po sesji hipnozy</span></div></figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><b>Zadbany Pazurek</b> · program stworzony przez Tomasza Świadomość</p>
+    <p>Zadbany Pazurek to narzędzie wspierające. Nie zastępuje terapii ani porady lekarskiej.</p>
+    <p>Sprzedawca: Golden Teacher Tomasz Grzybowski · ul. Hallera 6, 85-795 Bydgoszcz · NIP 5543047787</p>
+    <p><a id="privacy2" href="#" target="_blank" rel="noopener">Polityka prywatności</a> · <a id="terms" href="#" target="_blank" rel="noopener">Regulamin</a></p>
+  </div>
+</footer>
+
+<div class="sticky" id="sticky"><a class="btn" href="#zapis">Dołączam za 42 zł</a></div>
+
+<script src="config.js"></script>
+<script>
+(function(){
+  var C = window.LANDING || {};
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+  // Linki
+  ["privacy","privacy2"].forEach(function(id){ document.getElementById(id).href = C.PRIVACY_URL || "#"; });
+  var terms = document.getElementById("terms"); if (C.TERMS_URL) terms.href = C.TERMS_URL; else terms.classList.add("hidden");
+  var ig = document.getElementById("ig");
+  if (C.INSTAGRAM_URL) ig.href = C.INSTAGRAM_URL; else ig.parentNode.classList.add("hidden");
+  var dm = document.getElementById("hypDm");
+  if (C.INSTAGRAM_URL) dm.href = C.INSTAGRAM_URL; else dm.parentNode.classList.add("hidden");
+
+  // Zdjęcie trenera
+  if (C.PHOTO_URL) document.getElementById("avatar").innerHTML = '<img src="' + esc(C.PHOTO_URL) + '" alt="Tomasz Świadomość">';
+
+
+  // Suwak 0–100%: wypełnia się, gdy sekcja wjedzie na ekran
+  var proof = document.getElementById("proof");
+  if (proof && "IntersectionObserver" in window) {
+    proof.classList.add("pre");
+    new IntersectionObserver(function(es, o){ es.forEach(function(e){ if (e.isIntersecting) { setTimeout(function(){ proof.classList.remove("pre"); }, 150); o.disconnect(); } }); }, {threshold:.4}).observe(proof);
+  }
+
+
+  // Karuzela ekranów aplikacji
+  (function(){
+    var slides=document.getElementById("slides"); if(!slides) return;
+    var dots=[].slice.call(document.querySelectorAll("#phoneDots button")), cap=document.getElementById("phoneCap");
+    var names=["Dziś","Zapisz","SOS","Postęp"], feats=[].slice.call(document.querySelectorAll(".feat[data-slide]"));
+    var i=0, timer=null, reduce=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    function go(n){ i=(n+4)%4; slides.style.transform="translateX("+(-100*i)+"%)";
+      dots.forEach(function(d,k){ d.setAttribute("aria-selected", k===i ? "true" : "false"); });
+      cap.textContent=names[i]; feats.forEach(function(f){ f.classList.toggle("active", +f.dataset.slide===i); }); }
+    function play(){ if(reduce) return; stop(); timer=setInterval(function(){ go(i+1); }, 3500); }
+    function stop(){ clearInterval(timer); timer=null; }
+    dots.forEach(function(d,k){ d.addEventListener("click", function(){ go(k); play(); }); });
+    feats.forEach(function(f){ f.addEventListener("click", function(){ go(+f.dataset.slide); play(); }); });
+    var ph=document.getElementById("phone"), x0=null;
+    ph.addEventListener("mouseenter", stop); ph.addEventListener("mouseleave", play);
+    ph.addEventListener("touchstart", function(e){ x0=e.touches[0].clientX; stop(); }, {passive:true});
+    ph.addEventListener("touchend", function(e){ if(x0===null) return; var dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40) go(i+(dx<0?1:-1)); x0=null; play(); });
+    if("IntersectionObserver" in window){ new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? play() : stop(); }); }).observe(ph); } else play();
+    go(0);
+  })();
+
+  // Zdjęcia w sekcji o nawyku
+  var hp = (C.NAWYK_ZDJECIA || []).filter(Boolean);
+  document.getElementById("habitPics").innerHTML = hp.map(function(s){ return '<img src="' + esc(s) + '" alt="Osoba obgryzająca paznokcie" loading="lazy">'; }).join("");
+  if (!hp.length) document.getElementById("habitPics").classList.add("hidden");
+
+  // Przed i po: opis zależny od tego, czy to zdjęcia poglądowe
+  if (C.PRZED_PO_POGLADOWE) {
+    document.getElementById("baLead").textContent = "Tak wyglądają dłonie, kiedy nawyk odpuszcza: skórki się goją, a płytka odrasta. Przesuń suwak, żeby porównać.";
+    document.getElementById("baNote").innerHTML = "<b>Zdjęcia poglądowe.</b> To nie są uczestnicy programu. Efekty są indywidualne i zależą od regularności ćwiczeń.";
+    document.getElementById("baNote").classList.add("pogl");
+  }
+
+  // Przed i po: porównanie z suwakiem
+  var pairs = C.PRZED_PO && C.PRZED_PO.length ? C.PRZED_PO : null;
+  var slots = pairs || [{}, {}, {}];
+  document.getElementById("ba").innerHTML = slots.map(function(p, i){
+    var before = p.przed ? '<img src="' + esc(p.przed) + '" alt="Dłonie przed programem" loading="lazy">' : '<div class="ph">Przed<br>dzień 1</div>';
+    var after = p.po ? '<img src="' + esc(p.po) + '" alt="Dłonie po programie" loading="lazy">' : '<div class="ph">Po<br>dzień 90</div>';
+    var cap = p.podpis ? '<b>' + esc(p.podpis) + '</b>' : (pairs ? '' : '<b>Uczestnik ' + (i + 1) + '</b> · efekty już wkrótce');
+    return '<figure class="ba" style="margin:0"><div class="cmp">' +
+      '<div class="layer before">' + before + '</div><div class="layer after">' + after + '</div>' +
+      '<span class="tag l"><b>Przed</b><small>Obgryzanie paznokci</small></span><span class="tag r"><b>Po</b><small>Po zaprzestaniu obgryzania</small></span><span class="bar"></span>' +
+      '<input type="range" min="0" max="100" value="50" aria-label="Porównaj przed i po">' +
+      '</div>' + (cap ? '<figcaption class="cap">' + cap + '</figcaption>' : '') + '</figure>';
+  }).join("");
+  Array.prototype.forEach.call(document.querySelectorAll(".cmp"), function(c){
+    var r = c.querySelector("input");
+    r.addEventListener("input", function(){ c.style.setProperty("--pos", r.value + "%"); });
+  });
+
+  // Film: ładuje YouTube dopiero po kliknięciu
+  var v = document.getElementById("video");
+  if (C.YOUTUBE_ID) {
+    var id = encodeURIComponent(C.YOUTUBE_ID);
+    v.innerHTML = '<button aria-label="Odtwórz film" style="background-image:url(https://i.ytimg.com/vi/' + id + '/hqdefault.jpg)"><span class="play"></span></button>';
+    v.querySelector("button").addEventListener("click", function(){
+      v.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen title="Film"></iframe>';
+    });
+    document.getElementById("czytaj").classList.remove("hidden");
+  }
+
+  // Przycisk przyklejony do dołu (telefon)
+  var sticky = document.getElementById("sticky"), hero = document.querySelector(".hero"), zapis = document.getElementById("zapis");
+  function onScroll(){
+    var pastHero = hero.getBoundingClientRect().bottom < 0;
+    var r = zapis.getBoundingClientRect();
+    var atForm = r.top < window.innerHeight && r.bottom > 0;
+    sticky.classList.toggle("show", pastHero && !atForm);
+  }
+  window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+  // Skąd przyszła osoba: link w DM może mieć dopisek ?z=instagram lub ?z=tiktok
+  var q = new URLSearchParams(location.search);
+  var zrodlo = (q.get("z") || q.get("utm_source") || document.referrer.split("/")[2] || "bezposrednio").slice(0,100);
+
+  // Prosta analityka: wejście, kliknięcie „Dołączam”, zapis. Bez ciasteczek i bez adresu IP.
+  function track(ev){
+    try {
+      if (!C.SUPABASE_URL || C.SUPABASE_URL.indexOf("TWOJ-PROJEKT") > -1) return;
+      var k = "zp_ev_" + ev; if (ev !== "zapis" && sessionStorage.getItem(k)) return; sessionStorage.setItem(k, "1");
+      var h = { "apikey": C.SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" };
+      if (C.SUPABASE_KEY.indexOf("eyJ") === 0) h["Authorization"] = "Bearer " + C.SUPABASE_KEY;
+      fetch(C.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/landing_events", { method:"POST", headers:h, keepalive:true,
+        body: JSON.stringify({ event: ev, zrodlo: zrodlo, urzadzenie: window.innerWidth < 760 ? "telefon" : "komputer" }) }).catch(function(){});
+    } catch (e) {}
+  }
+  track("wejscie");
+
+  // Formularz pokazuje się dopiero po kliknięciu „Dołączam”
+  var formBox = document.getElementById("formBox"), joinCta = document.getElementById("joinCta");
+  function openForm(focus){
+    formBox.classList.remove("hidden"); joinCta.classList.add("hidden");
+    formBox.setAttribute("data-anim-done", "1"); formBox.classList.add("an-in", "an-done");
+    track("dolaczam");
+    setTimeout(function(){ formBox.scrollIntoView({ behavior: "smooth", block: "start" }); if (focus) try { document.getElementById("imie").focus({ preventScroll: true }); } catch (e) {} }, 30);
+  }
+  [].forEach.call(document.querySelectorAll('a[href="#zapis"]'), function(a){
+    a.addEventListener("click", function(e){ e.preventDefault(); openForm(true); });
+  });
+  if (location.hash === "#zapis") openForm(false);
+
+  // Formularz
+  var form = document.getElementById("form"), msg = document.getElementById("msg"), btn = document.getElementById("send");
+  function err(t){ msg.className = "msg err"; msg.textContent = t; }
+  function success(name, dup){
+    // Po zapisie przenosimy na stronę z podziękowaniem (później: adres powrotu z bramki płatności)
+    if (!dup) track("zapis");
+    if (!dup && C.PAY_URL) { location.href = "dziekuje.html" + (name ? "?imie=" + encodeURIComponent(name) : ""); return; }
+    form.classList.add("hidden");
+    document.getElementById("done").classList.remove("hidden");
+    document.getElementById("doneTitle").textContent = dup
+      ? "Ten e-mail jest już na liście. Odezwę się wkrótce."
+      : "Dzięki" + (name ? ", " + name : "") + "! Twoje zgłoszenie dotarło.";
+  }
+
+  if (!C.PAY_URL) btn.textContent = "Wyślij zgłoszenie";
+  if (C.PAY_URL) {
+    document.getElementById("talkNote").classList.add("hidden");
+    document.getElementById("regBox").classList.remove("hidden");
+    var t2 = document.getElementById("terms2"); if (C.TERMS_URL) t2.href = C.TERMS_URL;
+  }
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    msg.className = "msg";
+    var f = form.elements;
+    if (f.firma.value) { success("", false); return; } // bot
+    var data = {
+      imie: f.imie.value.trim(),
+      email: f.email.value.trim().toLowerCase(),
+      profil: f.profil.value.trim() || null,
+      telefon: f.telefon.value.trim() || undefined,
+      jak_dlugo: f.jak_dlugo.value,
+      wiadomosc: f.wiadomosc.value.trim() || null,
+      wiek16: document.getElementById("wiek16").checked,
+      zgoda: document.getElementById("zgoda").checked,
+      zrodlo: zrodlo
+    };
+    if (!data.imie) return err("Wpisz swoje imię.");
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(data.email)) return err("Sprawdź adres e-mail.");
+    if (data.telefon && !/^[+0-9 ()-]{7,30}$/.test(data.telefon)) return err("Sprawdź numer telefonu (same cyfry, może być + na początku).");
+    if (!data.jak_dlugo) return err("Zaznacz, jak długo obgryzasz paznokcie.");
+    if (!data.wiek16) return err("Program jest dla osób od 16 lat.");
+    if (!data.zgoda) return err("Zaznacz zgodę na przetwarzanie danych.");
+
+    if (C.PAY_URL) {
+      if (!document.getElementById("regulamin").checked) return err("Zaznacz akceptację regulaminu.");
+      data.regulamin = true; data.action = "start";
+      btn.disabled = true; btn.textContent = "Przechodzę do płatności...";
+      var ph = { "apikey": C.SUPABASE_KEY, "Content-Type": "application/json" };
+      if (C.SUPABASE_KEY.indexOf("eyJ") === 0) ph["Authorization"] = "Bearer " + C.SUPABASE_KEY;
+      fetch(C.PAY_URL, { method: "POST", headers: ph, body: JSON.stringify(data) })
+        .then(function(r){ return r.json().catch(function(){ return {}; }); })
+        .then(function(d){
+          if (d && d.url) { track("zapis"); location.href = d.url; return; }
+          throw new Error(d && d.error || "brak");
+        })
+        .catch(function(){
+          btn.disabled = false; btn.textContent = "Dołączam za 42 zł";
+          err("Nie udało się otworzyć płatności. Spróbuj za chwilę albo napisz do mnie w DM.");
+        });
+      return;
+    }
+
+    // Tryb podglądu: klucze Supabase jeszcze nie wpisane
+    if (!C.SUPABASE_URL || C.SUPABASE_URL.indexOf("TWOJ-PROJEKT") > -1) {
+      console.warn("Tryb podglądu: uzupełnij config.js, żeby zgłoszenia trafiały do Supabase.", data);
+      success(data.imie, false); return;
+    }
+
+    btn.disabled = true; btn.textContent = "Wysyłam...";
+    var headers = { "apikey": C.SUPABASE_KEY, "Content-Type": "application/json", "Prefer": "return=minimal" };
+    if (C.SUPABASE_KEY.indexOf("eyJ") === 0) headers["Authorization"] = "Bearer " + C.SUPABASE_KEY;
+
+    fetch(C.SUPABASE_URL.replace(/\/$/, "") + "/rest/v1/beta_zgloszenia", { method:"POST", headers:headers, body:JSON.stringify(data) })
+      .then(function(r){
+        if (r.ok) return success(data.imie, false);
+        if (r.status === 409) return success(data.imie, true);
+        throw new Error(r.status);
+      })
+      .catch(function(){
+        btn.disabled = false; btn.textContent = C.PAY_URL ? "Dołączam za 42 zł" : "Wyślij zgłoszenie";
+        err("Coś poszło nie tak. Spróbuj ponownie albo napisz do mnie w DM.");
+      });
+  });
+})();
+</script>
+<script src="animacje.js"></script>
+<script>
+(function(){
+  // linia pod nagłówkami sekcji (na środku, gdy sekcja jest wyśrodkowana)
+  document.querySelectorAll("section h2").forEach(function(h){ h.classList.add("an-line"); if (h.closest(".center") || h.classList.contains("center")) h.classList.add("an-center"); });
+  document.querySelectorAll(".card, .quote, .feat, .fact").forEach(function(c){ c.classList.add("an-card"); });
+  Animacje.init({
+    map: [
+      [".hero .eyebrow","up"], [".hero h1","clip"], [".hero .slogan","blur"], [".hero .sub","up"], [".hero .cta-row","up"], [".hero .fine","up"],
+      ["section .eyebrow","up"], ["section h2","clip"], ["section .lead","blur"],
+      [".video","scale"], [".habit-pics > *","rise"], [".chips .chip","up"], [".card","rise"],
+      [".ba-grid > *","rise"], [".quote","rise"], [".phone-wrap","left"], [".feat","right"],
+      [".price","scale"],[".bonus-badge","scale"],[".bonus-tile","rise"], [".proof","up"], [".form-box","scale"],
+      [".steps li","up"], [".fact","up"], [".avatar","left"], ["details","up"],[".hero-pics > *","rise"],[".an-band p","blur"],[".pic","scale"]
+    ]
+  });
+})();
+</script>
+</body>
+</html>
