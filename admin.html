@@ -6,7 +6,7 @@
 <title>Panel trenera · Zadbany Pazurek</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=23">
+<link rel="stylesheet" href="style.css?v=24">
 </head>
 <body>
 <div class="app wide">
@@ -93,6 +93,15 @@
         <tbody id="tbl"></tbody></table></div>
       <p class="small muted">Liczby w tabeli dotyczą wybranego zakresu czasu. „Zadania” to odhaczone dni w całym programie. „Higiena” to dni, w których ktoś odhaczył pielęgnację, i średnio ile z 3 rzeczy zrobił.</p></div>
 
+    <div class="card stack" id="leadCard" style="gap:10px"><div class="label">Zgłoszenia ze strony · osoby, które kliknęły „Dołączam”</div>
+      <p class="small muted" id="leadInfo">Wczytuję…</p>
+      <div class="row" style="gap:8px;flex-wrap:wrap" id="leadFilter">
+        <button class="btn slim" data-lf="aktywne">Do obsłużenia</button>
+        <button class="btn ghost slim" data-lf="wszystkie">Wszystkie</button>
+      </div>
+      <div class="stack" id="leadList" style="gap:10px"></div>
+    </div>
+
     <div class="card stack" id="accCard" style="gap:10px"><div class="label">Lista dostępu · kto może zalogować się do aplikacji</div>
       <p class="small muted" id="accInfo">Osoby, które zapłaciły w Przelewy24, trafiają tu same. Możesz też dodać kogoś ręcznie (tester, prezent) albo odebrać dostęp po zwrocie pieniędzy.</p>
       <form class="row" id="accForm" style="gap:8px;flex-wrap:wrap">
@@ -111,8 +120,8 @@
 </div>
 <div class="toast" id="toast" hidden></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=23"></script>
-<script src="plan.js?v=23"></script>
-<script src="admin.js?v=23"></script>
+<script src="config.js?v=24"></script>
+<script src="plan.js?v=24"></script>
+<script src="admin.js?v=24"></script>
 </body>
 </html>

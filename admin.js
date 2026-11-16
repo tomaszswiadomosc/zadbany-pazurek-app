@@ -45,7 +45,7 @@ async function boot() {
   D.profiles = D.profiles.filter(p => !p.is_admin);
   D.ev.forEach(e => e.t = new Date(e.created_at).getTime());
   D.drills.forEach(e => e.t = new Date(e.created_at).getTime());
-  show("a-main"); render(); renderCases(); loadMeet(); loadAccess();
+  show("a-main"); render(); renderCases(); loadMeet(); loadAccess(); loadLeads();
 }
 
 // ---------- Spotkania na żywo ----------
@@ -66,6 +66,60 @@ $("meetForm").onsubmit = async e => {
   $("mSave").disabled = false;
   toast(error ? "Nie udało się zapisać: " + error.message : "Zapisane. Uczestnicy zobaczą to w aplikacji.");
 };
+// ---------- Zgłoszenia ze strony ----------
+let LEADS = [], LF = "aktywne";
+const LSTAT = { nowe: "Nowe", w_kontakcie: "W kontakcie", oplacone: "Opłacone", wyslany_dostep: "Ma dostęp", odrzucony: "Odrzucone" };
+async function loadLeads() {
+  const r = await sb.from("beta_zgloszenia").select("*").order("created_at", { ascending: false });
+  if (r.error) { $("leadInfo").textContent = "Nie mogę wczytać zgłoszeń. Uruchom w Supabase plik zgloszenia-rozmowa.sql."; return; }
+  LEADS = r.data || []; renderLeads();
+}
+function leadMsg(l) {
+  const app = C.APP_URL || location.origin;
+  return `Hej ${l.imie}! Masz już dostęp do programu Zadbany Pazurek 🎉\n\n1. Wejdź na ${app}\n2. Wpisz e-mail ${l.email} i kliknij „Wyślij kod do logowania”.\n3. Wpisz kod z maila i gotowe.\n\nNa iPhonie dodaj aplikację do ekranu: ··· obok paska adresu → Udostępnij → Do ekranu głównego → Dodaj.\n\nPowodzenia! Tomasz`;
+}
+function renderLeads() {
+  const open = LEADS.filter(l => l.status === "nowe" || l.status === "w_kontakcie");
+  const nowe = LEADS.filter(l => l.status === "nowe").length;
+  $("leadInfo").textContent = `Nowych: ${nowe} · do obsłużenia: ${open.length} · wszystkich: ${LEADS.length}. Po rozmowie i płatności kliknij „Opłacone, daj dostęp”, potem skopiuj wiadomość z linkiem i wyślij ją tej osobie.`;
+  document.querySelectorAll("[data-lf]").forEach(b => b.classList.toggle("ghost", b.dataset.lf !== LF));
+  const rows = LF === "aktywne" ? open : LEADS;
+  $("leadList").innerHTML = rows.map(l => `<div class="lead" data-id="${l.id}">
+    <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(l.imie)}</b><span class="pill st-${l.status}">${LSTAT[l.status] || l.status}</span></div>
+    <div class="small">${esc(l.email)}${l.telefon ? ` · tel. <a href="tel:${esc(l.telefon.replace(/[^+0-9]/g, ""))}">${esc(l.telefon)}</a>` : ""}${l.profil ? " · " + esc(l.profil) : ""}</div>
+    <div class="small muted">${new Date(l.created_at).toLocaleString("pl-PL", { dateStyle: "short", timeStyle: "short" })} · obgryza: ${esc(l.jak_dlugo)}${l.zrodlo ? " · źródło: " + esc(l.zrodlo) : ""}</div>
+    ${l.wiadomosc ? `<div class="small" style="font-style:italic">„${esc(l.wiadomosc)}”</div>` : ""}
+    <div class="row" style="gap:6px;flex-wrap:wrap;margin-top:4px">
+      ${l.status === "nowe" ? `<button class="btn ghost slim" data-la="w_kontakcie">W kontakcie</button>` : ""}
+      ${l.status === "nowe" || l.status === "w_kontakcie" ? `<button class="btn slim" data-la="dostep">Opłacone, daj dostęp</button><button class="btn ghost slim" data-la="odrzucony">Odrzuć</button>` : ""}
+      ${l.status === "oplacone" || l.status === "wyslany_dostep" ? `<button class="btn ghost slim" data-la="kopiuj">Kopiuj wiadomość z linkiem</button>` : ""}
+      ${l.status === "oplacone" ? `<button class="btn ghost slim" data-la="wyslany_dostep">Wysłałem link</button>` : ""}
+      ${l.status === "odrzucony" ? `<button class="btn ghost slim" data-la="nowe">Przywróć</button>` : ""}
+    </div></div>`).join("") || '<p class="small muted">Brak zgłoszeń do obsłużenia.</p>';
+}
+document.querySelectorAll("[data-lf]").forEach(b => b.onclick = () => { LF = b.dataset.lf; renderLeads(); });
+$("leadList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-la]"); if (!b) return;
+  const id = +b.closest("[data-id]").dataset.id, l = LEADS.find(x => x.id === id), act = b.dataset.la;
+  if (act === "kopiuj") {
+    const t = leadMsg(l);
+    try { await navigator.clipboard.writeText(t); toast("Skopiowane. Wklej w SMS, WhatsApp albo mail."); }
+    catch { prompt("Skopiuj wiadomość:", t); }
+    return;
+  }
+  let status = act;
+  if (act === "dostep") {
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno opłacone? Kliknij jeszcze raz"; return; }
+    const a = await sb.from("access_list").upsert({ email: l.email.toLowerCase(), imie: l.imie, zrodlo: "reczny", revoked_at: null, note: "zgłoszenie ze strony" }, { onConflict: "email" });
+    if (a.error) return toast("Nie udało się dać dostępu: " + a.error.message);
+    status = "oplacone";
+  }
+  const { error } = await sb.from("beta_zgloszenia").update({ status }).eq("id", id);
+  if (error) return toast("Nie udało się zmienić statusu: " + error.message);
+  l.status = status; renderLeads();
+  if (act === "dostep") { toast("Dostęp nadany. Teraz skopiuj wiadomość z linkiem i wyślij."); loadAccess(); }
+});
+
 // ---------- Lista dostępu ----------
 let ACC = [], ORD = [];
 async function loadAccess() {
