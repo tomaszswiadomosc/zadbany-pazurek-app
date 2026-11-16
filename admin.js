@@ -79,13 +79,13 @@ function leadMsg(l) {
   return `Hej ${l.imie}! Masz już dostęp do programu Zadbany Pazurek 🎉\n\n1. Wejdź na ${app}\n2. Wpisz e-mail ${l.email} i kliknij „Wyślij kod do logowania”.\n3. Wpisz kod z maila i gotowe.\n\nNa iPhonie dodaj aplikację do ekranu: ··· obok paska adresu → Udostępnij → Do ekranu głównego → Dodaj.\n\nPowodzenia! Tomasz`;
 }
 // Dostęp + automatyczny mail powitalny przez funkcję „platnosci” (Brevo). Zwraca "mail", "nomail" albo "brak" (funkcja niewdrożona).
-async function grantAccess(l) {
+async function grantAccess(l, action = "przyznaj") {
   try {
     const { data: { session } } = await sb.auth.getSession();
     const r = await fetch(C.SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/platnosci", {
       method: "POST",
       headers: { "Content-Type": "application/json", "apikey": C.SUPABASE_ANON_KEY, "Authorization": "Bearer " + session.access_token },
-      body: JSON.stringify({ action: "przyznaj", id: l.id })
+      body: JSON.stringify({ action, id: l.id })
     });
     if (!r.ok) return "brak";
     const d = await r.json();
@@ -95,7 +95,7 @@ async function grantAccess(l) {
 function renderLeads() {
   const open = LEADS.filter(l => l.status === "nowe" || l.status === "w_kontakcie");
   const nowe = LEADS.filter(l => l.status === "nowe").length;
-  $("leadInfo").textContent = `Nowych: ${nowe} · do obsłużenia: ${open.length} · wszystkich: ${LEADS.length}. Program: po płatności kliknij „Opłacone, daj dostęp” (dostęp i mail z linkiem idą same). Przewodnik: wyślij PDF z Gmaila i kliknij „Opłacone, PDF wysłany”.`;
+  $("leadInfo").textContent = `Nowych: ${nowe} · do obsłużenia: ${open.length} · wszystkich: ${LEADS.length}. Program: po płatności kliknij „Opłacone, daj dostęp” (dostęp i mail z linkiem idą same). Przewodnik: po płatności kliknij „Opłacone, wyślij PDF” (mail z załącznikiem idzie sam).`;
   document.querySelectorAll("[data-lf]").forEach(b => b.classList.toggle("ghost", b.dataset.lf !== LF));
   const rows = LF === "aktywne" ? open : LEADS;
   const hasPdf = em => LEADS.some(x => x.oferta === "przewodnik" && x.email.toLowerCase() === em.toLowerCase() && (x.status === "oplacone" || x.status === "wyslany_dostep"));
@@ -110,7 +110,8 @@ function renderLeads() {
     <div class="row" style="gap:6px;flex-wrap:wrap;margin-top:4px">
       ${l.status === "nowe" ? `<button class="btn ghost slim" data-la="w_kontakcie">W kontakcie</button>` : ""}
       ${open && !pdf ? `<button class="btn slim" data-la="dostep">Opłacone, daj dostęp</button>` : ""}
-      ${open && pdf ? `<button class="btn ghost slim" data-la="email">Kopiuj e-mail</button><button class="btn slim" data-la="pdf">Opłacone, PDF wysłany</button>` : ""}
+      ${open && pdf ? `<button class="btn slim" data-la="pdfmail">Opłacone, wyślij PDF</button>` : ""}
+      ${(open || l.status === "oplacone") && pdf ? `<button class="btn ghost slim" data-la="email">Kopiuj e-mail</button><button class="btn ghost slim" data-la="pdf">Wysłałem PDF ręcznie</button>` : ""}
       ${open ? `<button class="btn ghost slim" data-la="odrzucony">Odrzuć</button>` : ""}
       ${!pdf && (l.status === "oplacone" || l.status === "wyslany_dostep") ? `<button class="btn ghost slim" data-la="kopiuj">Kopiuj wiadomość z linkiem</button>` : ""}
       ${!pdf && l.status === "oplacone" ? `<button class="btn slim" data-la="mail">Wyślij mail z dostępem</button><button class="btn ghost slim" data-la="wyslany_dostep">Wysłałem link ręcznie</button>` : ""}
@@ -136,6 +137,14 @@ $("leadList").addEventListener("click", async e => {
   if (act === "pdf") {
     if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno? Kliknij jeszcze raz"; return; }
     status = "wyslany_dostep";
+  }
+  if (act === "pdfmail") {
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno opłacone? Kliknij jeszcze raz"; return; }
+    b.disabled = true; b.textContent = "Wysyłam…";
+    const r = await grantAccess(l, "przewodnik");
+    if (r === "mail") { l.status = "wyslany_dostep"; renderLeads(); return toast(`Gotowe. ${l.imie} dostał(a) przewodnik mailem.`); }
+    b.disabled = false; b.dataset.sure = ""; b.textContent = "Opłacone, wyślij PDF";
+    return toast("Nie udało się wysłać PDF automatycznie. Wyślij go z Gmaila i kliknij „Wysłałem PDF ręcznie”.");
   }
   if (act === "dostep" || act === "mail") {
     if (act === "dostep" && b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno opłacone? Kliknij jeszcze raz"; return; }
