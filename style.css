@@ -245,3 +245,4 @@ details.danger[open]{display:flex;flex-direction:column;gap:10px}
 .lead{border:1px solid var(--line,#DCEAF4);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:4px;background:var(--card,#fff)}
 .lead .pill{font-size:12px;padding:3px 9px;border-radius:99px;background:#E6F3FB;color:#0E2A44}
 .lead .st-nowe{background:#0E92D6;color:#fff}.lead .st-oplacone,.lead .st-wyslany_dostep{background:#DDF3E4;color:#17643A}.lead .st-odrzucony{background:#EEE;color:#777}
+.lead .of-pdf{background:#FFF3E0;color:#8A4B00}.lead .of-prog{background:#E6F3FB;color:#0E2A44}

@@ -95,21 +95,27 @@ async function grantAccess(l) {
 function renderLeads() {
   const open = LEADS.filter(l => l.status === "nowe" || l.status === "w_kontakcie");
   const nowe = LEADS.filter(l => l.status === "nowe").length;
-  $("leadInfo").textContent = `Nowych: ${nowe} · do obsłużenia: ${open.length} · wszystkich: ${LEADS.length}. Po rozmowie i płatności BLIK kliknij „Opłacone, daj dostęp”: osoba trafi na listę dostępu i dostanie maila z linkiem do aplikacji.`;
+  $("leadInfo").textContent = `Nowych: ${nowe} · do obsłużenia: ${open.length} · wszystkich: ${LEADS.length}. Program: po płatności kliknij „Opłacone, daj dostęp” (dostęp i mail z linkiem idą same). Przewodnik: wyślij PDF z Gmaila i kliknij „Opłacone, PDF wysłany”.`;
   document.querySelectorAll("[data-lf]").forEach(b => b.classList.toggle("ghost", b.dataset.lf !== LF));
   const rows = LF === "aktywne" ? open : LEADS;
-  $("leadList").innerHTML = rows.map(l => `<div class="lead" data-id="${l.id}">
-    <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(l.imie)}</b><span class="pill st-${l.status}">${LSTAT[l.status] || l.status}</span></div>
+  const hasPdf = em => LEADS.some(x => x.oferta === "przewodnik" && x.email.toLowerCase() === em.toLowerCase() && (x.status === "oplacone" || x.status === "wyslany_dostep"));
+  $("leadList").innerHTML = rows.map(l => { const pdf = l.oferta === "przewodnik", open = l.status === "nowe" || l.status === "w_kontakcie";
+    const rabat = !pdf && (hasPdf(l.email) || /przewodnik/i.test(l.wiadomosc || ""));
+    return `<div class="lead" data-id="${l.id}">
+    <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(l.imie)}</b><span class="row" style="gap:6px"><span class="pill of-${pdf ? "pdf" : "prog"}">${pdf ? "Przewodnik PDF · 27 zł" : "Program · 57 zł"}</span><span class="pill st-${l.status}">${pdf && l.status === "wyslany_dostep" ? "PDF wysłany" : (LSTAT[l.status] || l.status)}</span></span></div>
+    ${rabat ? `<div class="small" style="color:#17643A;font-weight:600">Ma przewodnik: dopłata 30 zł zamiast 57 zł</div>` : ""}
     <div class="small">${esc(l.email)}${l.telefon ? ` · tel. <a href="tel:${esc(l.telefon.replace(/[^+0-9]/g, ""))}">${esc(l.telefon)}</a>` : ""}${l.profil ? " · " + esc(l.profil) : ""}</div>
     <div class="small muted">${new Date(l.created_at).toLocaleString("pl-PL", { dateStyle: "short", timeStyle: "short" })} · obgryza: ${esc(l.jak_dlugo)}${l.zrodlo ? " · źródło: " + esc(l.zrodlo) : ""}</div>
     ${l.wiadomosc ? `<div class="small" style="font-style:italic">„${esc(l.wiadomosc)}”</div>` : ""}
     <div class="row" style="gap:6px;flex-wrap:wrap;margin-top:4px">
       ${l.status === "nowe" ? `<button class="btn ghost slim" data-la="w_kontakcie">W kontakcie</button>` : ""}
-      ${l.status === "nowe" || l.status === "w_kontakcie" ? `<button class="btn slim" data-la="dostep">Opłacone, daj dostęp</button><button class="btn ghost slim" data-la="odrzucony">Odrzuć</button>` : ""}
-      ${l.status === "oplacone" || l.status === "wyslany_dostep" ? `<button class="btn ghost slim" data-la="kopiuj">Kopiuj wiadomość z linkiem</button>` : ""}
-      ${l.status === "oplacone" ? `<button class="btn slim" data-la="mail">Wyślij mail z dostępem</button><button class="btn ghost slim" data-la="wyslany_dostep">Wysłałem link ręcznie</button>` : ""}
+      ${open && !pdf ? `<button class="btn slim" data-la="dostep">Opłacone, daj dostęp</button>` : ""}
+      ${open && pdf ? `<button class="btn ghost slim" data-la="email">Kopiuj e-mail</button><button class="btn slim" data-la="pdf">Opłacone, PDF wysłany</button>` : ""}
+      ${open ? `<button class="btn ghost slim" data-la="odrzucony">Odrzuć</button>` : ""}
+      ${!pdf && (l.status === "oplacone" || l.status === "wyslany_dostep") ? `<button class="btn ghost slim" data-la="kopiuj">Kopiuj wiadomość z linkiem</button>` : ""}
+      ${!pdf && l.status === "oplacone" ? `<button class="btn slim" data-la="mail">Wyślij mail z dostępem</button><button class="btn ghost slim" data-la="wyslany_dostep">Wysłałem link ręcznie</button>` : ""}
       ${l.status === "odrzucony" ? `<button class="btn ghost slim" data-la="nowe">Przywróć</button>` : ""}
-    </div></div>`).join("") || '<p class="small muted">Brak zgłoszeń do obsłużenia.</p>';
+    </div></div>`; }).join("") || '<p class="small muted">Brak zgłoszeń do obsłużenia.</p>';
 }
 document.querySelectorAll("[data-lf]").forEach(b => b.onclick = () => { LF = b.dataset.lf; renderLeads(); });
 $("leadList").addEventListener("click", async e => {
@@ -121,7 +127,16 @@ $("leadList").addEventListener("click", async e => {
     catch { prompt("Skopiuj wiadomość:", t); }
     return;
   }
+  if (act === "email") {
+    try { await navigator.clipboard.writeText(l.email); toast("E-mail skopiowany. Wyślij przewodnik z Gmaila."); }
+    catch { prompt("Skopiuj e-mail:", l.email); }
+    return;
+  }
   let status = act;
+  if (act === "pdf") {
+    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno? Kliknij jeszcze raz"; return; }
+    status = "wyslany_dostep";
+  }
   if (act === "dostep" || act === "mail") {
     if (act === "dostep" && b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno opłacone? Kliknij jeszcze raz"; return; }
     b.disabled = true; b.textContent = "Wysyłam…";
