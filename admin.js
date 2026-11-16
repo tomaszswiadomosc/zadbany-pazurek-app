@@ -78,10 +78,24 @@ function leadMsg(l) {
   const app = C.APP_URL || location.origin;
   return `Hej ${l.imie}! Masz już dostęp do programu Zadbany Pazurek 🎉\n\n1. Wejdź na ${app}\n2. Wpisz e-mail ${l.email} i kliknij „Wyślij kod do logowania”.\n3. Wpisz kod z maila i gotowe.\n\nNa iPhonie dodaj aplikację do ekranu: ··· obok paska adresu → Udostępnij → Do ekranu głównego → Dodaj.\n\nPowodzenia! Tomasz`;
 }
+// Dostęp + automatyczny mail powitalny przez funkcję „platnosci” (Brevo). Zwraca "mail", "nomail" albo "brak" (funkcja niewdrożona).
+async function grantAccess(l) {
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    const r = await fetch(C.SUPABASE_URL.replace(/\/$/, "") + "/functions/v1/platnosci", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": C.SUPABASE_ANON_KEY, "Authorization": "Bearer " + session.access_token },
+      body: JSON.stringify({ action: "przyznaj", id: l.id })
+    });
+    if (!r.ok) return "brak";
+    const d = await r.json();
+    return d.ok ? (d.mail ? "mail" : "nomail") : "brak";
+  } catch { return "brak"; }
+}
 function renderLeads() {
   const open = LEADS.filter(l => l.status === "nowe" || l.status === "w_kontakcie");
   const nowe = LEADS.filter(l => l.status === "nowe").length;
-  $("leadInfo").textContent = `Nowych: ${nowe} · do obsłużenia: ${open.length} · wszystkich: ${LEADS.length}. Po rozmowie i płatności kliknij „Opłacone, daj dostęp”, potem skopiuj wiadomość z linkiem i wyślij ją tej osobie.`;
+  $("leadInfo").textContent = `Nowych: ${nowe} · do obsłużenia: ${open.length} · wszystkich: ${LEADS.length}. Po rozmowie i płatności BLIK kliknij „Opłacone, daj dostęp”: osoba trafi na listę dostępu i dostanie maila z linkiem do aplikacji.`;
   document.querySelectorAll("[data-lf]").forEach(b => b.classList.toggle("ghost", b.dataset.lf !== LF));
   const rows = LF === "aktywne" ? open : LEADS;
   $("leadList").innerHTML = rows.map(l => `<div class="lead" data-id="${l.id}">
@@ -93,7 +107,7 @@ function renderLeads() {
       ${l.status === "nowe" ? `<button class="btn ghost slim" data-la="w_kontakcie">W kontakcie</button>` : ""}
       ${l.status === "nowe" || l.status === "w_kontakcie" ? `<button class="btn slim" data-la="dostep">Opłacone, daj dostęp</button><button class="btn ghost slim" data-la="odrzucony">Odrzuć</button>` : ""}
       ${l.status === "oplacone" || l.status === "wyslany_dostep" ? `<button class="btn ghost slim" data-la="kopiuj">Kopiuj wiadomość z linkiem</button>` : ""}
-      ${l.status === "oplacone" ? `<button class="btn ghost slim" data-la="wyslany_dostep">Wysłałem link</button>` : ""}
+      ${l.status === "oplacone" ? `<button class="btn slim" data-la="mail">Wyślij mail z dostępem</button><button class="btn ghost slim" data-la="wyslany_dostep">Wysłałem link ręcznie</button>` : ""}
       ${l.status === "odrzucony" ? `<button class="btn ghost slim" data-la="nowe">Przywróć</button>` : ""}
     </div></div>`).join("") || '<p class="small muted">Brak zgłoszeń do obsłużenia.</p>';
 }
@@ -108,16 +122,21 @@ $("leadList").addEventListener("click", async e => {
     return;
   }
   let status = act;
-  if (act === "dostep") {
-    if (b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno opłacone? Kliknij jeszcze raz"; return; }
+  if (act === "dostep" || act === "mail") {
+    if (act === "dostep" && b.dataset.sure !== "1") { b.dataset.sure = "1"; b.textContent = "Na pewno opłacone? Kliknij jeszcze raz"; return; }
+    b.disabled = true; b.textContent = "Wysyłam…";
+    const r = await grantAccess(l);
+    if (r === "mail") { l.status = "wyslany_dostep"; renderLeads(); loadAccess(); return toast(`Gotowe. ${l.imie} ma dostęp i dostał(a) maila z linkiem do aplikacji.`); }
+    if (r === "nomail") { l.status = "oplacone"; renderLeads(); loadAccess(); return toast("Dostęp nadany, ale mail nie wyszedł. Kliknij „Kopiuj wiadomość z linkiem” i wyślij ręcznie."); }
+    if (act === "mail") { b.disabled = false; return toast("Nie udało się wysłać maila. Skopiuj wiadomość i wyślij ręcznie."); }
     const a = await sb.from("access_list").upsert({ email: l.email.toLowerCase(), imie: l.imie, zrodlo: "reczny", revoked_at: null, note: "zgłoszenie ze strony" }, { onConflict: "email" });
-    if (a.error) return toast("Nie udało się dać dostępu: " + a.error.message);
+    if (a.error) { b.disabled = false; return toast("Nie udało się dać dostępu: " + a.error.message); }
     status = "oplacone";
   }
   const { error } = await sb.from("beta_zgloszenia").update({ status }).eq("id", id);
   if (error) return toast("Nie udało się zmienić statusu: " + error.message);
   l.status = status; renderLeads();
-  if (act === "dostep") { toast("Dostęp nadany. Teraz skopiuj wiadomość z linkiem i wyślij."); loadAccess(); }
+  if (act === "dostep") { toast("Dostęp nadany. Automatyczny mail jeszcze nie działa, więc skopiuj wiadomość z linkiem i wyślij."); loadAccess(); }
 });
 
 // ---------- Lista dostępu ----------
