@@ -93,9 +93,18 @@ async function boot() {
   if (error) return fail(error);
   if (!prof || !prof.consent_health) return show("s-onboard");
   S.profile = prof;
+  touchSeen();
   await loadData();
   nextStep();
 }
+// Ostatnia aktywność (do wiadomości po 3 dniach ciszy), najwyżej raz na godzinę
+let lastTouch = 0;
+function touchSeen() {
+  if (!S.user || Date.now() - lastTouch < 3600e3) return;
+  lastTouch = Date.now();
+  sb.from("profiles").update({ last_seen: new Date().toISOString() }).eq("id", S.user.id).then(() => {}, () => {});
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden && S.profile) touchSeen(); });
 sb.auth.onAuthStateChange((ev, session) => {
   if (ev === "SIGNED_OUT") { S.user = null; S.profile = null; if (!S.deleted && !S.blocked) show("s-login"); }
   if (ev === "SIGNED_IN" && (!S.user || S.user.id !== session.user.id)) boot().catch(fail);
@@ -331,6 +340,7 @@ function renderDzis() {
   $("sBit").textContent = today.filter(e => e.kind === "bit").length;
   $("sRes").textContent = today.filter(e => e.kind === "res").length;
   $("sWeek").textContent = S.ev.filter(e => e.kind === "res" && e.t >= Date.now() - 7 * DAY).length;
+  renderMilestone(d); renderSkin(d);
   const tips = W.P90_TIPS.slice(); if (S.profile.cuticles) tips.push("Skórki: wieczorem wmasuj krem lub olejek. Gładka skórka mniej kusi do skubania.");
   $("tip").textContent = tips[d % tips.length];
   $("installHint").hidden = isStandalone();
@@ -720,6 +730,72 @@ function hbars(el, obj) {
 }
 // ---------- Kalendarz 90 dni ----------
 function dayOfTs(t) { const s = new Date(S.profile.start_date + "T00:00:00"), d = new Date(t); d.setHours(0, 0, 0, 0); return Math.round((d - s) / DAY) + 1; }
+// ---------- Skórki ----------
+function renderSkin(d) {
+  const on = !!S.profile.cuticles; $("skinCard").hidden = !on;
+  if (on) $("skinTip").textContent = W.P90_SKORKI[(Math.max(1, Math.ceil(d / 7)) - 1) % W.P90_SKORKI.length];
+}
+$("cutToggle").onchange = async e => {
+  const v = e.target.checked;
+  const { error } = await sb.from("profiles").update({ cuticles: v }).eq("id", S.user.id);
+  if (error) { e.target.checked = !v; return fail(error); }
+  S.profile.cuticles = v; toast(v ? "Gotowe. Na ekranie Dziś masz wskazówki dla skórek." : "Wyłączone.");
+};
+
+// ---------- Kamienie milowe ----------
+function progStats() {
+  const today = Math.min(dayRaw(), 90), byDay = {};
+  const mark = (d, k) => { if (d >= 1 && d <= 90) (byDay[d] = byDay[d] || {})[k] = 1; };
+  S.ev.forEach(e => mark(dayOfTs(e.t), e.kind === "bit" ? "bit" : "act"));
+  S.drills.forEach(e => mark(dayOfTs(e.t), "act")); S.tasks.forEach(d => mark(d, "act")); S.notes.forEach(n => mark(n.day, "act"));
+  let ok = 0, best = 0, run = 0;
+  for (let d = 1; d <= today; d++) { const x = byDay[d]; if (x && !x.bit) { ok++; run++; best = Math.max(best, run); } else run = 0; }
+  return { ok, best, res: S.ev.filter(e => e.kind === "res").length, drills: S.drills.length };
+}
+const msKey = m => "ms_seen_" + S.user.id + "_" + m;
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function renderMilestone(d) {
+  const m = [...W.P90_MILESTONES].reverse().find(x => d >= x.d && d <= x.d + (x.d === 90 ? 14 : 3));
+  if (!m || lsGet(msKey(m.d))) return $("msCard").hidden = true;
+  const st = progStats();
+  $("msBadge").innerHTML = `${m.d}<small>DNI</small>`; $("msT").textContent = m.t; $("msB").textContent = m.b;
+  $("msStats").textContent = `Dni bez obgryzania: ${st.ok} · najdłuższa seria: ${st.best} · powstrzymania: ${st.res} · ćwiczenia: ${st.drills}`;
+  $("msBtns").innerHTML = (m.d >= 30 ? `<button class="btn ghost slim" type="button" id="msBa">Zobacz dłonie przed i po</button>` : "") +
+    (m.d === 90 ? `<button class="btn slim" type="button" id="msDip">Pobierz dyplom</button>` : "");
+  $("msCard").hidden = false;
+  if ($("msBa")) $("msBa").onclick = openBeforeAfter;
+  if ($("msDip")) $("msDip").onclick = diploma;
+  $("msClose").onclick = () => { lsSet(msKey(m.d), "1"); $("msCard").hidden = true; };
+}
+async function openBeforeAfter() {
+  const first = S.photos[0], last = S.photos.length > 1 ? S.photos.at(-1) : null;
+  if (!first || !last) { toast("Potrzebujesz co najmniej dwóch zdjęć. Dodaj dzisiejsze w zakładce Postęp."); return go("postep"); }
+  const [a, b] = await Promise.all([signed(first.path), signed(last.path)]);
+  openMedia("Twoje dłonie: przed i po", `<div class="ba"><figure><img src="${a}" alt="Dzień ${first.day}"><figcaption>Dzień ${first.day}</figcaption></figure><figure><img src="${b}" alt="Dzień ${last.day}"><figcaption>Dzień ${last.day}</figcaption></figure></div>`);
+}
+async function diploma() {
+  const st = progStats(), name = [S.profile.first_name, S.profile.last_name].filter(Boolean).join(" ");
+  const c = document.createElement("canvas"); c.width = 1080; c.height = 1350; const g = c.getContext("2d");
+  const grd = g.createLinearGradient(0, 0, 0, 1350); grd.addColorStop(0, "#EAF5FC"); grd.addColorStop(1, "#FFFFFF"); g.fillStyle = grd; g.fillRect(0, 0, 1080, 1350);
+  g.strokeStyle = "#0E92D6"; g.lineWidth = 10; g.strokeRect(40, 40, 1000, 1270);
+  g.textAlign = "center"; g.fillStyle = "#0E92D6"; g.font = "600 34px Arial"; g.fillText("ZADBANY PAZUREK · PROGRAM 90 DNI", 540, 170);
+  g.fillStyle = "#0E2A44"; g.font = "800 96px Arial"; g.fillText("DYPLOM", 540, 330);
+  g.font = "400 38px Arial"; g.fillStyle = "#4B6178"; g.fillText("dla", 540, 420);
+  g.fillStyle = "#0E2A44"; g.font = "700 70px Arial"; g.fillText(name || "Uczestnika programu", 540, 520);
+  g.fillStyle = "#4B6178"; g.font = "400 38px Arial";
+  ["za ukończenie 90 dni pracy", "z nawykiem obgryzania"].forEach((t, i) => g.fillText(t, 540, 620 + i * 52));
+  g.fillStyle = "#0E92D6"; g.font = "800 120px Arial"; g.fillText(String(st.ok), 540, 860);
+  g.fillStyle = "#0E2A44"; g.font = "600 38px Arial"; g.fillText("dni bez obgryzania", 540, 920);
+  g.fillStyle = "#4B6178"; g.font = "400 32px Arial"; g.fillText(`najdłuższa seria: ${st.best} · powstrzymania: ${st.res}`, 540, 990);
+  g.fillText(new Date().toLocaleDateString("pl-PL", { day: "numeric", month: "long", year: "numeric" }), 540, 1120);
+  g.fillStyle = "#0E2A44"; g.font = "700 36px Arial"; g.fillText("Tomasz Świadomość", 540, 1210);
+  const blob = await new Promise(r => c.toBlob(r, "image/png")), file = new File([blob], "dyplom-zadbany-pazurek.png", { type: "image/png" });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: "Mój dyplom Zadbany Pazurek" }); return; } catch (e) { if (e.name === "AbortError") return; } }
+  const url = URL.createObjectURL(blob);
+  openMedia("Twój dyplom", `<img src="${url}" alt="Dyplom" style="width:100%;border-radius:12px"><p class="small muted">Przytrzymaj obrazek, żeby go zapisać.</p><a class="btn" href="${url}" download="dyplom-zadbany-pazurek.png">Zapisz dyplom</a>`);
+}
+
 function renderCal() {
   const today = dayRaw(), info = {};
   const add = (d, k) => { if (d < 1 || d > 90) return; (info[d] = info[d] || { bit: 0, res: 0, drill: 0, task: 0, note: 0, act: 0 }); info[d][k]++; info[d].act++; };
@@ -763,7 +839,7 @@ function renderCal() {
 }
 
 async function renderPostep() {
-  renderCal(); renderPushState();
+  renderCal(); renderPushState(); $("cutToggle").checked = !!S.profile.cuticles;
   const bit = S.ev.filter(e => e.kind === "bit"), now = new Date(); now.setHours(0, 0, 0, 0);
   let mx = 1; const days = [];
   for (let i = 13; i >= 0; i--) { const d = now.getTime() - i * DAY, b = bit.filter(e => sameDay(e.t, d)).length, r = S.ev.filter(e => e.kind === "res" && sameDay(e.t, d)).length; days.push([b, r]); mx = Math.max(mx, b + r); }

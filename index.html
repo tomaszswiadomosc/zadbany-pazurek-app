@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Zadbany Pazurek">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap">
-<link rel="stylesheet" href="style.css?v=29">
+<link rel="stylesheet" href="style.css?v=30">
 </head>
 <body>
 <div class="app">
@@ -150,6 +150,15 @@
       <div class="bar"><span id="progBar"></span></div>
     </div>
 
+    <div class="card milestone" id="msCard" hidden>
+      <button class="ms-x" type="button" id="msClose" aria-label="Zamknij">✕</button>
+      <div class="ms-badge" id="msBadge"></div>
+      <h2 id="msT"></h2>
+      <p id="msB"></p>
+      <p class="small" id="msStats"></p>
+      <div class="row" id="msBtns" style="gap:8px;flex-wrap:wrap"></div>
+    </div>
+
     <div class="card">
       <div class="label" id="taskLbl">Zadanie tygodnia · odhacz dzisiaj</div>
       <label class="task"><input type="checkbox" id="taskDone"><span><b id="taskT"></b><br><span class="small muted" id="taskD"></span></span></label>
@@ -206,6 +215,7 @@
     </div>
     <div class="row"><button class="btn" data-go="zapisz">Zapisz moment</button><button class="btn sos" data-go="sos">SOS</button></div>
 
+    <div class="card skin" id="skinCard" hidden><div class="label">Skórki · wskazówka tygodnia</div><p id="skinTip"></p></div>
     <div class="note" id="tip"></div>
     <div class="note" id="installHint" hidden><b>Dodaj aplikację do ekranu telefonu.</b><br><span id="installText"></span></div>
     <div class="card" id="meetCard" hidden>
@@ -350,6 +360,7 @@
     <div class="card"><div class="top"><div class="label">Przypomnienia 8:00 · 13:00 · 19:00</div><b class="small" id="pushState"></b></div>
       <button class="btn ghost" type="button" id="pushOn2" hidden>Włącz przypomnienia</button>
       <p class="small muted" id="pushHint"></p></div>
+    <div class="card"><label class="check"><input type="checkbox" id="cutToggle"><span><b>Obgryzam też skórki.</b> Na ekranie Dziś dostaniesz co tydzień wskazówkę dla skórek.</span></label></div>
     <a href="#" class="small" id="safetyInfo">Kiedy iść do lekarza</a>
     <button class="btn ghost" id="logout">Wyloguj</button>
     <details class="card danger" id="delBox">
@@ -378,8 +389,8 @@
 <div class="toast" id="toast" hidden></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="config.js?v=29"></script>
-<script src="plan.js?v=29"></script>
-<script src="app.js?v=29"></script>
+<script src="config.js?v=30"></script>
+<script src="plan.js?v=30"></script>
+<script src="app.js?v=30"></script>
 </body>
 </html>

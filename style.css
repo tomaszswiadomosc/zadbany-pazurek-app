@@ -246,3 +246,12 @@ details.danger[open]{display:flex;flex-direction:column;gap:10px}
 .lead .pill{font-size:12px;padding:3px 9px;border-radius:99px;background:#E6F3FB;color:#0E2A44}
 .lead .st-nowe{background:#0E92D6;color:#fff}.lead .st-oplacone,.lead .st-wyslany_dostep{background:#DDF3E4;color:#17643A}.lead .st-odrzucony{background:#EEE;color:#777}
 .lead .of-pdf{background:#FFF3E0;color:#8A4B00}.lead .of-prog{background:#E6F3FB;color:#0E2A44}
+
+.milestone{position:relative;text-align:center;background:linear-gradient(160deg,#EAF5FC,#FFFFFF 60%);border:1.5px solid #9CCBEA}
+.milestone h2{margin:6px 0 4px}
+.ms-badge{width:76px;height:76px;margin:4px auto 6px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#5CC0F0,#0E92D6);color:#fff;font:800 28px/1 var(--display,inherit);box-shadow:0 8px 24px rgba(14,146,214,.35)}
+.ms-badge small{display:block;font-size:11px;letter-spacing:.1em;font-weight:600}
+.ms-x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:18px;color:#7F91A3;cursor:pointer;padding:6px}
+.milestone .row{justify-content:center}
+.ba{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ba figure{margin:0}.ba img{width:100%;border-radius:10px;aspect-ratio:3/4;object-fit:cover}.ba figcaption{font-size:13px;text-align:center;color:#4B6178;margin-top:4px}
+.skin{border-left:4px solid #0E92D6}

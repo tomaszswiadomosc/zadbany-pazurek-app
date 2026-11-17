@@ -81,3 +81,27 @@ window.P90_dayRaw = function (startDate) {
   return Math.max(1, Math.round((t - s) / 864e5) + 1);
 };
 window.P90_dayNo = function (startDate) { return Math.min(90, window.P90_dayRaw(startDate)); };
+
+// Skórki: wskazówka na każdy tydzień (pokazywana, gdy ktoś zaznaczył „obgryzam też skórki”)
+window.P90_SKORKI = [
+  "Zauważ, którą skórkę ruszasz najczęściej. Gdy obgryzanie zaczyna się od skórki, zaznacz w zapisie „Odstająca skórka”.",
+  "Olejek na skórki rano i wieczorem. Miękka skórka nie odstaje, więc palce nie mają czego szukać.",
+  "Zadzior przytnij od razu małymi cążkami do skórek. Noś je przy sobie tak samo jak pilnik.",
+  "Gdy palec szuka skórki, daj mu inną fakturę: gładki kamyk, pierścionek albo piłeczkę w kieszeni.",
+  "Wieczorem przy serialu grubsza warstwa kremu i bawełniane rękawiczki na 10 minut. Dłonie są zajęte i pielęgnowane.",
+  "Krwawiącą skórkę umyj i zaklej plastrem na noc. Plaster to też fizyczna przerwa dla nawyku.",
+  "Raz w tygodniu po kąpieli delikatnie odsuń skórki drewnianym patyczkiem. Wycinanie sprawia, że odrastają twardsze.",
+  "Sprawdź w zapisach, kiedy skubiesz skórki, a kiedy obgryzasz paznokcie. Często stoją za tym różne sytuacje.",
+  "Ćwiczenie dotyku rób na opuszkach: powolne kółka kciukiem po każdym palcu, tam gdzie zwykle szukasz skórek.",
+  "Skóra goi się od środka. Pij wodę i zajrzyj do PDF „Suplementacja i odżywianie”.",
+  "Przy impulsie przy skórce: pięść na 60 sekund, potem kropla olejku. Ręce dostają zajęcie i pielęgnację.",
+  "Porównaj skórki ze zdjęciem z pierwszego tygodnia. Gojąca się skóra to często pierwszy widoczny efekt."
+];
+
+// Kamienie milowe programu
+window.P90_MILESTONES = [
+  { d: 7, t: "Pierwszy tydzień za Tobą", b: "Najtrudniejszy jest start, a Ty go masz. Przez 7 dni uczyłeś/aś się zauważać nawyk. To fundament całej zmiany." },
+  { d: 30, t: "30 dni programu", b: "Miesiąc pracy z nawykiem. Mózg zaczyna łączyć impuls z nowym ruchem rąk. Zrób dziś zdjęcie dłoni i porównaj je z pierwszym." },
+  { d: 60, t: "60 dni programu", b: "Dwie trzecie drogi. Nowe ruchy coraz częściej przychodzą same. Spójrz w kalendarz i zobacz, ile dni bez obgryzania już masz." },
+  { d: 90, t: "90 dni. Program ukończony", b: "Przeszedłeś/aś cały program. Zobacz swoje dłonie przed i po, pobierz dyplom i pochwal się nim, komu chcesz." }
+];
