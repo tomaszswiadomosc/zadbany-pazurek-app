@@ -105,7 +105,7 @@ function renderLeads() {
     <div class="row" style="justify-content:space-between;gap:8px;flex-wrap:wrap"><b>${esc(l.imie)}</b><span class="row" style="gap:6px"><span class="pill of-${pdf ? "pdf" : "prog"}">${pdf ? "Przewodnik PDF · 27 zł" : "Program · 57 zł"}</span><span class="pill st-${l.status}">${pdf && l.status === "wyslany_dostep" ? "PDF wysłany" : (LSTAT[l.status] || l.status)}</span></span></div>
     ${rabat ? `<div class="small" style="color:#17643A;font-weight:600">Ma przewodnik: dopłata 30 zł zamiast 57 zł</div>` : ""}
     <div class="small">${esc(l.email)}${l.telefon ? ` · tel. <a href="tel:${esc(l.telefon.replace(/[^+0-9]/g, ""))}">${esc(l.telefon)}</a>` : ""}${l.profil ? " · " + esc(l.profil) : ""}</div>
-    <div class="small muted">${new Date(l.created_at).toLocaleString("pl-PL", { dateStyle: "short", timeStyle: "short" })} · obgryza: ${esc(l.jak_dlugo)}${l.zrodlo ? " · źródło: " + esc(l.zrodlo) : ""}</div>
+    <div class="small muted">${new Date(l.created_at).toLocaleString("pl-PL", { dateStyle: "short", timeStyle: "short" })} · ${l.co_obgryza ? `<b>${{ paznokcie: "paznokcie", skorki: "skórki", oba: "paznokcie i skórki" }[l.co_obgryza] || esc(l.co_obgryza)}</b>, ` : "obgryza "}od: ${esc(l.jak_dlugo)}${l.zrodlo ? " · źródło: " + esc(l.zrodlo) : ""}</div>
     ${l.wiadomosc ? `<div class="small" style="font-style:italic">„${esc(l.wiadomosc)}”</div>` : ""}
     <div class="row" style="gap:6px;flex-wrap:wrap;margin-top:4px">
       ${l.status === "nowe" ? `<button class="btn ghost slim" data-la="w_kontakcie">W kontakcie</button>` : ""}
